@@ -67,10 +67,10 @@ link-includes:
 
 # ----------------------------------------------------------------------
 
-$(DIST)/test-cairo: $(patsubst %.cc,$(BUILD)/%.o,$(TEST_CAIRO_SOURCES)) | $(DIST)
+$(DIST)/test-cairo: $(patsubst %.cc,$(BUILD)/%.o,$(TEST_CAIRO_SOURCES)) $(ACMACS_DRAW_LIB) | $(DIST)
 	g++ $(LDFLAGS) -o $@ $^ $(TEST_CAIRO_LDLIBS)
 
-$(DIST)/test-cairo-fonts: $(patsubst %.cc,$(BUILD)/%.o,$(TEST_CAIRO_FONTS_SOURCES)) | $(DIST)
+$(DIST)/test-cairo-fonts: $(patsubst %.cc,$(BUILD)/%.o,$(TEST_CAIRO_FONTS_SOURCES)) $(ACMACS_DRAW_LIB) | $(DIST)
 	g++ $(LDFLAGS) -o $@ $^ $(TEST_CAIRO_LDLIBS)
 
 # ----------------------------------------------------------------------
