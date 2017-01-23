@@ -37,7 +37,7 @@ LIB_DIR = $(ACMACSD_ROOT)/lib
 ACMACSD_LIBS = -L$(LIB_DIR) -lacmacsbase
 ACMACS_DRAW_LIB = $(DIST)/libacmacsdraw.so
 ACMACS_DRAW_LDLIBS = $(ACMACSD_LIBS) $$(pkg-config --libs cairo)
-TEST_CAIRO_LDLIBS = $(ACMACS_DRAW_LDLIBS) -lacmacsdraw
+TEST_CAIRO_LDLIBS = $(ACMACS_DRAW_LDLIBS) -L$(DIST) -lacmacsdraw
 
 # PYTHON_VERSION = $(shell python3 -c 'import sys; print("{0.major}.{0.minor}".format(sys.version_info))')
 # PYTHON_CONFIG = python$(PYTHON_VERSION)-config
