@@ -8,7 +8,10 @@ MAKEFLAGS = -w
 
 SRC_DIR = $(abspath $(ACMACSD_ROOT)/sources)
 
-ACMACS_DRAW_SOURCES = color.cc
+ACMACS_DRAW_SOURCES = color.cc surface-cairo.cc
+
+TEST_CAIRO_SOURCES = test-cairo.cc
+TEST_CAIRO_FONTS_SOURCES = test-cairo-fonts.cc
 
 # ----------------------------------------------------------------------
 
@@ -28,10 +31,13 @@ OPTIMIZATION = -O3 #-fvisibility=hidden -flto
 PROFILE = # -pg
 CXXFLAGS = -MMD -g $(OPTIMIZATION) $(PROFILE) -fPIC -std=$(STD) $(WEVERYTHING) $(WARNINGS) -Icc -I$(BUILD)/include -I$(ACMACSD_ROOT)/include $(PKG_INCLUDES)
 LDFLAGS = $(OPTIMIZATION) $(PROFILE)
+PKG_INCLUDES = $$(pkg-config --cflags cairo)
 
 LIB_DIR = $(ACMACSD_ROOT)/lib
+ACMACSD_LIBS = -L$(LIB_DIR) -lacmacsbase
 ACMACS_DRAW_LIB = $(DIST)/libacmacsdraw.so
-ACMACS_DRAW_LDLIBS = # -L$(LIB_DIR)
+ACMACS_DRAW_LDLIBS = $(ACMACSD_LIBS) $$(pkg-config --libs cairo)
+TEST_CAIRO_LDLIBS = $(ACMACS_DRAW_LDLIBS) -lacmacsdraw
 
 # PYTHON_VERSION = $(shell python3 -c 'import sys; print("{0.major}.{0.minor}".format(sys.version_info))')
 # PYTHON_CONFIG = python$(PYTHON_VERSION)-config
@@ -47,15 +53,25 @@ DIST = $(abspath dist)
 
 # ----------------------------------------------------------------------
 
-all: check-python install
+all: check-python install $(DIST)/test-cairo $(DIST)/test-cairo-fonts
 
-install: check-acmacsd-root $(ACMACS_DRAW_LIB)
+install: check-acmacsd-root link-includes $(ACMACS_DRAW_LIB)
 	ln -sf $(ACMACS_DRAW_LIB) $(ACMACSD_ROOT)/lib
 	if [ $$(uname) = "Darwin" ]; then /usr/bin/install_name_tool -id $(ACMACSD_ROOT)/lib/$(notdir $(ACMACS_DRAW_LIB)) $(ACMACSD_ROOT)/lib/$(notdir $(ACMACS_DRAW_LIB)); fi
-	if [ ! -d $(ACMACSD_ROOT)/include/acmacs-draw ]; then mkdir $(ACMACSD_ROOT)/include/acmacs-draw; fi
-	ln -sf $(abspath cc)/*.hh $(ACMACSD_ROOT)/include/acmacs-draw
 	if [ -d $(SRC_DIR)/acmacs-draw/py/acmacs_draw ]; then ln -sf $(SRC_DIR)/acmacs-draw/py/acmacs_draw $(ACMACSD_ROOT)/py; fi
 	if [ -d $(SRC_DIR)/acmacs-draw/bin ]; then ln -sf $(SRC_DIR)/acmacs-draw/bin/* $(ACMACSD_ROOT)/bin; fi
+
+link-includes:
+	if [ ! -d $(ACMACSD_ROOT)/include/acmacs-draw ]; then mkdir $(ACMACSD_ROOT)/include/acmacs-draw; fi
+	ln -sf $(abspath cc)/*.hh $(ACMACSD_ROOT)/include/acmacs-draw
+
+# ----------------------------------------------------------------------
+
+$(DIST)/test-cairo: $(patsubst %.cc,$(BUILD)/%.o,$(TEST_CAIRO_SOURCES)) | $(DIST)
+	g++ $(LDFLAGS) -o $@ $^ $(TEST_CAIRO_LDLIBS)
+
+$(DIST)/test-cairo-fonts: $(patsubst %.cc,$(BUILD)/%.o,$(TEST_CAIRO_FONTS_SOURCES)) | $(DIST)
+	g++ $(LDFLAGS) -o $@ $^ $(TEST_CAIRO_LDLIBS)
 
 # ----------------------------------------------------------------------
 
@@ -71,6 +87,8 @@ clean:
 
 distclean: clean
 	rm -rf $(BUILD)
+
+test: install $(DIST)/test-cairo $(DIST)/test-cairo-fonts
 
 # ----------------------------------------------------------------------
 
