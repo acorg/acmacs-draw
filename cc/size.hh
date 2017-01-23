@@ -60,6 +60,7 @@ class Size
     inline std::string to_string() const { return "Size(" + std::to_string(width) + ", " + std::to_string(height) + ")"; }
 
     Size& operator += (const Size& sz) { width += sz.width; height += sz.height; return *this; }
+    Size& operator *= (double scale) { width *= scale; height *= scale; return *this; }
 
 }; // class Size
 
