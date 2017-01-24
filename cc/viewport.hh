@@ -18,6 +18,7 @@ class Viewport
     inline void set(const Location& a, const Location& b) { origin = a; size = b - a; }
     inline void set_from_center_size(const Location& aCenter, double aSize) { origin = aCenter - Size(aSize / 2, aSize / 2); size.set(aSize, aSize); }
     inline void set_from_center_size(const std::vector<double>& aCenter, double aSize) { origin.from_vector(aCenter); origin -= aSize / 2; size.set(aSize, aSize); }
+    inline double aspect() const { return size.aspect(); }
     inline void zoom(double scale) { const Size new_size = size * scale; origin = center() - new_size * 0.5; size = new_size; }
     inline void center(const Location& aCenter) { origin = aCenter - size * 0.5; }
     inline Size offset() const { return {-origin.x, -origin.y}; }
