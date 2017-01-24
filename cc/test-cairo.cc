@@ -16,8 +16,8 @@ int main(int /*argc*/, const char */*argv*/[])
     int exit_code = 0;
     try {
         PdfCairo surface("/tmp/tc.pdf", 500, 850);
-        surface.circle({500, 100}, Scaled{200}, 1.0, 0.0, "black", Pixels{3});
-        surface.circle({500, 100}, Pixels{200}, 1.0, 0.0, "red", Pixels{3});
+        surface.circle({300, 200}, Scaled{200}, 1.0, 0.0, "black", Pixels{3});
+        surface.circle({300, 200}, Pixels{100}, 1.0, 0.0, "red", Pixels{3});
         // const Size size = surface.size();
         // draw(surface);
         // Surface& sub1{surface.subsurface({size.width / 10.0, size.width / 10.0}, size / 2, size.width, true)};

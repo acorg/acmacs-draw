@@ -14,6 +14,7 @@ class Pixels
 {
  public:
     inline explicit Pixels(double aValue) : mValue(aValue) {}
+    inline double value() const { return mValue; }
 
  private:
     double mValue;
@@ -24,6 +25,7 @@ class Scaled
 {
  public:
     inline explicit Scaled(double aValue) : mValue(aValue) {}
+    inline double value() const { return mValue; }
 
  private:
     double mValue;

@@ -191,8 +191,21 @@ void SurfaceCairo::rectangle_filled(const Location& a, const Size& s, Color aOut
 
 // ----------------------------------------------------------------------
 
+template <typename S> inline void s_circle(SurfaceCairo& aSurface, const Location& aCenter, S aDiameter, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth)
+{
+    context(aSurface)
+            .set_line_width(aOutlineWidth.value())
+            .translate(aCenter)
+            .rotate(aAngle)
+            .aspect(aAspect)
+            .circle(aDiameter.value() / 2)
+            .set_source_rgba(aOutlineColor)
+            .stroke();
+}
+
 void SurfaceCairo::circle(const Location& aCenter, Pixels aDiameter, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth)
 {
+    s_circle(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth);
 
 } // SurfaceCairo::circle
 
@@ -200,6 +213,7 @@ void SurfaceCairo::circle(const Location& aCenter, Pixels aDiameter, double aAsp
 
 void SurfaceCairo::circle(const Location& aCenter, Scaled aDiameter, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth)
 {
+    s_circle(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth);
 
 } // SurfaceCairo::circle
 
