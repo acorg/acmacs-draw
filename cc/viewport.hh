@@ -52,7 +52,7 @@ class Viewport
     Location origin;
     Size size;
 
-    inline std::string to_string() const { return "Viewport(" + origin.to_string() + ", " + size.to_string() + ")"; }
+    // inline std::string to_string() const { return "Viewport(" + origin.to_string() + ", " + size.to_string() + ")"; }
 
 }; // class Viewport
 
@@ -60,7 +60,7 @@ class Viewport
 
 inline std::ostream& operator << (std::ostream& out, const Viewport& aViewport)
 {
-    out << '[' << std::fixed << std::setw(5) << std::setprecision(2) << aViewport.origin.x << ", " << aViewport.origin.y << ", " << aViewport.size.width;
+    out << "Viewport[" << std::fixed << std::setw(5) << std::setprecision(2) << aViewport.origin.x << ", " << aViewport.origin.y << ", " << aViewport.size.width;
     if (!float_equal(aViewport.size.width, aViewport.size.height))
         out << ", " << aViewport.size.height;
     return out << ']';

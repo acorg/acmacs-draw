@@ -90,6 +90,11 @@ class Surface
 
 }; // class Surface
 
+inline std::ostream& operator << (std::ostream& out, const Surface& aSurface)
+{
+    return out << "Surface(" << aSurface.viewport() << ", Origin" << aSurface.origin_in_parent() << ", width=" << aSurface.width_in_parent() << ')';
+}
+
 // ----------------------------------------------------------------------
 /// Local Variables:
 /// eval: (if (fboundp 'eu-rename-buffer) (eu-rename-buffer))
