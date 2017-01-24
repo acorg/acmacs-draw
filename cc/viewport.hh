@@ -10,7 +10,7 @@
 class Viewport
 {
  public:
-    inline Viewport() : origin(0, 0), size(0, 0) {}
+    inline Viewport() : origin{0, 0}, size{0, 0} {}
     inline Viewport(const Location& a, const Size& s) : origin(a), size(s) {}
     inline Viewport(const Location& a, const Location& b) : origin(a), size(b - a) {}
 
