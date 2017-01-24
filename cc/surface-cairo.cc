@@ -619,7 +619,7 @@ PdfCairo::PdfCairo(std::string aFilename, double aWidth, double aHeight)
     mCairoContext = cairo_create(surface);
     cairo_surface_destroy(surface);
     change_width_in_parent(aWidth);
-    viewport({0, 0}, {default_canvas_width, aHeight * default_canvas_width / aWidth});
+    viewport({Location{0, 0}, Size{default_canvas_width, aHeight * default_canvas_width / aWidth}});
     std::cerr << *this << std::endl;
 
 } // PdfCairo::PdfCairo
