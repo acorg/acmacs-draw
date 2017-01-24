@@ -67,9 +67,11 @@ link-includes:
 
 # ----------------------------------------------------------------------
 
+test-cairo: $(DIST)/test-cairo
 $(DIST)/test-cairo: $(patsubst %.cc,$(BUILD)/%.o,$(TEST_CAIRO_SOURCES)) $(ACMACS_DRAW_LIB) | $(DIST)
 	g++ $(LDFLAGS) -o $@ $^ $(TEST_CAIRO_LDLIBS)
 
+test-cairo-fonts: $(DIST)/test-cairo-fonts
 $(DIST)/test-cairo-fonts: $(patsubst %.cc,$(BUILD)/%.o,$(TEST_CAIRO_FONTS_SOURCES)) $(ACMACS_DRAW_LIB) | $(DIST)
 	g++ $(LDFLAGS) -o $@ $^ $(TEST_CAIRO_LDLIBS)
 

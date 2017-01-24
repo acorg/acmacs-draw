@@ -46,6 +46,10 @@ void draw(Surface& aSurface)
         aSurface.line({step, y}, {step, y + step}, "red", 10);
     }
     aSurface.circle({1000, 0}, 200, 1.0, 0.0, "blue", 10);
+
+    aSurface.text({700, 500}, "Wan-dan-dati", "blue", 10);
+    aSurface.text({700, 600}, "Wan-dan-dati", "blue", 20);
+    aSurface.text({700, 700}, "Wan-dan-dati", "blue", 30);
 }
 // ----------------------------------------------------------------------
 
