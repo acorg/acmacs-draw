@@ -16,10 +16,8 @@ int main(int /*argc*/, const char */*argv*/[])
     int exit_code = 0;
     try {
         PdfCairo surface("/tmp/tc.pdf", 500, 850);
-        surface.circle({300, 200}, Scaled{200}, 1.0, 0.0, "black", Pixels{3});
-        surface.circle({300, 200}, Pixels{100}, 1.0, 0.0, "red", Pixels{3});
+        draw(surface);
         // const Size size = surface.size();
-        // draw(surface);
         // Surface& sub1{surface.subsurface({size.width / 10.0, size.width / 10.0}, size / 2, size.width, true)};
         // draw(sub1);
         // Surface& sub2{sub1.subsurface({size.width / 10.0, size.width / 10.0}, size / 2, size.width, false)};
@@ -36,22 +34,25 @@ int main(int /*argc*/, const char */*argv*/[])
 
 void draw(Surface& aSurface)
 {
-    //   //aSurface.background("white");
-    // aSurface.border(0xC0808080, Pixels{20});
-    // const double width = aSurface.size().width;
-    // const double step = width / 10.0;
-    // const double height = aSurface.size().height;
-    // for (double x = step; x < width; x += step * 2) {
-    //     aSurface.line({x, step}, {x + step, step}, "red", 10);
-    // }
-    // for (double y = step; y < height; y += step * 2) {
-    //     aSurface.line({step, y}, {step, y + step}, "red", 10);
-    // }
-    // aSurface.circle({1000, 0}, 200, 1.0, 0.0, "blue", 10);
+    aSurface.circle({300, 200}, Scaled{200}, 1.0, 0.0, "black", Pixels{3});
+    aSurface.circle({300, 200}, Pixels{200}, 1.0, 0.0, "red", Pixels{1});
 
-    // aSurface.text({700, 500}, "Wan-dan-dati", "blue", 10);
-    // aSurface.text({700, 600}, "Wan-dan-dati", "blue", 20);
-    // aSurface.text({700, 700}, "Wan-dan-dati", "blue", 30);
+      //   //aSurface.background("white");
+      // aSurface.border(0xC0808080, Pixels{20});
+      // const double width = aSurface.size().width;
+      // const double step = width / 10.0;
+      // const double height = aSurface.size().height;
+      // for (double x = step; x < width; x += step * 2) {
+      //     aSurface.line({x, step}, {x + step, step}, "red", 10);
+      // }
+      // for (double y = step; y < height; y += step * 2) {
+      //     aSurface.line({step, y}, {step, y + step}, "red", 10);
+      // }
+      // aSurface.circle({1000, 0}, 200, 1.0, 0.0, "blue", 10);
+
+      // aSurface.text({700, 500}, "Wan-dan-dati", "blue", 10);
+      // aSurface.text({700, 600}, "Wan-dan-dati", "blue", 20);
+      // aSurface.text({700, 700}, "Wan-dan-dati", "blue", 30);
 }
 // ----------------------------------------------------------------------
 

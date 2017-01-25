@@ -11,6 +11,7 @@ class SurfaceCairo : public Surface
 {
  public:
     virtual SurfaceCairo* parent() = 0;
+    virtual const SurfaceCairo* parent() const = 0;
     virtual cairo_t* cairo_context() = 0;
 
     virtual std::shared_ptr<Surface> subsurface(const Location& aOriginInParent, double aWidthInParent, const Viewport& aViewport, bool aClip);
@@ -52,10 +53,20 @@ class SurfaceCairo : public Surface
  protected:
     inline SurfaceCairo() : mViewport{}, mOriginInParent{0, 0}, mWidthInParent{mViewport.size.width} {}
 
+    virtual Location arrow_head(const Location& a, double angle, double sign, Color aColor, Pixels aArrowWidth);
+
     inline void change_origin(const Location& aOriginInParent) { mOriginInParent = aOriginInParent; }
     inline void change_width_in_parent(double aWidthInParent) { mWidthInParent = aWidthInParent; }
 
-    virtual Location arrow_head(const Location& a, double angle, double sign, Color aColor, Pixels aArrowWidth);
+    inline double scale() const
+        {
+            return (parent() ? parent()->scale() : 1.0) * (width_in_parent() / viewport().size.width);
+        }
+
+    inline Location origin_offset() const
+        {
+            return parent() ? (parent()->origin_offset() + origin_in_parent() * parent()->scale()) : origin_in_parent();
+        }
 
  private:
     Viewport mViewport;
@@ -78,6 +89,7 @@ class SurfaceCairoChild : public SurfaceCairo
     //     : mParent(aParent), mOffset(aOffset), mSize(aSize), mScale(aScale), mClip(aClip) {}
 
     virtual inline SurfaceCairo* parent() { return &mParent; }
+    virtual inline const SurfaceCairo* parent() const { return &mParent; }
     virtual inline cairo_t* cairo_context() { return mParent.cairo_context(); }
 
     virtual inline void move(const Location& aOriginInParent) { change_origin(aOriginInParent); }
@@ -102,6 +114,7 @@ class PdfCairo : public SurfaceCairo
 
     virtual inline cairo_t* cairo_context() { return mCairoContext; }
     virtual inline SurfaceCairo* parent() { return nullptr; }
+    virtual inline const SurfaceCairo* parent() const { return nullptr; }
 
     virtual inline void move(const Location&) { throw std::logic_error("cannot move PdfCairo surface"); }
     virtual inline void move_resize(const Location&, double) { throw std::logic_error("cannot move/resize PdfCairo surface"); }

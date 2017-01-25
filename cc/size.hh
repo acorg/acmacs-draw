@@ -105,10 +105,15 @@ inline Location operator - (const Location& a, const Size& s)
     return {a.x - s.width, a.y - s.height};
 }
 
-double inline distance(const Location& a, const Location& b)
+inline double distance(const Location& a, const Location& b)
 {
     const double dx = a.x - b.x, dy = a.y - b.y;
     return sqrt(dx * dx + dy * dy);
+}
+
+inline Location operator * (const Location& a, double v)
+{
+    return {a.x * v, a.y * v};
 }
 
 inline Size operator - (const Location& a, const Location& b)

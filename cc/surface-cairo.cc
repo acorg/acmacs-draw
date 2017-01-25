@@ -7,12 +7,12 @@ class context
 {
  public:
     context(SurfaceCairo& aSurface)
-        : mSurface(aSurface), mParent(aSurface.parent() ? new context(*aSurface.parent()) : nullptr)
+        : mSurface(aSurface), mParent(aSurface.parent() ? new context(*aSurface.parent()) : nullptr), mScale(aSurface.scale())
         {
+            std::cerr << "origin_offset: " << aSurface.origin_offset() << "  scale: " << aSurface.scale() << std::endl;
             cairo_save(cairo_context());
-            // translate(aSurface.offset());
-            // scale(aSurface.scale());
-            // translate(aSurface.viewport_offset());
+            translate(aSurface.origin_offset());
+            scale(mScale);
             if (aSurface.clip()) {
                 new_path();
                 move_to(aSurface.viewport().origin);
@@ -29,7 +29,7 @@ class context
             delete mParent;
         }
 
-    inline context& set_line_width(double aWidth) { cairo_set_line_width(cairo_context(), aWidth); return *this; }
+    template <typename S> inline context& set_line_width(S aWidth) { cairo_set_line_width(cairo_context(), convert(aWidth)); return *this; }
     inline context& set_source_rgba(Color aColor) { cairo_set_source_rgba(cairo_context(), aColor.red(), aColor.green(), aColor.blue(), aColor.alpha()); return *this; }
     inline context& set_line_cap(Surface::LineCap aLineCap) { cairo_set_line_cap(cairo_context(), cairo_line_cap(aLineCap)); return *this; }
     inline context& set_line_join(Surface::LineJoin aLineJoin) { cairo_set_line_join(cairo_context(), cairo_line_join(aLineJoin)); return *this; }
@@ -39,7 +39,7 @@ class context
     inline context& lines_to(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last) { for ( ; first != last; ++first) { line_to(*first); } return *this; }
     inline context& rectangle(const Location& a, const Size& s) { cairo_rectangle(cairo_context(), a.x, a.y, s.width, s.height); return *this; }
     inline context& arc(const Location& a, double radius, double angle1, double angle2) { cairo_arc(cairo_context(), a.x, a.y, radius, angle1, angle2); return *this; }
-    inline context& circle(double radius) { cairo_arc(cairo_context(), 0.0, 0.0, radius, 0.0, 2.0 * M_PI); return *this; }
+    template <typename S> inline context& circle(S radius) { cairo_arc(cairo_context(), 0.0, 0.0, convert(radius), 0.0, 2.0 * M_PI); return *this; }
     inline context& circle(const Location& a, double radius) { cairo_arc(cairo_context(), a.x, a.y, radius, 0.0, 2.0 * M_PI); return *this; }
     inline context& stroke() { cairo_stroke(cairo_context()); return *this; }
     inline context& fill() { cairo_fill(cairo_context()); return *this; }
@@ -98,8 +98,13 @@ class context
  private:
     SurfaceCairo& mSurface;
     context* mParent;
+    double mScale;
 
     inline cairo_t* cairo_context() { return mSurface.cairo_context(); }
+
+    inline double convert(double aValue) { return aValue; }
+    inline double convert(Scaled aValue) { return aValue.value(); }
+    inline double convert(Pixels aValue) { return aValue.value() / mScale; }
 
     inline cairo_line_cap_t cairo_line_cap(Surface::LineCap aLineCap) const
         {
@@ -194,11 +199,11 @@ void SurfaceCairo::rectangle_filled(const Location& a, const Size& s, Color aOut
 template <typename S> inline void s_circle(SurfaceCairo& aSurface, const Location& aCenter, S aDiameter, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth)
 {
     context(aSurface)
-            .set_line_width(aOutlineWidth.value())
+            .set_line_width(aOutlineWidth)
             .translate(aCenter)
             .rotate(aAngle)
             .aspect(aAspect)
-            .circle(aDiameter.value() / 2)
+            .circle(aDiameter / 2)
             .set_source_rgba(aOutlineColor)
             .stroke();
 }

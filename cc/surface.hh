@@ -15,6 +15,8 @@ class Pixels
  public:
     inline explicit Pixels(double aValue) : mValue(aValue) {}
     inline double value() const { return mValue; }
+    inline Pixels operator / (double a) const { return Pixels{mValue / a}; }
+    inline Pixels operator * (double a) const { return Pixels{mValue * a}; }
 
  private:
     double mValue;
@@ -26,6 +28,8 @@ class Scaled
  public:
     inline explicit Scaled(double aValue) : mValue(aValue) {}
     inline double value() const { return mValue; }
+    inline Scaled operator / (double a) const { return Scaled{mValue / a}; }
+    inline Scaled operator * (double a) const { return Scaled{mValue * a}; }
 
  private:
     double mValue;
