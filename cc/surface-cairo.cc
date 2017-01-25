@@ -34,7 +34,9 @@ class context
     inline context& set_line_join(Surface::LineJoin aLineJoin) { cairo_set_line_join(cairo_context(), cairo_line_join(aLineJoin)); return *this; }
     inline context& move_to() { cairo_move_to(cairo_context(), 0.0, 0.0); return *this; }
     inline context& move_to(const Location& a) { cairo_move_to(cairo_context(), a.x, a.y); return *this; }
+    template <typename S> inline context& move_to(S x, S y) { cairo_move_to(cairo_context(), convert(x), convert(y)); return *this; }
     inline context& line_to(const Location& a) { cairo_line_to(cairo_context(), a.x, a.y); return *this; }
+    template <typename S> inline context& line_to(S x, S y) { cairo_line_to(cairo_context(), convert(x), convert(y)); return *this; }
     inline context& lines_to(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last) { for ( ; first != last; ++first) { line_to(*first); } return *this; }
     inline context& rectangle(const Location& a, const Size& s) { cairo_rectangle(cairo_context(), a.x, a.y, s.width, s.height); return *this; }
     template <typename S> inline context& rectangle(S x1, S y1, S x2, S y2) { cairo_rectangle(cairo_context(), convert(x1), convert(y1), convert(x2) - convert(x1), convert(y2) - convert(y1)); return *this; }
@@ -298,15 +300,34 @@ void SurfaceCairo::square_filled(const Location& aCenter, Scaled aSide, double a
 
 // ----------------------------------------------------------------------
 
+template <typename S> inline void s_triangle_filled(SurfaceCairo& aSurface, const Location& aCenter, S aSide, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, PdfCairo::LineCap aLineCap)
+{
+    const auto cos_pi_6 = std::cos(M_PI / 6.0);
+    const auto radius = aSide * cos_pi_6;
+    context(aSurface)
+            .set_line_width(aOutlineWidth)
+            .set_line_cap(aLineCap)
+            .translate(aCenter)
+            .rotate(aAngle)
+            .move_to(S{0}, - radius)
+            .line_to(- radius * cos_pi_6 * aAspect, radius * 0.5)
+            .line_to(radius * cos_pi_6 * aAspect, radius * 0.5)
+            .close_path()
+            .set_source_rgba(aFillColor)
+            .fill_preserve()
+            .set_source_rgba(aOutlineColor)
+            .stroke();
+}
+
 void SurfaceCairo::triangle_filled(const Location& aCenter, Pixels aSide, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, LineCap aLineCap)
 {
+    s_triangle_filled(*this, aCenter, aSide, aAspect, aAngle, aOutlineColor, aOutlineWidth, aFillColor, aLineCap);
 
 } // SurfaceCairo::triangle_filled
 
-// ----------------------------------------------------------------------
-
 void SurfaceCairo::triangle_filled(const Location& aCenter, Scaled aSide, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, LineCap aLineCap)
 {
+    s_triangle_filled(*this, aCenter, aSide, aAspect, aAngle, aOutlineColor, aOutlineWidth, aFillColor, aLineCap);
 
 } // SurfaceCairo::triangle_filled
 
@@ -435,28 +456,6 @@ Location SurfaceCairo::arrow_head(const Location& a, double angle, double sign, 
 //             .stroke();
 
 // } // SurfaceCairo::circle
-
-// // ----------------------------------------------------------------------
-
-// void SurfaceCairo::triangle_filled(const Location& aCenter, double aSide, double aAspect, double aAngle, Color aOutlineColor, double aOutlineWidth, Color aFillColor, LineCap aLineCap)
-// {
-//     const auto cos_pi_6 = std::cos(M_PI / 6.0);
-//     const auto radius = aSide * cos_pi_6;
-//     context(*this)
-//             .set_line_width(aOutlineWidth)
-//             .set_line_cap(aLineCap)
-//             .translate(aCenter)
-//             .rotate(aAngle)
-//             .move_to({0, - radius})
-//             .line_to({- radius * cos_pi_6 * aAspect, radius * 0.5})
-//             .line_to({radius * cos_pi_6 * aAspect, radius * 0.5})
-//             .close_path()
-//             .set_source_rgba(aFillColor)
-//             .fill_preserve()
-//             .set_source_rgba(aOutlineColor)
-//             .stroke();
-
-// } // SurfaceCairo::triangle_filled
 
 // // ----------------------------------------------------------------------
 

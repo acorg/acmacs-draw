@@ -47,6 +47,8 @@ void draw(Surface& aSurface)
     aSurface.circle_filled({150, 200}, Pixels{10}, 1.4, 0.75, "black", Pixels{1}, 0xC0FFB000);
     aSurface.square_filled({200, 200}, Scaled{50}, 1.0, 1.0, "black", Pixels{1}, 0xC0FF00B0);
     aSurface.square_filled({250, 200}, Pixels{10}, 1.0, 0.0, "black", Pixels{1}, 0xC0FF00B0);
+    aSurface.triangle_filled({300, 200}, Scaled{50}, 1.0, 0.0, "black", Pixels{1}, 0xC000B0B0);
+    aSurface.triangle_filled({350, 200}, Pixels{10}, 1.0, 0.0, "black", Pixels{1}, 0xC000B0B0);
 
       // const double width = aSurface.size().width;
       // const double step = width / 10.0;
