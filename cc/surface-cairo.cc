@@ -7,9 +7,9 @@ class context
 {
  public:
     context(SurfaceCairo& aSurface)
-        : mSurface(aSurface), mParent(aSurface.parent() ? new context(*aSurface.parent()) : nullptr), mScale(aSurface.scale())
+        : mSurface(aSurface), mScale(aSurface.scale())
         {
-            std::cerr << "origin_offset: " << aSurface.origin_offset() << "  scale: " << aSurface.scale() << std::endl;
+            // std::cerr << "origin_offset: " << aSurface.origin_offset() << "  scale: " << mScale << std::endl;
             cairo_save(cairo_context());
             translate(aSurface.origin_offset());
             scale(mScale);
@@ -26,7 +26,6 @@ class context
     ~context()
         {
             cairo_restore(cairo_context());
-            delete mParent;
         }
 
     template <typename S> inline context& set_line_width(S aWidth) { cairo_set_line_width(cairo_context(), convert(aWidth)); return *this; }
@@ -39,7 +38,7 @@ class context
     inline context& lines_to(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last) { for ( ; first != last; ++first) { line_to(*first); } return *this; }
     inline context& rectangle(const Location& a, const Size& s) { cairo_rectangle(cairo_context(), a.x, a.y, s.width, s.height); return *this; }
     inline context& arc(const Location& a, double radius, double angle1, double angle2) { cairo_arc(cairo_context(), a.x, a.y, radius, angle1, angle2); return *this; }
-    template <typename S> inline context& circle(S radius) { cairo_arc(cairo_context(), 0.0, 0.0, convert(radius), 0.0, 2.0 * M_PI); return *this; }
+    template <typename S> inline context& circle(S radius) { cairo_arc(cairo_context(), 0.0, 0.0, convert(radius), 0.0, 2.0 * M_PI); std::cerr << "CIR " << convert(radius) << std::endl;return *this; }
     inline context& circle(const Location& a, double radius) { cairo_arc(cairo_context(), a.x, a.y, radius, 0.0, 2.0 * M_PI); return *this; }
     inline context& stroke() { cairo_stroke(cairo_context()); return *this; }
     inline context& fill() { cairo_fill(cairo_context()); return *this; }
@@ -97,7 +96,6 @@ class context
 
  private:
     SurfaceCairo& mSurface;
-    context* mParent;
     double mScale;
 
     inline cairo_t* cairo_context() { return mSurface.cairo_context(); }
@@ -159,9 +157,9 @@ class context
 
 // ----------------------------------------------------------------------
 
-std::shared_ptr<Surface> SurfaceCairo::subsurface(const Location& aOriginInParent, double aWidthInParent, const Viewport& aViewport, bool aClip)
+Surface* SurfaceCairo::subsurface(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip)
 {
-    return nullptr;
+    return new SurfaceCairoChild(*this, aOriginInParent, aWidthInParent, aViewport, aClip);
 
 } // SurfaceCairo::subsurface
 
@@ -184,6 +182,12 @@ void SurfaceCairo::line(const Location& a, const Location& b, Color aColor, Pixe
 
 void SurfaceCairo::rectangle(const Location& a, const Size& s, Color aColor, Pixels aWidth, LineCap aLineCap)
 {
+    context(*this)
+            .set_line_width(aWidth)
+            .set_line_cap(aLineCap)
+            .rectangle(a, s)
+            .set_source_rgba(aColor)
+            .stroke();
 
 } // SurfaceCairo::rectangle
 
@@ -191,6 +195,14 @@ void SurfaceCairo::rectangle(const Location& a, const Size& s, Color aColor, Pix
 
 void SurfaceCairo::rectangle_filled(const Location& a, const Size& s, Color aOutlineColor, Pixels aWidth, Color aFillColor, LineCap aLineCap)
 {
+    context(*this)
+            .set_line_width(aWidth)
+            .set_line_cap(aLineCap)
+            .rectangle(a, s)
+            .set_source_rgba(aFillColor)
+            .fill_preserve()
+            .set_source_rgba(aOutlineColor)
+            .stroke();
 
 } // SurfaceCairo::rectangle_filled
 
@@ -303,6 +315,24 @@ void SurfaceCairo::double_arrow(const Location& a, const Location& b, Color aCol
 
 void SurfaceCairo::grid(Scaled aStep, Color aLineColor, Pixels aLineWidth)
 {
+    std::vector<Location> lines;
+    const Size& sz = viewport().size;
+    const double step = aStep.value();
+    for (double x = step; x < sz.width; x += step) {
+        lines.emplace_back(-x, 0);
+        lines.emplace_back(x, sz.height);
+    }
+    for (double y = step; y < sz.height; y += step) {
+        lines.emplace_back(-1e-8, y);
+        lines.emplace_back(sz.width, y);
+    }
+
+    context(*this)
+            .set_line_width(aLineWidth)
+            .set_source_rgba(aLineColor)
+            .set_line_cap(LineCap::Butt)
+            .move_to_line_to(lines.begin(), lines.end())
+            .stroke();
 
 } // SurfaceCairo::grid
 
@@ -310,6 +340,7 @@ void SurfaceCairo::grid(Scaled aStep, Color aLineColor, Pixels aLineWidth)
 
 void SurfaceCairo::border(Color aLineColor, Pixels aLineWidth)
 {
+    rectangle(viewport().origin, viewport().size, aLineColor, aLineWidth * 2);
 
 } // SurfaceCairo::border
 
@@ -317,6 +348,7 @@ void SurfaceCairo::border(Color aLineColor, Pixels aLineWidth)
 
 void SurfaceCairo::background(Color aColor)
 {
+    rectangle_filled(viewport().origin, viewport().size, aColor, Pixels{0}, aColor);
 
 } // SurfaceCairo::background
 
@@ -562,46 +594,6 @@ Location SurfaceCairo::arrow_head(const Location& a, double angle, double sign, 
 //     return b;
 
 // } // SurfaceCairo::arrow_head
-
-// // ----------------------------------------------------------------------
-
-// void SurfaceCairo::grid(double aStep, Color aLineColor, double aLineWidth)
-// {
-//     std::vector<Location> lines;
-//     const Size sz = size();
-//     for (double x = aStep; x < sz.width; x += aStep) {
-//         lines.emplace_back(-x, 0);
-//         lines.emplace_back(x, sz.height);
-//     }
-//     for (double y = aStep; y < sz.height; y += aStep) {
-//         lines.emplace_back(-1e-8, y);
-//         lines.emplace_back(sz.width, y);
-//     }
-
-//     context(*this)
-//             .set_line_width(aLineWidth)
-//             .set_source_rgba(aLineColor)
-//             .set_line_cap(LineCap::Butt)
-//             .move_to_line_to(lines.begin(), lines.end())
-//             .stroke();
-
-// } // SurfaceCairo::grid
-
-// // ----------------------------------------------------------------------
-
-// void SurfaceCairo::border(Color aLineColor, double aLineWidth)
-// {
-//     rectangle(viewport_offset() * -1.0, size(), aLineColor, aLineWidth);
-
-// } // SurfaceCairo::border
-
-// // ----------------------------------------------------------------------
-
-// void SurfaceCairo::background(Color aColor)
-// {
-//     rectangle_filled(viewport_offset() * -1.0, size(), aColor, 0, aColor);
-
-// } // SurfaceCairo::background
 
 // // ----------------------------------------------------------------------
 

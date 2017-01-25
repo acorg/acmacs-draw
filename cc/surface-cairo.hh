@@ -14,7 +14,7 @@ class SurfaceCairo : public Surface
     virtual const SurfaceCairo* parent() const = 0;
     virtual cairo_t* cairo_context() = 0;
 
-    virtual std::shared_ptr<Surface> subsurface(const Location& aOriginInParent, double aWidthInParent, const Viewport& aViewport, bool aClip);
+    virtual Surface* subsurface(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip);
 
     virtual inline const Viewport& viewport() const { return mViewport; }
     virtual inline const Location& origin_in_parent() const { return mOriginInParent; }
@@ -52,6 +52,8 @@ class SurfaceCairo : public Surface
 
  protected:
     inline SurfaceCairo() : mViewport{}, mOriginInParent{0, 0}, mWidthInParent{mViewport.size.width} {}
+    inline SurfaceCairo(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport)
+        : mViewport(aViewport), mOriginInParent(aOriginInParent), mWidthInParent(aWidthInParent.value()) {}
 
     virtual Location arrow_head(const Location& a, double angle, double sign, Color aColor, Pixels aArrowWidth);
 
@@ -83,8 +85,8 @@ class SurfaceCairo : public Surface
 class SurfaceCairoChild : public SurfaceCairo
 {
  public:
-    inline SurfaceCairoChild(SurfaceCairo& aParent, bool aClip)
-        : mParent(aParent), mClip(aClip) {}
+    inline SurfaceCairoChild(SurfaceCairo& aParent, const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip)
+        : SurfaceCairo{aOriginInParent, aWidthInParent, aViewport}, mParent(aParent), mClip(aClip) {}
     // inline SurfaceCairoChild(SurfaceCairo& aParent, const Size& aOffset, const Size& aSize, double aScale, bool aClip)
     //     : mParent(aParent), mOffset(aOffset), mSize(aSize), mScale(aScale), mClip(aClip) {}
 

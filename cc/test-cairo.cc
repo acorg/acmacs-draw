@@ -17,6 +17,10 @@ int main(int /*argc*/, const char */*argv*/[])
     try {
         PdfCairo surface("/tmp/tc.pdf", 500, 850);
         draw(surface);
+        auto sub1 = surface.subsurface({110, 500}, Scaled{500}, {Location{}, Size{1000, 1000}}, false);
+        draw(*sub1);
+        auto sub2 = sub1->subsurface({110, 500}, Scaled{500}, {Location{}, Size{1000, 1000}}, true);
+        draw(*sub2);
         // const Size size = surface.size();
         // Surface& sub1{surface.subsurface({size.width / 10.0, size.width / 10.0}, size / 2, size.width, true)};
         // draw(sub1);
@@ -34,11 +38,11 @@ int main(int /*argc*/, const char */*argv*/[])
 
 void draw(Surface& aSurface)
 {
-    aSurface.circle({300, 200}, Scaled{200}, 1.0, 0.0, "black", Pixels{3});
-    aSurface.circle({300, 200}, Pixels{200}, 1.0, 0.0, "red", Pixels{1});
+    aSurface.background("white");
+    aSurface.grid(Scaled{aSurface.viewport().size.width / 10}, 0xC0808080, Pixels{1});
+    aSurface.border(0xC0808080, Pixels{1});
 
-      //   //aSurface.background("white");
-      // aSurface.border(0xC0808080, Pixels{20});
+    aSurface.line({150, 50}, {250, 60}, "red2", Pixels{2});
       // const double width = aSurface.size().width;
       // const double step = width / 10.0;
       // const double height = aSurface.size().height;
