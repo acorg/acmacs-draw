@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "acmacs-draw/surface.hh"
 #include "acmacs-draw/cairo.hh"
 
@@ -14,7 +16,7 @@ class SurfaceCairo : public Surface
     virtual const SurfaceCairo* parent() const = 0;
     virtual cairo_t* cairo_context() = 0;
 
-    virtual Surface* subsurface(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip);
+    virtual Surface& subsurface(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip);
 
     virtual inline const Viewport& viewport() const { return mViewport; }
     virtual inline const Location& origin_in_parent() const { return mOriginInParent; }
@@ -74,6 +76,7 @@ class SurfaceCairo : public Surface
     Viewport mViewport;
     Location mOriginInParent;
     double mWidthInParent;
+    std::vector<std::shared_ptr<SurfaceCairoChild>> mChildren;
 
     friend class context;
     virtual inline bool clip() const { return false; }

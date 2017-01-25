@@ -17,15 +17,10 @@ int main(int /*argc*/, const char */*argv*/[])
     try {
         PdfCairo surface("/tmp/tc.pdf", 500, 850);
         draw(surface);
-        auto sub1 = surface.subsurface({110, 720}, Scaled{500}, {Location{}, Size{1000, 1000}}, false);
-        draw(*sub1);
-        auto sub2 = sub1->subsurface({110, 470}, Scaled{500}, {Location{}, Size{1000, 1000}}, true);
-        draw(*sub2);
-        // const Size size = surface.size();
-        // Surface& sub1{surface.subsurface({size.width / 10.0, size.width / 10.0}, size / 2, size.width, true)};
-        // draw(sub1);
-        // Surface& sub2{sub1.subsurface({size.width / 10.0, size.width / 10.0}, size / 2, size.width, false)};
-        // draw(sub2);
+        auto& sub1 = surface.subsurface({110, 720}, Scaled{500}, {Location{}, Size{1000, 1000}}, false);
+        draw(sub1);
+        auto& sub2 = sub1.subsurface({110, 470}, Scaled{500}, {Location{}, Size{1000, 1000}}, true);
+        draw(sub2);
     }
     catch (std::exception& err) {
         std::cerr << err.what() << std::endl;
@@ -58,7 +53,7 @@ void draw(Surface& aSurface)
 
     aSurface.text({700, 550}, "Pan-dan", "magenta", Pixels{10});
     Size s2 = aSurface.text_size("Pan-dan", Pixels{10});
-    aSurface.text({700 + s2.width, 550}, "-dati", "magenta", Pixels{10});
+    aSurface.text({700 + s2.width, 550}, "-dati", "purple", Pixels{10});
 
       // aSurface.text({700, 600}, "Wan-dan-dati", "blue", 20);
       // aSurface.text({700, 700}, "Wan-dan-dati", "blue", 30);

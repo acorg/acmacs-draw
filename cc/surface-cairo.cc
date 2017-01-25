@@ -160,19 +160,13 @@ class context
 
 // ----------------------------------------------------------------------
 
-Surface* SurfaceCairo::subsurface(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip)
+Surface& SurfaceCairo::subsurface(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip)
 {
-    return new SurfaceCairoChild(*this, aOriginInParent, aWidthInParent, aViewport, aClip);
+    SurfaceCairoChild* child = new SurfaceCairoChild(*this, aOriginInParent, aWidthInParent, aViewport, aClip);
+    mChildren.emplace_back(child);
+    return *child;
 
 } // SurfaceCairo::subsurface
-
-// Surface& SurfaceCairo::subsurface(const Size& aOffset, const Size& aOuterSize, double aInnerWidth, bool aClip)
-// {
-//     const double scale = aOuterSize.width / aInnerWidth;
-//     mChildren.emplace_back(*this, aOffset, aOuterSize / scale, scale, aClip);
-//     return mChildren.back();
-
-// } // SurfaceCairo::subsurface
 
 // ----------------------------------------------------------------------
 
