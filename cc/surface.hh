@@ -9,34 +9,24 @@
 
 // ----------------------------------------------------------------------
 
-// size in pixels, indepenent from the surface internal coordinate system
-class Pixels
+template <char Tag> class SizeScale
 {
  public:
-    inline explicit Pixels(double aValue) : mValue(aValue) {}
+    inline explicit SizeScale(double aValue) : mValue(aValue) {}
+    inline SizeScale(const SizeScale& a) = default;
+    inline SizeScale& operator = (double aValue) { mValue = aValue; return *this; }
     inline double value() const { return mValue; }
-    inline Pixels operator / (double a) const { return Pixels{mValue / a}; }
-    inline Pixels operator * (double a) const { return Pixels{mValue * a}; }
-    inline Pixels operator - () const { return Pixels{- mValue}; }
+    inline SizeScale operator / (double a) const { return SizeScale{mValue / a}; }
+    inline SizeScale operator * (double a) const { return SizeScale{mValue * a}; }
+    inline SizeScale& operator *= (double a) { mValue *= a; return *this; }
+    inline SizeScale operator - () const { return SizeScale{- mValue}; }
 
  private:
     double mValue;
 };
 
-// size in the surface internal coordinate system
-class Scaled
-{
- public:
-    inline explicit Scaled(double aValue) : mValue(aValue) {}
-    inline double value() const { return mValue; }
-    inline Scaled operator / (double a) const { return Scaled{mValue / a}; }
-    inline Scaled operator * (double a) const { return Scaled{mValue * a}; }
-    inline Scaled operator - () const { return Scaled{- mValue}; }
-
- private:
-    double mValue;
-};
-
+using Pixels = SizeScale<'P'>; // size in pixels, indepenent from the surface internal coordinate system
+using Scaled = SizeScale<'S'>; // size in the surface internal coordinate system
 
 // ----------------------------------------------------------------------
 
