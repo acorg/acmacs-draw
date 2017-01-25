@@ -17,9 +17,9 @@ int main(int /*argc*/, const char */*argv*/[])
     try {
         PdfCairo surface("/tmp/tc.pdf", 500, 850);
         draw(surface);
-        auto sub1 = surface.subsurface({110, 500}, Scaled{500}, {Location{}, Size{1000, 1000}}, false);
+        auto sub1 = surface.subsurface({110, 720}, Scaled{500}, {Location{}, Size{1000, 1000}}, false);
         draw(*sub1);
-        auto sub2 = sub1->subsurface({110, 500}, Scaled{500}, {Location{}, Size{1000, 1000}}, true);
+        auto sub2 = sub1->subsurface({110, 470}, Scaled{500}, {Location{}, Size{1000, 1000}}, true);
         draw(*sub2);
         // const Size size = surface.size();
         // Surface& sub1{surface.subsurface({size.width / 10.0, size.width / 10.0}, size / 2, size.width, true)};
@@ -42,7 +42,12 @@ void draw(Surface& aSurface)
     aSurface.grid(Scaled{aSurface.viewport().size.width / 10}, 0xC0808080, Pixels{1});
     aSurface.border(0xC0808080, Pixels{1});
 
-    aSurface.line({150, 50}, {250, 60}, "red2", Pixels{2});
+    aSurface.line({150, 50}, {950, 160}, "red2", Pixels{2});
+    aSurface.circle_filled({100, 200}, Scaled{50}, 0.5, 0.25, "black", Pixels{1}, 0xC0FF0000);
+    aSurface.circle_filled({150, 200}, Pixels{10}, 1.4, 0.75, "black", Pixels{1}, 0xC0FFB000);
+    aSurface.square_filled({200, 200}, Scaled{50}, 1.0, 1.0, "black", Pixels{1}, 0xC0FF00B0);
+    aSurface.square_filled({250, 200}, Pixels{10}, 1.0, 0.0, "black", Pixels{1}, 0xC0FF00B0);
+
       // const double width = aSurface.size().width;
       // const double step = width / 10.0;
       // const double height = aSurface.size().height;

@@ -17,6 +17,7 @@ class Pixels
     inline double value() const { return mValue; }
     inline Pixels operator / (double a) const { return Pixels{mValue / a}; }
     inline Pixels operator * (double a) const { return Pixels{mValue * a}; }
+    inline Pixels operator - () const { return Pixels{- mValue}; }
 
  private:
     double mValue;
@@ -30,6 +31,7 @@ class Scaled
     inline double value() const { return mValue; }
     inline Scaled operator / (double a) const { return Scaled{mValue / a}; }
     inline Scaled operator * (double a) const { return Scaled{mValue * a}; }
+    inline Scaled operator - () const { return Scaled{- mValue}; }
 
  private:
     double mValue;

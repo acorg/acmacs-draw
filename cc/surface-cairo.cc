@@ -37,8 +37,9 @@ class context
     inline context& line_to(const Location& a) { cairo_line_to(cairo_context(), a.x, a.y); return *this; }
     inline context& lines_to(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last) { for ( ; first != last; ++first) { line_to(*first); } return *this; }
     inline context& rectangle(const Location& a, const Size& s) { cairo_rectangle(cairo_context(), a.x, a.y, s.width, s.height); return *this; }
+    template <typename S> inline context& rectangle(S x1, S y1, S x2, S y2) { cairo_rectangle(cairo_context(), convert(x1), convert(y1), convert(x2) - convert(x1), convert(y2) - convert(y1)); return *this; }
     inline context& arc(const Location& a, double radius, double angle1, double angle2) { cairo_arc(cairo_context(), a.x, a.y, radius, angle1, angle2); return *this; }
-    template <typename S> inline context& circle(S radius) { cairo_arc(cairo_context(), 0.0, 0.0, convert(radius), 0.0, 2.0 * M_PI); std::cerr << "CIR " << convert(radius) << std::endl;return *this; }
+    template <typename S> inline context& circle(S radius) { cairo_arc(cairo_context(), 0.0, 0.0, convert(radius), 0.0, 2.0 * M_PI); return *this; }
     inline context& circle(const Location& a, double radius) { cairo_arc(cairo_context(), a.x, a.y, radius, 0.0, 2.0 * M_PI); return *this; }
     inline context& stroke() { cairo_stroke(cairo_context()); return *this; }
     inline context& fill() { cairo_fill(cairo_context()); return *this; }
@@ -175,6 +176,13 @@ Surface* SurfaceCairo::subsurface(const Location& aOriginInParent, Scaled aWidth
 
 void SurfaceCairo::line(const Location& a, const Location& b, Color aColor, Pixels aWidth, LineCap aLineCap)
 {
+    context(*this)
+            .set_line_width(aWidth)
+            .set_source_rgba(aColor)
+            .set_line_cap(aLineCap)
+            .move_to(a)
+            .line_to(b)
+            .stroke();
 
 } // SurfaceCairo::line
 
@@ -226,8 +234,6 @@ void SurfaceCairo::circle(const Location& aCenter, Pixels aDiameter, double aAsp
 
 } // SurfaceCairo::circle
 
-// ----------------------------------------------------------------------
-
 void SurfaceCairo::circle(const Location& aCenter, Scaled aDiameter, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth)
 {
     s_circle(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth);
@@ -236,29 +242,57 @@ void SurfaceCairo::circle(const Location& aCenter, Scaled aDiameter, double aAsp
 
 // ----------------------------------------------------------------------
 
+template <typename S> inline void s_circle_filled(SurfaceCairo& aSurface, const Location& aCenter, S aDiameter, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor)
+{
+    context(aSurface)
+            .set_line_width(aOutlineWidth)
+            .translate(aCenter)
+            .rotate(aAngle)
+            .aspect(aAspect)
+            .circle(aDiameter / 2)
+            .set_source_rgba(aFillColor)
+            .fill_preserve()
+            .set_source_rgba(aOutlineColor)
+            .stroke();
+}
+
 void SurfaceCairo::circle_filled(const Location& aCenter, Pixels aDiameter, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor)
 {
+    s_circle_filled(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth, aFillColor);
 
 } // SurfaceCairo::circle_filled
-
-// ----------------------------------------------------------------------
 
 void SurfaceCairo::circle_filled(const Location& aCenter, Scaled aDiameter, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor)
 {
+    s_circle_filled(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth, aFillColor);
 
 } // SurfaceCairo::circle_filled
 
 // ----------------------------------------------------------------------
 
+template <typename S> inline void s_square_filled(SurfaceCairo& aSurface, const Location& aCenter, S aSide, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, PdfCairo::LineCap aLineCap)
+{
+    context(aSurface)
+            .set_line_width(aOutlineWidth)
+            .set_line_cap(aLineCap)
+            .translate(aCenter)
+            .rotate(aAngle)
+            .rectangle(- aSide / 2 * aAspect, - aSide / 2, aSide / 2 * aAspect, aSide / 2)
+            .set_source_rgba(aFillColor)
+            .fill_preserve()
+            .set_source_rgba(aOutlineColor)
+            .stroke();
+}
+
 void SurfaceCairo::square_filled(const Location& aCenter, Pixels aSide, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, LineCap aLineCap)
 {
+    s_square_filled(*this, aCenter, aSide, aAspect, aAngle, aOutlineColor, aOutlineWidth, aFillColor, aLineCap);
 
 } // SurfaceCairo::square_filled
 
-// ----------------------------------------------------------------------
-
 void SurfaceCairo::square_filled(const Location& aCenter, Scaled aSide, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, LineCap aLineCap)
 {
+    s_square_filled(*this, aCenter, aSide, aAspect, aAngle, aOutlineColor, aOutlineWidth, aFillColor, aLineCap);
 
 } // SurfaceCairo::square_filled
 
@@ -389,48 +423,6 @@ Location SurfaceCairo::arrow_head(const Location& a, double angle, double sign, 
 
 // ----------------------------------------------------------------------
 
-// void SurfaceCairo::line(const Location& a, const Location& b, Color aColor, double aWidth, LineCap aLineCap)
-// {
-//     context(*this)
-//             .set_line_width(aWidth)
-//             .set_source_rgba(aColor)
-//             .set_line_cap(aLineCap)
-//             .move_to(a)
-//             .line_to(b)
-//             .stroke();
-
-// } // SurfaceCairo::line
-
-// // ----------------------------------------------------------------------
-
-// void SurfaceCairo::rectangle(const Location& a, const Size& s, Color aColor, double aWidth, LineCap aLineCap)
-// {
-//     context(*this)
-//             .set_line_width(aWidth)
-//             .set_line_cap(aLineCap)
-//             .rectangle(a, s)
-//             .set_source_rgba(aColor)
-//             .stroke();
-
-// } // SurfaceCairo::rectangle
-
-// // ----------------------------------------------------------------------
-
-// void SurfaceCairo::rectangle_filled(const Location& a, const Size& s, Color aOutlineColor, double aWidth, Color aFillColor, LineCap aLineCap)
-// {
-//     context(*this)
-//             .set_line_width(aWidth)
-//             .set_line_cap(aLineCap)
-//             .rectangle(a, s)
-//             .set_source_rgba(aFillColor)
-//             .fill_preserve()
-//             .set_source_rgba(aOutlineColor)
-//             .stroke();
-
-// } // SurfaceCairo::rectangle_filled
-
-// // ----------------------------------------------------------------------
-
 // void SurfaceCairo::circle(const Location& aCenter, double aDiameter, double aAspect, double aAngle, Color aOutlineColor, double aOutlineWidth)
 // {
 //     context(*this)
@@ -443,40 +435,6 @@ Location SurfaceCairo::arrow_head(const Location& a, double angle, double sign, 
 //             .stroke();
 
 // } // SurfaceCairo::circle
-
-// // ----------------------------------------------------------------------
-
-// void SurfaceCairo::circle_filled(const Location& aCenter, double aDiameter, double aAspect, double aAngle, Color aOutlineColor, double aOutlineWidth, Color aFillColor)
-// {
-//     context(*this)
-//             .set_line_width(aOutlineWidth)
-//             .translate(aCenter)
-//             .rotate(aAngle)
-//             .aspect(aAspect)
-//             .circle(aDiameter / 2)
-//             .set_source_rgba(aFillColor)
-//             .fill_preserve()
-//             .set_source_rgba(aOutlineColor)
-//             .stroke();
-
-// } // SurfaceCairo::circle_filled
-
-// // ----------------------------------------------------------------------
-
-// void SurfaceCairo::square_filled(const Location& aCenter, double aSide, double aAspect, double aAngle, Color aOutlineColor, double aOutlineWidth, Color aFillColor, LineCap aLineCap)
-// {
-//     context(*this)
-//             .set_line_width(aOutlineWidth)
-//             .set_line_cap(aLineCap)
-//             .translate(aCenter)
-//             .rotate(aAngle)
-//             .rectangle({- aSide / 2 * aAspect, - aSide / 2}, {aSide * aAspect, aSide})
-//             .set_source_rgba(aFillColor)
-//             .fill_preserve()
-//             .set_source_rgba(aOutlineColor)
-//             .stroke();
-
-// } // SurfaceCairo::square_filled
 
 // // ----------------------------------------------------------------------
 
