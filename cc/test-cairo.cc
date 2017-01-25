@@ -52,18 +52,9 @@ void draw(Surface& aSurface)
 
     aSurface.double_arrow({100, 300}, {600, 250}, "blue", Pixels{2}, Pixels{6});
 
-      // const double width = aSurface.size().width;
-      // const double step = width / 10.0;
-      // const double height = aSurface.size().height;
-      // for (double x = step; x < width; x += step * 2) {
-      //     aSurface.line({x, step}, {x + step, step}, "red", 10);
-      // }
-      // for (double y = step; y < height; y += step * 2) {
-      //     aSurface.line({step, y}, {step, y + step}, "red", 10);
-      // }
-      // aSurface.circle({1000, 0}, 200, 1.0, 0.0, "blue", 10);
+    aSurface.text({700, 500}, "Pan-dan-dati", "magenta", Scaled{30});
+    aSurface.text({700, 550}, "Pan-dan-dati", "magenta", Pixels{10});
 
-      // aSurface.text({700, 500}, "Wan-dan-dati", "blue", 10);
       // aSurface.text({700, 600}, "Wan-dan-dati", "blue", 20);
       // aSurface.text({700, 700}, "Wan-dan-dati", "blue", 30);
 }
