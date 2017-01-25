@@ -88,9 +88,6 @@ void get_fonts(std::vector<std::string>& fonts)
 } // get_fonts
 
 // ----------------------------------------------------------------------
-
-
-// ----------------------------------------------------------------------
 /// Local Variables:
 /// eval: (if (fboundp 'eu-rename-buffer) (eu-rename-buffer))
 /// End:
