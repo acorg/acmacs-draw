@@ -170,15 +170,26 @@ Surface& SurfaceCairo::subsurface(const Location& aOriginInParent, Scaled aWidth
 
 // ----------------------------------------------------------------------
 
-void SurfaceCairo::line(const Location& a, const Location& b, Color aColor, Pixels aWidth, LineCap aLineCap)
+template <typename S> static inline void s_line(SurfaceCairo& aSurface, const Location& a, const Location& b, Color aColor, S aWidth, PdfCairo::LineCap aLineCap)
 {
-    context(*this)
+    context(aSurface)
             .set_line_width(aWidth)
             .set_source_rgba(aColor)
             .set_line_cap(aLineCap)
             .move_to(a)
             .line_to(b)
             .stroke();
+}
+
+void SurfaceCairo::line(const Location& a, const Location& b, Color aColor, Pixels aWidth, LineCap aLineCap)
+{
+    s_line(*this, a, b, aColor, aWidth, aLineCap);
+
+} // SurfaceCairo::line
+
+void SurfaceCairo::line(const Location& a, const Location& b, Color aColor, Scaled aWidth, LineCap aLineCap)
+{
+    s_line(*this, a, b, aColor, aWidth, aLineCap);
 
 } // SurfaceCairo::line
 

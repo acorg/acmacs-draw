@@ -14,6 +14,7 @@ namespace _acmacs_draw_internal
     template <char Tag> class SizeScale
     {
      public:
+        inline SizeScale() : mValue(0) {}
         inline explicit SizeScale(double aValue) : mValue(aValue) {}
         inline SizeScale(const SizeScale& a) = default;
         inline SizeScale& operator = (double aValue) { mValue = aValue; return *this; }
@@ -57,6 +58,7 @@ class Surface
     virtual Surface& subsurface(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip) = 0;
 
     virtual void line(const Location& a, const Location& b, Color aColor, Pixels aWidth, LineCap aLineCap = LineCap::Butt) = 0;
+    virtual void line(const Location& a, const Location& b, Color aColor, Scaled aWidth, LineCap aLineCap = LineCap::Butt) = 0;
     virtual void rectangle(const Location& a, const Size& s, Color aColor, Pixels aWidth, LineCap aLineCap = LineCap::Butt) = 0;
     virtual void rectangle_filled(const Location& a, const Size& s, Color aOutlineColor, Pixels aWidth, Color aFillColor, LineCap aLineCap = LineCap::Butt) = 0;
 
