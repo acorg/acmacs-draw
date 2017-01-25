@@ -17,6 +17,7 @@ class SurfaceCairo : public Surface
     virtual cairo_t* cairo_context() = 0;
 
     virtual Surface& subsurface(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip);
+    virtual Surface& subsurface(bool aClip);
 
     virtual inline const Viewport& viewport() const { return mViewport; }
     virtual inline const Location& origin_in_parent() const { return mOriginInParent; }

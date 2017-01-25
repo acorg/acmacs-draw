@@ -52,10 +52,12 @@ class Surface
     virtual void viewport(const Viewport& aViewport) = 0;
     virtual void move(const Location& aOriginInParent) = 0;
     virtual void move_resize(const Location& aOriginInParent, double aWidthInParent) = 0;
+    inline void move_resize_viewport(const Location& aOriginInParent, double aWidthInParent, const Viewport& aViewport) { move_resize(aOriginInParent, aWidthInParent); viewport(aViewport); }
 
     inline double aspect() const { return viewport().aspect(); }
 
     virtual Surface& subsurface(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip) = 0;
+    virtual Surface& subsurface(bool aClip) = 0;
 
     virtual void line(const Location& a, const Location& b, Color aColor, Pixels aWidth, LineCap aLineCap = LineCap::Butt) = 0;
     virtual void line(const Location& a, const Location& b, Color aColor, Scaled aWidth, LineCap aLineCap = LineCap::Butt) = 0;

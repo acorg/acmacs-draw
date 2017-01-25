@@ -170,6 +170,14 @@ Surface& SurfaceCairo::subsurface(const Location& aOriginInParent, Scaled aWidth
 
 // ----------------------------------------------------------------------
 
+Surface& SurfaceCairo::subsurface(bool aClip)
+{
+    return subsurface(Location{}, Scaled{}, Viewport{}, aClip);
+
+} // SurfaceCairo::subsurface
+
+// ----------------------------------------------------------------------
+
 template <typename S> static inline void s_line(SurfaceCairo& aSurface, const Location& a, const Location& b, Color aColor, S aWidth, PdfCairo::LineCap aLineCap)
 {
     context(aSurface)
