@@ -335,6 +335,15 @@ void SurfaceCairo::triangle_filled(const Location& aCenter, Scaled aSide, double
 
 void SurfaceCairo::path_outline(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last, Color aOutlineColor, Pixels aOutlineWidth, bool aClose, LineCap aLineCap)
 {
+    context(*this)
+            .new_path()
+            .set_line_cap(aLineCap)
+            .set_line_join(LineJoin::Miter)
+            .set_line_width(aOutlineWidth)
+            .set_source_rgba(aOutlineColor)
+            .move_to_line_to(first, last)
+            .close_path_if(aClose)
+            .stroke();
 
 } // SurfaceCairo::path_outline
 
@@ -342,6 +351,15 @@ void SurfaceCairo::path_outline(std::vector<Location>::const_iterator first, std
 
 void SurfaceCairo::path_outline(const double* first, const double* last, Color aOutlineColor, Pixels aOutlineWidth, bool aClose, LineCap aLineCap)
 {
+    context(*this)
+            .new_path()
+            .set_line_cap(aLineCap)
+            .set_line_join(LineJoin::Miter)
+            .set_line_width(aOutlineWidth)
+            .set_source_rgba(aOutlineColor)
+            .move_to_line_to(first, last)
+            .close_path_if(aClose)
+            .stroke();
 
 } // SurfaceCairo::path_outline
 
@@ -349,6 +367,12 @@ void SurfaceCairo::path_outline(const double* first, const double* last, Color a
 
 void SurfaceCairo::path_fill(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last, Color aFillColor)
 {
+    context(*this)
+            .new_path()
+            .set_source_rgba(aFillColor)
+            .move_to_line_to(first, last)
+            .close_path()
+            .fill();
 
 } // SurfaceCairo::path_fill
 
@@ -356,6 +380,12 @@ void SurfaceCairo::path_fill(std::vector<Location>::const_iterator first, std::v
 
 void SurfaceCairo::path_fill(const double* first, const double* last, Color aFillColor)
 {
+    context(*this)
+            .new_path()
+            .set_source_rgba(aFillColor)
+            .close_move_to_line_to(first, last)
+            .close_path()
+            .fill();
 
 } // SurfaceCairo::path_fill
 
@@ -363,8 +393,39 @@ void SurfaceCairo::path_fill(const double* first, const double* last, Color aFil
 
 void SurfaceCairo::double_arrow(const Location& a, const Location& b, Color aColor, Pixels aLineWidth, Pixels aArrowWidth)
 {
+    const bool x_eq = float_equal(b.x, a.x);
+    const double sign2 = x_eq ? (a.y < b.y ? 1.0 : -1.0) : (b.x < a.x ? 1.0 : -1.0);
+    const double angle = x_eq ? -M_PI_2 : std::atan((b.y - a.y) / (b.x - a.x));
+    auto const la = arrow_head(a, angle, - sign2, aColor, aArrowWidth);
+    auto const lb = arrow_head(b, angle,   sign2, aColor, aArrowWidth);
+    line(la, lb, aColor, aLineWidth);
 
 } // SurfaceCairo::double_arrow
+
+// ----------------------------------------------------------------------
+
+Location SurfaceCairo::arrow_head(const Location& a, double angle, double sign, Color aColor, Pixels aArrowWidth)
+{
+    constexpr double ARROW_WIDTH_TO_LENGTH_RATIO = 2.0;
+
+    const double arrow_width = aArrowWidth.value() / scale();
+    const double arrow_length = arrow_width * ARROW_WIDTH_TO_LENGTH_RATIO;
+    const Location b(a.x + sign * arrow_length * std::cos(angle), a.y + sign * arrow_length * std::sin(angle));
+    const Location c(b.x + sign * arrow_width * std::cos(angle + M_PI_2) * 0.5, b.y + sign * arrow_width * std::sin(angle + M_PI_2) * 0.5);
+    const Location d(b.x + sign * arrow_width * std::cos(angle - M_PI_2) * 0.5, b.y + sign * arrow_width * std::sin(angle - M_PI_2) * 0.5);
+
+    context(*this)
+            .set_source_rgba(aColor)
+            .set_line_join(LineJoin::Miter)
+            .move_to(a)
+            .line_to(c)
+            .line_to(d)
+            .close_path()
+            .fill();
+
+    return b;
+
+} // SurfaceCairo::arrow_head
 
 // ----------------------------------------------------------------------
 
@@ -436,86 +497,6 @@ Size SurfaceCairo::text_size(std::string aText, Scaled aSize, const TextStyle& a
 } // SurfaceCairo::text_size
 
 // ----------------------------------------------------------------------
-
-Location SurfaceCairo::arrow_head(const Location& a, double angle, double sign, Color aColor, Pixels aArrowWidth)
-{
-
-} // SurfaceCairo::arrow_head
-
-// ----------------------------------------------------------------------
-
-// void SurfaceCairo::circle(const Location& aCenter, double aDiameter, double aAspect, double aAngle, Color aOutlineColor, double aOutlineWidth)
-// {
-//     context(*this)
-//             .set_line_width(aOutlineWidth)
-//             .translate(aCenter)
-//             .rotate(aAngle)
-//             .aspect(aAspect)
-//             .circle(aDiameter / 2)
-//             .set_source_rgba(aOutlineColor)
-//             .stroke();
-
-// } // SurfaceCairo::circle
-
-// // ----------------------------------------------------------------------
-
-// void SurfaceCairo::path_outline(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last, Color aOutlineColor, double aOutlineWidth, bool aClose, LineCap aLineCap)
-// {
-//     context(*this)
-//             .new_path()
-//             .set_line_cap(aLineCap)
-//             .set_line_join(LineJoin::Miter)
-//             .set_line_width(aOutlineWidth)
-//             .set_source_rgba(aOutlineColor)
-//             .move_to_line_to(first, last)
-//             .close_path_if(aClose)
-//             .stroke();
-
-// } // SurfaceCairo::path_outline
-
-// // ----------------------------------------------------------------------
-
-// void SurfaceCairo::path_outline(const double* first, const double* last, Color aOutlineColor, double aOutlineWidth, bool aClose, LineCap aLineCap)
-// {
-//     context(*this)
-//             .new_path()
-//             .set_line_cap(aLineCap)
-//             .set_line_join(LineJoin::Miter)
-//             .set_line_width(aOutlineWidth)
-//             .set_source_rgba(aOutlineColor)
-//             .move_to_line_to(first, last)
-//             .close_path_if(aClose)
-//             .stroke();
-
-// } // SurfaceCairo::path_outline
-
-// // ----------------------------------------------------------------------
-
-// void SurfaceCairo::path_fill(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last, Color aFillColor)
-// {
-//     context(*this)
-//             .new_path()
-//             .set_source_rgba(aFillColor)
-//             .move_to_line_to(first, last)
-//             .close_path()
-//             .fill();
-
-// } // SurfaceCairo::path_fill
-
-// // ----------------------------------------------------------------------
-
-// void SurfaceCairo::path_fill(const double* first, const double* last, Color aFillColor)
-// {
-//     context(*this)
-//             .new_path()
-//             .set_source_rgba(aFillColor)
-//             .close_move_to_line_to(first, last)
-//             .close_path()
-//             .fill();
-
-// } // SurfaceCairo::path_fill
-
-// // ----------------------------------------------------------------------
 
 // void SurfaceCairo::double_arrow(const Location& a, const Location& b, Color aColor, double aLineWidth, double aArrowWidth)
 // {

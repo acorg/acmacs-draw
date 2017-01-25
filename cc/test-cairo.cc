@@ -50,6 +50,8 @@ void draw(Surface& aSurface)
     aSurface.triangle_filled({300, 200}, Scaled{50}, 1.0, 0.0, "black", Pixels{1}, 0xC000B0B0);
     aSurface.triangle_filled({350, 200}, Pixels{10}, 1.0, 0.0, "black", Pixels{1}, 0xC000B0B0);
 
+    aSurface.double_arrow({100, 300}, {600, 250}, "blue", Pixels{2}, Pixels{6});
+
       // const double width = aSurface.size().width;
       // const double step = width / 10.0;
       // const double height = aSurface.size().height;
