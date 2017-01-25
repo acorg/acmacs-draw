@@ -519,33 +519,6 @@ Size SurfaceCairo::text_size(std::string aText, Scaled aSize, const TextStyle& a
 
 // ----------------------------------------------------------------------
 
-// void SurfaceCairo::text(const Location& a, std::string aText, Color aColor, double aSize, const TextStyle& aTextStyle, double aRotation)
-// {
-//     context(*this)
-//             .prepare_for_text(aSize, aTextStyle)
-//             .move_to(a)
-//             .rotate(aRotation)
-//             .set_source_rgba(aColor)
-//             .show_text(aText);
-
-// } // SurfaceCairo::text
-
-// // ----------------------------------------------------------------------
-
-// Size SurfaceCairo::text_size(std::string aText, double aSize, const TextStyle& aTextStyle, double* x_bearing)
-// {
-//     cairo_text_extents_t text_extents;
-//     context(*this)
-//             .prepare_for_text(aSize, aTextStyle)
-//             .text_extents(aText, text_extents);
-//     if (x_bearing != nullptr)
-//         *x_bearing = text_extents.x_bearing;
-//     return {text_extents.x_advance, - text_extents.y_bearing};
-
-// } // SurfaceCairo::text_size
-
-// ----------------------------------------------------------------------
-
 PdfCairo::PdfCairo(std::string aFilename, double aWidth, double aHeight)
 {
     auto surface = cairo_pdf_surface_create(aFilename.c_str(), aWidth, aHeight);

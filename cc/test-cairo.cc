@@ -52,12 +52,18 @@ void draw(Surface& aSurface)
 
     aSurface.double_arrow({100, 300}, {600, 250}, "blue", Pixels{2}, Pixels{6});
 
-    aSurface.text({700, 500}, "Pan-dan-dati", "magenta", Scaled{30});
-    aSurface.text({700, 550}, "Pan-dan-dati", "magenta", Pixels{10});
+    aSurface.text({700, 500}, "Pan-dan", "magenta", Scaled{30});
+    Size s1 = aSurface.text_size("Pan-dan", Scaled{30});
+    aSurface.text({700 + s1.width, 500}, "-dati", "magenta", Scaled{30});
+
+    aSurface.text({700, 550}, "Pan-dan", "magenta", Pixels{10});
+    Size s2 = aSurface.text_size("Pan-dan", Pixels{10});
+    aSurface.text({700 + s2.width, 550}, "-dati", "magenta", Pixels{10});
 
       // aSurface.text({700, 600}, "Wan-dan-dati", "blue", 20);
       // aSurface.text({700, 700}, "Wan-dan-dati", "blue", 30);
 }
+
 // ----------------------------------------------------------------------
 
 void draw1(Surface& aSurface)
