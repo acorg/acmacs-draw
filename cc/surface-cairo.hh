@@ -54,6 +54,16 @@ class SurfaceCairo : public Surface
     virtual Size text_size(std::string aText, Pixels aSize, const TextStyle& aTextStyle = TextStyle(), double* x_bearing = nullptr);
     virtual Size text_size(std::string aText, Scaled aSize, const TextStyle& aTextStyle = TextStyle(), double* x_bearing = nullptr);
 
+    virtual inline double scale() const
+        {
+            return (parent() ? parent()->scale() : 1.0) * (width_in_parent() / viewport().size.width);
+        }
+
+    virtual inline Location origin_offset() const
+        {
+            return parent() ? (parent()->origin_offset() + origin_in_parent() * parent()->scale()) : origin_in_parent();
+        }
+
  protected:
     inline SurfaceCairo() : mViewport{}, mOriginInParent{0, 0}, mWidthInParent{mViewport.size.width} {}
     inline SurfaceCairo(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport)
@@ -63,16 +73,6 @@ class SurfaceCairo : public Surface
 
     inline void change_origin(const Location& aOriginInParent) { mOriginInParent = aOriginInParent; }
     inline void change_width_in_parent(double aWidthInParent) { mWidthInParent = aWidthInParent; }
-
-    virtual inline double scale() const
-        {
-            return (parent() ? parent()->scale() : 1.0) * (width_in_parent() / viewport().size.width);
-        }
-
-    inline Location origin_offset() const
-        {
-            return parent() ? (parent()->origin_offset() + origin_in_parent() * parent()->scale()) : origin_in_parent();
-        }
 
  private:
     Viewport mViewport;

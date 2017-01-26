@@ -90,11 +90,13 @@ class Surface
 
     inline Scaled convert(Pixels a) const { return Scaled{a.value() / scale()}; }
 
+    virtual inline double scale() const = 0;
+    virtual inline Location origin_offset() const = 0;
+
  protected:
     inline Surface() = default;
 
     virtual Location arrow_head(const Location& a, double angle, double sign, Color aColor, Pixels aArrowWidth) = 0;
-    virtual inline double scale() const = 0;
 
 }; // class Surface
 

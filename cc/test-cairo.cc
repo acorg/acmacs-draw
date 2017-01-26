@@ -61,7 +61,7 @@ void draw(Surface& aSurface)
 
 // ----------------------------------------------------------------------
 
-void draw1(Surface& aSurface)
+void draw1(Surface& /*aSurface*/)
 {
     // aSurface.background(0x40F0F0FF);
     // aSurface.grid(200, "grey80", 5);

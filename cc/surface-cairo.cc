@@ -9,10 +9,11 @@ class context
     context(SurfaceCairo& aSurface)
         : mSurface(aSurface), mScale(aSurface.scale())
         {
-            // std::cerr << "origin_offset: " << aSurface.origin_offset() << "  scale: " << mScale << std::endl;
+              // std::cerr << "origin_offset: " << aSurface.origin_offset() << "  scale: " << mScale << std::endl;
             cairo_save(cairo_context());
             translate(aSurface.origin_offset());
             scale(mScale);
+            translate(- aSurface.viewport().origin);
             if (aSurface.clip()) {
                 new_path();
                 move_to(aSurface.viewport().origin);
@@ -445,15 +446,15 @@ Location SurfaceCairo::arrow_head(const Location& a, double angle, double sign, 
 void SurfaceCairo::grid(Scaled aStep, Color aLineColor, Pixels aLineWidth)
 {
     std::vector<Location> lines;
-    const Size& sz = viewport().size;
+    const Viewport& v = viewport();
     const double step = aStep.value();
-    for (double x = step; x < sz.width; x += step) {
-        lines.emplace_back(-x, 0);
-        lines.emplace_back(x, sz.height);
+    for (double x = step; x < v.size.width; x += step) {
+        lines.emplace_back(- v.origin.x - x, v.origin.y);
+        lines.emplace_back(v.origin.x + x, v.origin.y + v.size.height);
     }
-    for (double y = step; y < sz.height; y += step) {
-        lines.emplace_back(-1e-8, y);
-        lines.emplace_back(sz.width, y);
+    for (double y = step; y < v.size.height; y += step) {
+        lines.emplace_back(-1e-8 - v.origin.x, v.origin.y + y);
+        lines.emplace_back(v.origin.x + v.size.width, v.origin.y + y);
     }
 
     context(*this)

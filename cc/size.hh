@@ -26,7 +26,9 @@ class Location
     Location& operator -= (const Size& a);
     inline Location& operator += (double s) { x += s; y += s; return *this; }
     inline Location& operator -= (double s) { x -= s; y -= s; return *this; }
-    inline std::string to_string() const { return "Location(" + std::to_string(x) + ", " + std::to_string(y) + ")"; }
+    inline Location operator - () const { return {-x, -y}; }
+
+      // inline std::string to_string() const { return "Location(" + std::to_string(x) + ", " + std::to_string(y) + ")"; }
 
     inline void min(const Location& a) { x = std::min(x, a.x); y = std::min(y, a.y); }
     inline void max(const Location& a) { x = std::max(x, a.x); y = std::max(y, a.y); }
@@ -57,7 +59,7 @@ class Size
     inline double aspect() const { return width / height; }
     inline bool empty() const { return float_zero(width) && float_zero(height); }
 
-    inline std::string to_string() const { return "Size(" + std::to_string(width) + ", " + std::to_string(height) + ")"; }
+      // inline std::string to_string() const { return "Size(" + std::to_string(width) + ", " + std::to_string(height) + ")"; }
 
     Size& operator += (const Size& sz) { width += sz.width; height += sz.height; return *this; }
     Size& operator *= (double scale) { width *= scale; height *= scale; return *this; }
