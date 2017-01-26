@@ -90,8 +90,8 @@ class Surface
 
     inline Scaled convert(Pixels a) const { return Scaled{a.value() / scale()}; }
 
-    virtual inline double scale() const = 0;
-    virtual inline Location origin_offset() const = 0;
+    virtual double scale() const = 0;
+    virtual Location origin_offset() const = 0;
 
  protected:
     inline Surface() = default;
