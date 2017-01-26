@@ -88,10 +88,13 @@ class Surface
     virtual Size text_size(std::string aText, Pixels aSize, const TextStyle& aTextStyle = TextStyle(), double* x_bearing = nullptr) = 0;
     virtual Size text_size(std::string aText, Scaled aSize, const TextStyle& aTextStyle = TextStyle(), double* x_bearing = nullptr) = 0;
 
+    inline Scaled convert(Pixels a) const { return Scaled{a.value() / scale()}; }
+
  protected:
     inline Surface() = default;
 
     virtual Location arrow_head(const Location& a, double angle, double sign, Color aColor, Pixels aArrowWidth) = 0;
+    virtual inline double scale() const = 0;
 
 }; // class Surface
 

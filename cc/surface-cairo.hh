@@ -64,7 +64,7 @@ class SurfaceCairo : public Surface
     inline void change_origin(const Location& aOriginInParent) { mOriginInParent = aOriginInParent; }
     inline void change_width_in_parent(double aWidthInParent) { mWidthInParent = aWidthInParent; }
 
-    inline double scale() const
+    virtual inline double scale() const
         {
             return (parent() ? parent()->scale() : 1.0) * (width_in_parent() / viewport().size.width);
         }
