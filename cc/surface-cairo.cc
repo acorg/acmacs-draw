@@ -61,7 +61,7 @@ class context
     inline context& show_text(std::string aText) { cairo_show_text(cairo_context(), aText.c_str()); return *this; }
     inline context& text_extents(std::string aText, cairo_text_extents_t& extents) { cairo_text_extents(cairo_context(), aText.c_str(), &extents); return *this; }
 
-      // if Location::x is negative - move_to, else - path_to
+      // if Location::x is negative - move_to, else - path_to. It assumes origin is {0,0}!!!
     inline context& move_to_line_to(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last)
         {
             for ( ; first != last; ++first) {
@@ -445,24 +445,25 @@ Location SurfaceCairo::arrow_head(const Location& a, double angle, double sign, 
 
 void SurfaceCairo::grid(Scaled aStep, Color aLineColor, Pixels aLineWidth)
 {
-    std::vector<Location> lines;
+      // cannot use move_to_line_to because viewport().origin is usually negative
+
+    context ctx{*this};
+    ctx.set_line_width(aLineWidth)
+            .set_source_rgba(aLineColor)
+            .set_line_cap(LineCap::Butt);
+
     const Viewport& v = viewport();
     const double step = aStep.value();
-    for (double x = step; x < v.size.width; x += step) {
-        lines.emplace_back(- v.origin.x - x, v.origin.y);
-        lines.emplace_back(v.origin.x + x, v.origin.y + v.size.height);
+    for (double x = v.left() + step; x < v.right(); x += step) {
+        ctx.move_to(x, v.top());
+        ctx.line_to(x, v.bottom());
     }
-    for (double y = step; y < v.size.height; y += step) {
-        lines.emplace_back(-1e-8 - v.origin.x, v.origin.y + y);
-        lines.emplace_back(v.origin.x + v.size.width, v.origin.y + y);
+    for (double y = v.top() + step; y < v.bottom(); y += step) {
+        ctx.move_to(v.left(),  y);
+        ctx.line_to(v.right(), y);
     }
 
-    context(*this)
-            .set_line_width(aLineWidth)
-            .set_source_rgba(aLineColor)
-            .set_line_cap(LineCap::Butt)
-            .move_to_line_to(lines.begin(), lines.end())
-            .stroke();
+    ctx.stroke();
 
 } // SurfaceCairo::grid
 

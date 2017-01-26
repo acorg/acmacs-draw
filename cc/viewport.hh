@@ -40,7 +40,9 @@ class Viewport
       // zoom out viewport to make width a whole number)
     inline void whole_width() { zoom(std::ceil(size.width) / size.width); }
 
+    inline double left() const { return origin.x; }
     inline double right() const { return origin.x + size.width; }
+    inline double top() const { return origin.y; }
     inline double bottom() const { return origin.y + size.height; }
     inline Location top_right() const { return origin + Size(size.width, 0); }
     inline Location bottom_right() const { return origin + size; }
