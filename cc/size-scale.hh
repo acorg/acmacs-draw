@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cmath>
+
 // ----------------------------------------------------------------------
 
 namespace _acmacs_draw_internal
@@ -9,13 +11,14 @@ namespace _acmacs_draw_internal
      public:
         inline SizeScale() : mValue(0) {}
         inline explicit SizeScale(double aValue) : mValue(aValue) {}
-        inline SizeScale(const SizeScale& a) = default;
+          // inline SizeScale(const SizeScale& a) = default;
         inline SizeScale& operator = (double aValue) { mValue = aValue; return *this; }
         inline double value() const { return mValue; }
         inline SizeScale operator / (double a) const { return SizeScale{mValue / a}; }
         inline SizeScale operator * (double a) const { return SizeScale{mValue * a}; }
         inline SizeScale& operator *= (double a) { mValue *= a; return *this; }
         inline SizeScale operator - () const { return SizeScale{- mValue}; }
+        inline bool empty() const { return std::isnan(mValue); }
 
      private:
         double mValue;

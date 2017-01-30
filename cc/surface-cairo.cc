@@ -49,10 +49,10 @@ class context
     inline context& fill_preserve() { cairo_fill_preserve(cairo_context()); return *this; }
     inline context& translate(const Size& a) { cairo_translate(cairo_context(), a.width, a.height); return *this; }
     inline context& translate(const Location& a) { cairo_translate(cairo_context(), a.x, a.y); return *this; }
-    inline context& rotate(double aAngle) { cairo_rotate(cairo_context(), aAngle); return *this; }
+    inline context& rotate(Rotation aAngle) { cairo_rotate(cairo_context(), aAngle.value()); return *this; }
     inline context& scale(double x, double y) { cairo_scale(cairo_context(), x, y); return *this; }
     inline context& scale(double x) { cairo_scale(cairo_context(), x, x); return *this; }
-    inline context& aspect(double x) { cairo_scale(cairo_context(), x, 1.0); return *this; }
+    inline context& aspect(Aspect x) { cairo_scale(cairo_context(), x.value(), 1.0); return *this; }
     inline context& clip() { cairo_clip(cairo_context()); return *this; }
     inline context& new_path() { cairo_new_path(cairo_context()); return *this; }
     inline context& close_path() { cairo_close_path(cairo_context()); return *this; }
@@ -232,7 +232,7 @@ void SurfaceCairo::rectangle_filled(const Location& a, const Size& s, Color aOut
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_circle(SurfaceCairo& aSurface, const Location& aCenter, S aDiameter, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth)
+template <typename S> static inline void s_circle(SurfaceCairo& aSurface, const Location& aCenter, S aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth)
 {
     context(aSurface)
             .set_line_width(aOutlineWidth)
@@ -244,13 +244,13 @@ template <typename S> static inline void s_circle(SurfaceCairo& aSurface, const 
             .stroke();
 }
 
-void SurfaceCairo::circle(const Location& aCenter, Pixels aDiameter, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth)
+void SurfaceCairo::circle(const Location& aCenter, Pixels aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth)
 {
     s_circle(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth);
 
 } // SurfaceCairo::circle
 
-void SurfaceCairo::circle(const Location& aCenter, Scaled aDiameter, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth)
+void SurfaceCairo::circle(const Location& aCenter, Scaled aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth)
 {
     s_circle(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth);
 
@@ -258,7 +258,7 @@ void SurfaceCairo::circle(const Location& aCenter, Scaled aDiameter, double aAsp
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_circle_filled(SurfaceCairo& aSurface, const Location& aCenter, S aDiameter, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor)
+template <typename S> static inline void s_circle_filled(SurfaceCairo& aSurface, const Location& aCenter, S aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor)
 {
     context(aSurface)
             .set_line_width(aOutlineWidth)
@@ -272,13 +272,13 @@ template <typename S> static inline void s_circle_filled(SurfaceCairo& aSurface,
             .stroke();
 }
 
-void SurfaceCairo::circle_filled(const Location& aCenter, Pixels aDiameter, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor)
+void SurfaceCairo::circle_filled(const Location& aCenter, Pixels aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor)
 {
     s_circle_filled(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth, aFillColor);
 
 } // SurfaceCairo::circle_filled
 
-void SurfaceCairo::circle_filled(const Location& aCenter, Scaled aDiameter, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor)
+void SurfaceCairo::circle_filled(const Location& aCenter, Scaled aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor)
 {
     s_circle_filled(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth, aFillColor);
 
@@ -286,27 +286,27 @@ void SurfaceCairo::circle_filled(const Location& aCenter, Scaled aDiameter, doub
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_square_filled(SurfaceCairo& aSurface, const Location& aCenter, S aSide, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, PdfCairo::LineCap aLineCap)
+template <typename S> static inline void s_square_filled(SurfaceCairo& aSurface, const Location& aCenter, S aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, PdfCairo::LineCap aLineCap)
 {
     context(aSurface)
             .set_line_width(aOutlineWidth)
             .set_line_cap(aLineCap)
             .translate(aCenter)
             .rotate(aAngle)
-            .rectangle(- aSide / 2 * aAspect, - aSide / 2, aSide / 2 * aAspect, aSide / 2)
+            .rectangle(- aSide / 2 * aAspect.value(), - aSide / 2, aSide / 2 * aAspect.value(), aSide / 2)
             .set_source_rgba(aFillColor)
             .fill_preserve()
             .set_source_rgba(aOutlineColor)
             .stroke();
 }
 
-void SurfaceCairo::square_filled(const Location& aCenter, Pixels aSide, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, LineCap aLineCap)
+void SurfaceCairo::square_filled(const Location& aCenter, Pixels aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, LineCap aLineCap)
 {
     s_square_filled(*this, aCenter, aSide, aAspect, aAngle, aOutlineColor, aOutlineWidth, aFillColor, aLineCap);
 
 } // SurfaceCairo::square_filled
 
-void SurfaceCairo::square_filled(const Location& aCenter, Scaled aSide, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, LineCap aLineCap)
+void SurfaceCairo::square_filled(const Location& aCenter, Scaled aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, LineCap aLineCap)
 {
     s_square_filled(*this, aCenter, aSide, aAspect, aAngle, aOutlineColor, aOutlineWidth, aFillColor, aLineCap);
 
@@ -314,7 +314,7 @@ void SurfaceCairo::square_filled(const Location& aCenter, Scaled aSide, double a
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_triangle_filled(SurfaceCairo& aSurface, const Location& aCenter, S aSide, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, PdfCairo::LineCap aLineCap)
+template <typename S> static inline void s_triangle_filled(SurfaceCairo& aSurface, const Location& aCenter, S aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, PdfCairo::LineCap aLineCap)
 {
     const auto cos_pi_6 = std::cos(M_PI / 6.0);
     const auto radius = aSide * cos_pi_6;
@@ -324,8 +324,8 @@ template <typename S> static inline void s_triangle_filled(SurfaceCairo& aSurfac
             .translate(aCenter)
             .rotate(aAngle)
             .move_to(S{0}, - radius)
-            .line_to(- radius * cos_pi_6 * aAspect, radius * 0.5)
-            .line_to(radius * cos_pi_6 * aAspect, radius * 0.5)
+            .line_to(- radius * cos_pi_6 * aAspect.value(), radius * 0.5)
+            .line_to(radius * cos_pi_6 * aAspect.value(), radius * 0.5)
             .close_path()
             .set_source_rgba(aFillColor)
             .fill_preserve()
@@ -333,13 +333,13 @@ template <typename S> static inline void s_triangle_filled(SurfaceCairo& aSurfac
             .stroke();
 }
 
-void SurfaceCairo::triangle_filled(const Location& aCenter, Pixels aSide, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, LineCap aLineCap)
+void SurfaceCairo::triangle_filled(const Location& aCenter, Pixels aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, LineCap aLineCap)
 {
     s_triangle_filled(*this, aCenter, aSide, aAspect, aAngle, aOutlineColor, aOutlineWidth, aFillColor, aLineCap);
 
 } // SurfaceCairo::triangle_filled
 
-void SurfaceCairo::triangle_filled(const Location& aCenter, Scaled aSide, double aAspect, double aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, LineCap aLineCap)
+void SurfaceCairo::triangle_filled(const Location& aCenter, Scaled aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, LineCap aLineCap)
 {
     s_triangle_filled(*this, aCenter, aSide, aAspect, aAngle, aOutlineColor, aOutlineWidth, aFillColor, aLineCap);
 
@@ -485,7 +485,7 @@ void SurfaceCairo::background(Color aColor)
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_text(SurfaceCairo& aSurface, const Location& a, std::string aText, Color aColor, S aSize, const TextStyle& aTextStyle, double aRotation)
+template <typename S> static inline void s_text(SurfaceCairo& aSurface, const Location& a, std::string aText, Color aColor, S aSize, const TextStyle& aTextStyle, Rotation aRotation)
 {
     context(aSurface)
             .prepare_for_text(aSize, aTextStyle)
@@ -495,13 +495,13 @@ template <typename S> static inline void s_text(SurfaceCairo& aSurface, const Lo
             .show_text(aText);
 }
 
-void SurfaceCairo::text(const Location& a, std::string aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle, double aRotation)
+void SurfaceCairo::text(const Location& a, std::string aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle, Rotation aRotation)
 {
     s_text(*this, a, aText, aColor, aSize, aTextStyle, aRotation);
 
 } // SurfaceCairo::text
 
-void SurfaceCairo::text(const Location& a, std::string aText, Color aColor, Scaled aSize, const TextStyle& aTextStyle, double aRotation)
+void SurfaceCairo::text(const Location& a, std::string aText, Color aColor, Scaled aSize, const TextStyle& aTextStyle, Rotation aRotation)
 {
     s_text(*this, a, aText, aColor, aSize, aTextStyle, aRotation);
 

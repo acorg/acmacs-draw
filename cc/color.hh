@@ -10,6 +10,7 @@ class Color
 {
  public:
     using value_type = uint32_t;
+    constexpr static const value_type NoChange = 0xFFFFFFFE;
 
     inline Color() : mColor(0xFF00FF) {}
     template <typename Uint, typename std::enable_if<std::is_integral<Uint>::value>::type* = nullptr> constexpr inline Color(Uint aColor) : mColor(static_cast<uint32_t>(aColor)) {}
@@ -32,6 +33,8 @@ class Color
     inline void alphaI(value_type v) { mColor = (mColor & 0xFFFFFF) | ((v & 0xFF) << 24); }
     inline size_t rgbI() const { return static_cast<size_t>(mColor & 0xFFFFFF); }
 
+    inline bool empty() const { return mColor == NoChange; }
+
     // inline void set_transparency(double aTransparency) { mColor = (mColor & 0x00FFFFFF) | ((int(aTransparency * 255.0) & 0xFF) << 24); }
 
     inline operator std::string() const { return to_string(); }
@@ -46,6 +49,8 @@ class Color
     value_type mColor; // 4 bytes, most->least significant: transparency-red-green-blue, 0x00FF0000 - opaque red, 0xFF000000 - fully transparent
 
 }; // class Color
+
+const Color ColorNoChange{Color::NoChange};
 
 inline std::ostream& operator<<(std::ostream& out, Color c)
 {

@@ -38,12 +38,12 @@ void draw(Surface& aSurface)
     aSurface.border(0xC0808080, Pixels{1});
 
     aSurface.line({150, 50}, {950, 160}, "red2", Pixels{2});
-    aSurface.circle_filled({100, 200}, Scaled{50}, 0.5, 0.25, "black", Pixels{1}, 0xC0FF0000);
-    aSurface.circle_filled({150, 200}, Pixels{10}, 1.4, 0.75, "black", Pixels{1}, 0xC0FFB000);
-    aSurface.square_filled({200, 200}, Scaled{50}, 1.0, 1.0, "black", Pixels{1}, 0xC0FF00B0);
-    aSurface.square_filled({250, 200}, Pixels{10}, 1.0, 0.0, "black", Pixels{1}, 0xC0FF00B0);
-    aSurface.triangle_filled({300, 200}, Scaled{50}, 1.0, 0.0, "black", Pixels{1}, 0xC000B0B0);
-    aSurface.triangle_filled({350, 200}, Pixels{10}, 1.0, 0.0, "black", Pixels{1}, 0xC000B0B0);
+    aSurface.circle_filled({100, 200}, Scaled{50}, Aspect{0.5}, Rotation{0.25}, "black", Pixels{1}, 0xC0FF0000);
+    aSurface.circle_filled({150, 200}, Pixels{10}, Aspect{1.4}, Rotation{0.75}, "black", Pixels{1}, 0xC0FFB000);
+    aSurface.square_filled({200, 200}, Scaled{50}, Aspect{1.0}, Rotation{1.0}, "black", Pixels{1}, 0xC0FF00B0);
+    aSurface.square_filled({250, 200}, Pixels{10}, Aspect{1.0}, Rotation{0.0}, "black", Pixels{1}, 0xC0FF00B0);
+    aSurface.triangle_filled({300, 200}, Scaled{50}, Aspect{1.0}, Rotation{0.0}, "black", Pixels{1}, 0xC000B0B0);
+    aSurface.triangle_filled({350, 200}, Pixels{10}, Aspect{1.0}, Rotation{0.0}, "black", Pixels{1}, 0xC000B0B0);
 
     aSurface.double_arrow({100, 300}, {600, 250}, "blue", Pixels{2}, Pixels{6});
 
