@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <limits>
 
 // ----------------------------------------------------------------------
 
@@ -19,6 +20,7 @@ namespace _acmacs_draw_internal
         inline SizeScale& operator *= (double a) { mValue *= a; return *this; }
         inline SizeScale operator - () const { return SizeScale{- mValue}; }
         inline bool empty() const { return std::isnan(mValue); }
+        static SizeScale make_empty() { return SizeScale(std::numeric_limits<double>::quiet_NaN()); }
 
      private:
         double mValue;
