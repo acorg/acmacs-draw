@@ -18,6 +18,7 @@ class Location
 
     inline Location() : x(0), y(0) {}
     inline Location(double aX, double aY) : x(aX), y(aY) {}
+    inline Location(const std::vector<double>& aCoord) : x(aCoord[0]), y(aCoord[1]) {}
     Location(const Size& s);
 
     inline Location& operator -= (const Location& a) { x -= a.x; y -= a.y; return *this; }
