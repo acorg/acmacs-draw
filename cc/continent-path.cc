@@ -9878,13 +9878,16 @@ static const continent_map_path_entry_t continent_map_path_data[] = {
 
 // ----------------------------------------------------------------------
 
-std::pair<const double*, const double*> continent_map_path(std::string continent)
+namespace continent_path
 {
-    for (const auto& e: continent_map_path_data) {
-        if (e.continent == continent)
-            return std::make_pair(e.path, e.path + e.size);
+    std::pair<const double*, const double*> continent_map_path(std::string continent)
+    {
+        for (const auto& e: continent_map_path_data) {
+            if (e.continent == continent)
+                return std::make_pair(e.path, e.path + e.size);
+        }
+        throw std::runtime_error("Continent not found in continent_map_path: " + continent);
     }
-    throw std::runtime_error("Continent not found in continent_map_path: " + continent);
 }
 
 //======================================================================

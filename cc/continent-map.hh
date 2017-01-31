@@ -1,16 +1,19 @@
 #pragma once
 
-#include <utility>
-#include <string>
+#include <map>
+
+#include "acmacs-draw/size.hh"
+#include "acmacs-draw/color.hh"
+
+class Surface;
 
 // ----------------------------------------------------------------------
 
-namespace continent_path
-{
-    constexpr const double continent_map_size[2] = {686.475, 346.750};
+extern const char* const ContinentLabels[9];
 
-    std::pair<const double*, const double*> continent_map_path(std::string continent);
-}
+Color continent_color(std::string aContinent);
+void continent_map_draw(Surface& aSurface);
+Size continent_map_size();
 
 // ----------------------------------------------------------------------
 /// Local Variables:
