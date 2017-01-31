@@ -13,6 +13,13 @@
 using Aspect = _acmacs_draw_internal::SizeScale<'A'>;
 using Rotation = _acmacs_draw_internal::SizeScale<'R'>;
 
+#include "acmacs-base/global-constructors-push.hh"
+
+const Rotation NoRotation{0.0};
+const Aspect AspectNormal{1.0};
+
+#include "acmacs-base/diagnostics-pop.hh"
+
 // ----------------------------------------------------------------------
 
 class Surface
