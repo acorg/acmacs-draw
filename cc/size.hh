@@ -119,6 +119,11 @@ inline Location operator * (const Location& a, double v)
     return {a.x * v, a.y * v};
 }
 
+inline Location operator / (const Location& a, double v)
+{
+    return {a.x / v, a.y / v};
+}
+
 inline Size operator - (const Location& a, const Location& b)
 {
     return {a.x - b.x, a.y - b.y};

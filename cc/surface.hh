@@ -36,6 +36,8 @@ class Surface
     virtual const Viewport& viewport() const = 0;
     virtual const Location& origin_in_parent() const = 0;
     virtual double width_in_parent() const = 0;
+    inline double width_in_pixels() const { return viewport().size.width * scale(); }
+    inline double height_in_pixels() const { return viewport().size.height * scale(); }
 
     virtual void viewport(const Viewport& aViewport) = 0;
     virtual void move(const Location& aOriginInParent) = 0;
@@ -46,6 +48,7 @@ class Surface
 
     virtual Surface& subsurface(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip) = 0;
     virtual Surface& subsurface(bool aClip) = 0;
+    virtual Surface& subsurface(const Location& aOriginInParent, Pixels aWidthInParent, const Viewport& aViewport, bool aClip) = 0; // origin is in pixels
 
     virtual void line(const Location& a, const Location& b, Color aColor, Pixels aWidth, LineCap aLineCap = LineCap::Butt) = 0;
     virtual void line(const Location& a, const Location& b, Color aColor, Scaled aWidth, LineCap aLineCap = LineCap::Butt) = 0;
