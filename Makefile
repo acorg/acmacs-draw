@@ -55,13 +55,13 @@ DIST = $(abspath dist)
 
 all: check-python install $(DIST)/test-cairo $(DIST)/test-cairo-fonts
 
-install: check-acmacsd-root link-includes $(ACMACS_DRAW_LIB)
+install: check-acmacsd-root install-headers $(ACMACS_DRAW_LIB)
 	ln -sf $(ACMACS_DRAW_LIB) $(ACMACSD_ROOT)/lib
 	if [ $$(uname) = "Darwin" ]; then /usr/bin/install_name_tool -id $(ACMACSD_ROOT)/lib/$(notdir $(ACMACS_DRAW_LIB)) $(ACMACSD_ROOT)/lib/$(notdir $(ACMACS_DRAW_LIB)); fi
 	if [ -d $(SRC_DIR)/acmacs-draw/py/acmacs_draw ]; then ln -sf $(SRC_DIR)/acmacs-draw/py/acmacs_draw $(ACMACSD_ROOT)/py; fi
 	if [ -d $(SRC_DIR)/acmacs-draw/bin ]; then ln -sf $(SRC_DIR)/acmacs-draw/bin/* $(ACMACSD_ROOT)/bin; fi
 
-link-includes:
+install-headers:
 	if [ ! -d $(ACMACSD_ROOT)/include/acmacs-draw ]; then mkdir $(ACMACSD_ROOT)/include/acmacs-draw; fi
 	ln -sf $(abspath cc)/*.hh $(ACMACSD_ROOT)/include/acmacs-draw
 
@@ -94,7 +94,7 @@ test: install $(DIST)/test-cairo $(DIST)/test-cairo-fonts
 
 # ----------------------------------------------------------------------
 
-$(BUILD)/%.o: cc/%.cc | $(BUILD)
+$(BUILD)/%.o: cc/%.cc | $(BUILD) install-headers
 	@echo $<
 	@g++ $(CXXFLAGS) -c -o $@ $<
 
