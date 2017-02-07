@@ -15,12 +15,15 @@ class Transformation : public std::vector<double>
 
     inline void multiply_by(const Transformation& t)
     {
-        (*this)[0] = (*this)[0] * t[0] + (*this)[1] * t[2];
-        (*this)[1] = (*this)[0] * t[1] + (*this)[1] * t[3];
-        (*this)[2] = (*this)[2] * t[0] + (*this)[3] * t[2];
-        (*this)[3] = (*this)[2] * t[1] + (*this)[3] * t[3];
+        const auto r0 = (*this)[0] * t[0] + (*this)[1] * t[2];
+        const auto r1 = (*this)[0] * t[1] + (*this)[1] * t[3];
+        const auto r2 = (*this)[2] * t[0] + (*this)[3] * t[2];
+        const auto r3 = (*this)[2] * t[1] + (*this)[3] * t[3];
+        (*this)[0] = r0;
+        (*this)[1] = r1;
+        (*this)[2] = r2;
+        (*this)[3] = r3;
     }
-
 };
 
 // ----------------------------------------------------------------------
