@@ -500,7 +500,8 @@ template <typename S> static inline void s_text(SurfaceCairo& aSurface, const Lo
             .move_to(a)
             .rotate(aRotation)
             .set_source_rgba(aColor)
-            .show_text(aText);
+            .show_text(aText)
+            .new_path();        // clear text path (bug in cairo?)
 }
 
 void SurfaceCairo::text(const Location& a, std::string aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle, Rotation aRotation)
