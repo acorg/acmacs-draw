@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 #include <cstdint>
 
 // ----------------------------------------------------------------------
@@ -44,6 +45,7 @@ class Color
     inline void from_string(const char* s, size_t len) { from_string(std::string(s, len)); }
 
     static const value_type DistinctColors[];
+    static std::vector<std::string> distinct_colors();
 
  private:
     value_type mColor; // 4 bytes, most->least significant: transparency-red-green-blue, 0x00FF0000 - opaque red, 0xFF000000 - fully transparent

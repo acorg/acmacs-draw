@@ -88,6 +88,13 @@ const Color::value_type Color::DistinctColors[] = {
     0x232C16, //Dark Olive Green
 };
 
+std::vector<std::string> Color::distinct_colors()
+{
+    std::vector<std::string> result(std::end(DistinctColors) - std::begin(DistinctColors));
+    std::transform(std::begin(DistinctColors), std::end(DistinctColors), result.begin(), [](auto c) { return Color(c).to_string(); });
+    return result;
+}
+
 // ----------------------------------------------------------------------
 
 namespace _internal
