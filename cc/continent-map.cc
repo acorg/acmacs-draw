@@ -60,6 +60,14 @@ Size continent_map_size()
 } // continent_map_size
 
 // ----------------------------------------------------------------------
+
+double continent_map_aspect()
+{
+    return continent_path::continent_map_size[0] / continent_path::continent_map_size[1];
+
+} // continent_map_aspect
+
+// ----------------------------------------------------------------------
 /// Local Variables:
 /// eval: (if (fboundp 'eu-rename-buffer) (eu-rename-buffer))
 /// End:
