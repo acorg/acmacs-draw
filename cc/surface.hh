@@ -3,9 +3,9 @@
 #include <vector>
 #include <memory>
 
+#include "acmacs-base/color.hh"
 #include "acmacs-draw/text-style.hh"
 #include "acmacs-draw/viewport.hh"
-#include "acmacs-draw/color.hh"
 #include "acmacs-draw/size-scale.hh"
 
 // ----------------------------------------------------------------------

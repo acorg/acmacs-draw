@@ -8,7 +8,7 @@ MAKEFLAGS = -w
 
 SRC_DIR = $(abspath $(ACMACSD_ROOT)/sources)
 
-ACMACS_DRAW_SOURCES = color.cc surface-cairo.cc continent-path.cc continent-map.cc
+ACMACS_DRAW_SOURCES = surface-cairo.cc continent-path.cc continent-map.cc
 
 TEST_CAIRO_SOURCES = test-cairo.cc
 TEST_CAIRO_FONTS_SOURCES = test-cairo-fonts.cc

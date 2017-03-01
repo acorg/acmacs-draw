@@ -2,8 +2,8 @@
 
 #include <map>
 
+#include "acmacs-base/color.hh"
 #include "acmacs-draw/size.hh"
-#include "acmacs-draw/color.hh"
 
 class Surface;
 
