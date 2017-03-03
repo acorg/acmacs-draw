@@ -12,6 +12,7 @@ ACMACS_DRAW_SOURCES = surface-cairo.cc continent-path.cc continent-map.cc
 
 TEST_CAIRO_SOURCES = test-cairo.cc
 TEST_CAIRO_FONTS_SOURCES = test-cairo-fonts.cc
+TEST_DISTINCT_COLORS_SOURCES = test-distinct-colors.cc
 
 # ----------------------------------------------------------------------
 
@@ -53,7 +54,7 @@ DIST = $(abspath dist)
 
 # ----------------------------------------------------------------------
 
-all: check-python install $(DIST)/test-cairo $(DIST)/test-cairo-fonts
+all: check-python install $(DIST)/test-cairo $(DIST)/test-cairo-fonts $(DIST)/test-distinct-colors
 
 install: check-acmacsd-root install-headers $(ACMACS_DRAW_LIB)
 	ln -sf $(ACMACS_DRAW_LIB) $(ACMACSD_ROOT)/lib
@@ -75,6 +76,10 @@ test-cairo-fonts: $(DIST)/test-cairo-fonts
 $(DIST)/test-cairo-fonts: $(patsubst %.cc,$(BUILD)/%.o,$(TEST_CAIRO_FONTS_SOURCES)) $(ACMACS_DRAW_LIB) | $(DIST)
 	g++ $(LDFLAGS) -o $@ $^ $(TEST_CAIRO_LDLIBS)
 
+test-distinct-colors: $(DIST)/test-distinct-colors
+$(DIST)/test-distinct-colors: $(patsubst %.cc,$(BUILD)/%.o,$(TEST_DISTINCT_COLORS_SOURCES)) $(ACMACS_DRAW_LIB) | $(DIST)
+	g++ $(LDFLAGS) -o $@ $^ $(TEST_CAIRO_LDLIBS)
+
 # ----------------------------------------------------------------------
 
 -include $(BUILD)/*.d
@@ -90,7 +95,7 @@ clean:
 distclean: clean
 	rm -rf $(BUILD)
 
-test: install $(DIST)/test-cairo $(DIST)/test-cairo-fonts
+test: install $(DIST)/test-cairo $(DIST)/test-cairo-fonts $(DIST)/test-distinct-colors
 
 # ----------------------------------------------------------------------
 
