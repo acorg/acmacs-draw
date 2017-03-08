@@ -350,10 +350,9 @@ void SurfaceCairo::sector_filled(const Location& aCenter, Scaled aDiameter, Rota
 
       // radius lines
     ctx.rotate(aEnd)
-            .move_to(Scaled(0), Scaled(0))
-            .line_to(aDiameter / 2, Scaled(0))
+            .move_to(aDiameter / 2, Scaled(0))
+            .line_to(Scaled(0), Scaled(0))
             .rotate(aStart - aEnd)
-            .move_to(Scaled(0), Scaled(0))
             .line_to(aDiameter / 2, Scaled(0))
             .set_line_width(aRadiusWidth)
             .set_source_rgba(aRadiusColor)
