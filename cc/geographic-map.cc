@@ -4,12 +4,10 @@
 
 // ----------------------------------------------------------------------
 
-void geographic_map_draw(Surface& aSurface)
+void geographic_map_draw(Surface& aSurface, Color outline_color, Pixels outline_width)
 {
     const auto& path = geographic_path::geographic_map_path();
-    Color geographic_map_outline_color("black");
-    Pixels geographic_map_outline_width{1};
-    aSurface.path_outline(path.first, path.second, geographic_map_outline_color, geographic_map_outline_width);
+    aSurface.path_outline(path.first, path.second, outline_color, outline_width);
 
 } // geographic_map_draw
 
