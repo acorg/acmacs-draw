@@ -28,6 +28,15 @@ double geographic_map_aspect()
 } // geographic_map_aspect
 
 // ----------------------------------------------------------------------
+
+Viewport geographic_map_viewport()
+{
+    using namespace geographic_path;
+    return {Location{geographic_map_bounds[0], -geographic_map_bounds[1]}, Location{geographic_map_bounds[2], -geographic_map_bounds[3]}};
+
+} // geographic_map_viewport
+
+// ----------------------------------------------------------------------
 /// Local Variables:
 /// eval: (if (fboundp 'eu-rename-buffer) (eu-rename-buffer))
 /// End:
