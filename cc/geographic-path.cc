@@ -2,7 +2,10 @@
 // Antigenic Cartography 2017
 //======================================================================
 
+#include <iostream>
 #include <iterator>
+#include <algorithm>
+#include <cmath>
 
 #include "geographic-path.hh"
 
@@ -2576,9 +2579,22 @@ namespace geographic_path
 {
     std::pair<const double*, const double*> geographic_map_path()
     {
+          // calculate_geographic_map_size();
         constexpr const size_t size = sizeof(geographic_map_path_data) / sizeof(geographic_map_path_data[0][0]);
         return std::make_pair(&geographic_map_path_data[0][0], &geographic_map_path_data[0][0] + size);
     }
+
+    std::pair<double, double> calculate_geographic_map_size()
+    {
+        double width = 0, height = 0;
+        for (const auto& entry: geographic_map_path_data) {
+            width = std::max(width, std::abs(entry[0]));
+            height = std::max(height, std::abs(entry[1]));
+        }
+        std::cerr << "geographic_map_size: " << width << " " << height << std::endl;
+        return std::make_pair(width, height);
+    }
+
 }
 
 //======================================================================

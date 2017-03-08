@@ -6,9 +6,11 @@
 
 namespace geographic_path
 {
-    constexpr const double geographic_map_size[2] = {1261.085, 632.59101};
+    constexpr const double geographic_map_size[2] = {1261.3, 632.591};
 
     std::pair<const double*, const double*> geographic_map_path();
+
+    std::pair<double, double> calculate_geographic_map_size();
 }
 
 // ----------------------------------------------------------------------
