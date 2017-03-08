@@ -3,6 +3,24 @@
 
 // ----------------------------------------------------------------------
 
+class CairoPath
+{
+ public:
+    inline ~CairoPath() { if (mPath) cairo_path_destroy(mPath); }
+    inline CairoPath(CairoPath&& aSource) : mPath(aSource.mPath) { aSource.mPath = nullptr; }
+
+ private:
+    cairo_path_t* mPath;
+
+    friend class context;
+    inline CairoPath(cairo_path_t* aPath) : mPath(aPath) {}
+    CairoPath(const CairoPath& aSource) = delete;
+    inline operator cairo_path_t*() const { return mPath; }
+
+}; // class CairoPath
+
+// ----------------------------------------------------------------------
+
 class context
 {
  public:
@@ -31,8 +49,27 @@ class context
 
     template <typename S> inline context& set_line_width(S aWidth) { cairo_set_line_width(cairo_context(), convert(aWidth)); return *this; }
     inline context& set_source_rgba(Color aColor) { cairo_set_source_rgba(cairo_context(), aColor.red(), aColor.green(), aColor.blue(), aColor.alpha()); return *this; }
+
     inline context& set_line_cap(Surface::LineCap aLineCap) { cairo_set_line_cap(cairo_context(), cairo_line_cap(aLineCap)); return *this; }
     inline context& set_line_join(Surface::LineJoin aLineJoin) { cairo_set_line_join(cairo_context(), cairo_line_join(aLineJoin)); return *this; }
+    inline context& set_line_dash(Surface::Dash aLineDash)
+        {
+            double dash_size;
+            switch (aLineDash) {
+              case Surface::Dash::NoDash:
+                  break;
+              case Surface::Dash::Dash1:
+                  dash_size = convert(Pixels{1});
+                  cairo_set_dash(cairo_context(), &dash_size, 1, 0);
+                  break;
+              case Surface::Dash::Dash2:
+                  dash_size = convert(Pixels{5});
+                  cairo_set_dash(cairo_context(), &dash_size, 1, 0);
+                  break;
+            }
+            return *this;
+        }
+
     inline context& move_to() { cairo_move_to(cairo_context(), 0.0, 0.0); return *this; }
     inline context& move_to(const Location& a) { cairo_move_to(cairo_context(), a.x, a.y); return *this; }
     template <typename S> inline context& move_to(S x, S y) { cairo_move_to(cairo_context(), convert(x), convert(y)); return *this; }
@@ -41,10 +78,12 @@ class context
     inline context& lines_to(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last) { for ( ; first != last; ++first) { line_to(*first); } return *this; }
     inline context& rectangle(const Location& a, const Size& s) { cairo_rectangle(cairo_context(), a.x, a.y, s.width, s.height); return *this; }
     template <typename S> inline context& rectangle(S x1, S y1, S x2, S y2) { cairo_rectangle(cairo_context(), convert(x1), convert(y1), convert(x2) - convert(x1), convert(y2) - convert(y1)); return *this; }
-    inline context& arc(const Location& a, double radius, double angle1, double angle2) { cairo_arc(cairo_context(), a.x, a.y, radius, angle1, angle2); return *this; }
+      // inline context& arc(const Location& a, double radius, double angle1, double angle2) { cairo_arc(cairo_context(), a.x, a.y, radius, angle1, angle2); return *this; }
     template <typename S> inline context& circle(S radius) { cairo_arc(cairo_context(), 0.0, 0.0, convert(radius), 0.0, 2.0 * M_PI); return *this; }
+    template <typename S> inline context& arc(S radius, Rotation start, Rotation end) { cairo_arc(cairo_context(), 0.0, 0.0, convert(radius), start.value(), end.value()); return *this; }
     inline context& circle(const Location& a, double radius) { cairo_arc(cairo_context(), a.x, a.y, radius, 0.0, 2.0 * M_PI); return *this; }
     inline context& stroke() { cairo_stroke(cairo_context()); return *this; }
+    inline context& stroke_preserve() { cairo_stroke_preserve(cairo_context()); return *this; }
     inline context& fill() { cairo_fill(cairo_context()); return *this; }
     inline context& fill_preserve() { cairo_fill_preserve(cairo_context()); return *this; }
     inline context& translate(const Size& a) { cairo_translate(cairo_context(), a.width, a.height); return *this; }
@@ -57,6 +96,9 @@ class context
     inline context& new_path() { cairo_new_path(cairo_context()); return *this; }
     inline context& close_path() { cairo_close_path(cairo_context()); return *this; }
     inline context& close_path_if(bool aClose) { if (aClose) cairo_close_path(cairo_context()); return *this; }
+    inline context& append_path(CairoPath& aPath) { cairo_append_path(cairo_context(), aPath); return *this; }
+    inline CairoPath copy_path() { return std::move(cairo_copy_path(cairo_context())); }
+
     template <typename S> inline context& prepare_for_text(S aSize, const TextStyle& aTextStyle) { cairo_select_font_face(cairo_context(), aTextStyle.font_family().c_str(), cairo_font_slant(aTextStyle.slant()), cairo_font_weight(aTextStyle.weight())); cairo_set_font_size(cairo_context(), convert(aSize)); return *this; }
     inline context& show_text(std::string aText) { cairo_show_text(cairo_context(), aText.c_str()); return *this; }
     inline context& text_extents(std::string aText, cairo_text_extents_t& extents) { cairo_text_extents(cairo_context(), aText.c_str(), &extents); return *this; }
@@ -291,6 +333,41 @@ void SurfaceCairo::circle_filled(const Location& aCenter, Scaled aDiameter, Aspe
     s_circle_filled(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth, aFillColor);
 
 } // SurfaceCairo::circle_filled
+
+// ----------------------------------------------------------------------
+
+void SurfaceCairo::sector_filled(const Location& aCenter, Scaled aDiameter, Rotation aStart, Rotation aEnd, Color aOutlineColor, Pixels aOutlineWidth, Color aRadiusColor, Pixels aRadiusWidth, Dash aRadiusDash, Color aFillColor)
+{
+    context ctx(*this);
+    ctx.translate(aCenter);
+
+      // arc
+    ctx.arc(aDiameter / 2, aStart, aEnd)
+            .set_line_width(aOutlineWidth)
+            .set_source_rgba(aOutlineColor);
+    CairoPath arc_path(ctx.copy_path());
+    ctx.stroke();
+
+      // radius lines
+    ctx.rotate(aEnd)
+            .move_to(Scaled(0), Scaled(0))
+            .line_to(aDiameter / 2, Scaled(0))
+            .rotate(aStart - aEnd)
+            .move_to(Scaled(0), Scaled(0))
+            .line_to(aDiameter / 2, Scaled(0))
+            .set_line_width(aRadiusWidth)
+            .set_source_rgba(aRadiusColor)
+            .set_line_dash(aRadiusDash)
+              // .set_line_join(Surface::LineJoin::Miter)
+            .stroke_preserve()
+            .rotate(-aStart);
+
+      // fill area
+    ctx.append_path(arc_path)
+            .set_source_rgba(aFillColor)
+            .fill();
+
+} // SurfaceCairo::sector_filled
 
 // ----------------------------------------------------------------------
 
