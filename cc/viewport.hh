@@ -14,6 +14,8 @@ class Viewport
     inline Viewport(const Location& a, const Size& s) : origin(a), size(s) {}
     inline Viewport(const Size& s) : origin{0, 0}, size(s) {}
     inline Viewport(const Location& a, const Location& b) : origin(a), size(b - a) {}
+    inline Viewport(double aX, double aY, double aSize) : origin{aX, aY}, size{aSize, aSize} {}
+    inline Viewport(double aX, double aY, double aWidth, double aHeight) : origin{aX, aY}, size{aWidth, aHeight} {}
 
     inline void set(const Location& a, const Size& s) { origin = a; size = s; }
     inline void set(const Location& a, const Location& b) { origin = a; size = b - a; }
