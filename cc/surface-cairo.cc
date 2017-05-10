@@ -429,6 +429,22 @@ void SurfaceCairo::triangle_filled(const Location& aCenter, Scaled aSide, Aspect
 
 } // SurfaceCairo::triangle_filled
 
+void SurfaceCairo::triangle_filled(const Location& aCorner1, const Location& aCorner2, const Location& aCorner3, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, LineCap aLineCap)
+{
+    context(*this)
+            .set_line_width(aOutlineWidth)
+            .set_line_cap(aLineCap)
+            .move_to(aCorner1)
+            .line_to(aCorner2)
+            .line_to(aCorner3)
+            .close_path()
+            .set_source_rgba(aFillColor)
+            .fill_preserve()
+            .set_source_rgba(aOutlineColor)
+            .stroke();
+
+} // SurfaceCairo::triangle_filled
+
 // ----------------------------------------------------------------------
 
 void SurfaceCairo::path_outline(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last, Color aOutlineColor, Pixels aOutlineWidth, bool aClose, LineCap aLineCap)
