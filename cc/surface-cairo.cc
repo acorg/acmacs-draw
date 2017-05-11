@@ -596,6 +596,19 @@ template <typename S> static inline void s_text(SurfaceCairo& aSurface, const Lo
             .new_path();        // clear text path (bug in cairo?)
 }
 
+template <typename S> static inline Size s_text_size(SurfaceCairo& aSurface, std::string aText, S aSize, const TextStyle& aTextStyle, double* x_bearing)
+{
+    cairo_text_extents_t text_extents;
+    context(aSurface)
+            .prepare_for_text(aSize, aTextStyle)
+            .text_extents(aText, text_extents);
+    if (x_bearing != nullptr)
+        *x_bearing = text_extents.x_bearing;
+    return {text_extents.x_advance, - text_extents.y_bearing};
+}
+
+// ----------------------------------------------------------------------
+
 void SurfaceCairo::text(const Location& a, std::string aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle, Rotation aRotation)
 {
     s_text(*this, a, aText, aColor, aSize, aTextStyle, aRotation);
@@ -608,18 +621,19 @@ void SurfaceCairo::text(const Location& a, std::string aText, Color aColor, Scal
 
 } // SurfaceCairo::text
 
-// ----------------------------------------------------------------------
-
-template <typename S> static inline Size s_text_size(SurfaceCairo& aSurface, std::string aText, S aSize, const TextStyle& aTextStyle, double* x_bearing)
+void SurfaceCairo::text_right_aligned(const Location& aEnd, std::string aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle, Rotation aRotation)
 {
-    cairo_text_extents_t text_extents;
-    context(aSurface)
-            .prepare_for_text(aSize, aTextStyle)
-            .text_extents(aText, text_extents);
-    if (x_bearing != nullptr)
-        *x_bearing = text_extents.x_bearing;
-    return {text_extents.x_advance, - text_extents.y_bearing};
-}
+    s_text(*this, {aEnd.x - s_text_size(*this, aText, aSize, aTextStyle, nullptr).width, aEnd.y}, aText, aColor, aSize, aTextStyle, aRotation);
+
+} // SurfaceCairo::text_right_aligned
+
+void SurfaceCairo::text_right_aligned(const Location& aEnd, std::string aText, Color aColor, Scaled aSize, const TextStyle& aTextStyle, Rotation aRotation)
+{
+    s_text(*this, {aEnd.x - s_text_size(*this, aText, aSize, aTextStyle, nullptr).width, aEnd.y}, aText, aColor, aSize, aTextStyle, aRotation);
+
+} // SurfaceCairo::text_right_aligned
+
+// ----------------------------------------------------------------------
 
 Size SurfaceCairo::text_size(std::string aText, Pixels aSize, const TextStyle& aTextStyle, double* x_bearing)
 {
