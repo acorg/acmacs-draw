@@ -103,6 +103,7 @@ class SurfaceCairoChild : public SurfaceCairo
     virtual inline SurfaceCairo* parent() { return &mParent; }
     virtual inline const SurfaceCairo* parent() const { return &mParent; }
     virtual inline cairo_t* cairo_context() { return mParent.cairo_context(); }
+    virtual inline void new_page() { mParent.new_page(); }
 
     virtual inline void move(const Location& aOriginInParent) { change_origin(aOriginInParent); }
     virtual inline void move_resize(const Location& aOriginInParent, double aWidthInParent) { change_origin(aOriginInParent); change_width_in_parent(aWidthInParent); }
@@ -127,6 +128,7 @@ class PdfCairo : public SurfaceCairo
     virtual inline cairo_t* cairo_context() { return mCairoContext; }
     virtual inline SurfaceCairo* parent() { return nullptr; }
     virtual inline const SurfaceCairo* parent() const { return nullptr; }
+    virtual inline void new_page() { cairo_show_page(cairo_context()); }
 
     virtual inline void move(const Location&) { throw std::logic_error("cannot move PdfCairo surface"); }
     virtual inline void move_resize(const Location&, double) { throw std::logic_error("cannot move/resize PdfCairo surface"); }

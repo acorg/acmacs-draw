@@ -79,6 +79,8 @@ class Surface
     virtual double scale() const = 0;
     virtual Location origin_offset() const = 0;
 
+    virtual void new_page() = 0;
+
  protected:
     inline Surface() = default;
 
