@@ -19,7 +19,9 @@ def main(args):
     output_dir = Path("/tmp/test-acmacs-draw")
     output_dir.mkdir(exist_ok=True)
     print(str(output_dir.joinpath("test.pdf")))
-    surface = draw_m.PdfCairo(str(output_dir.joinpath("test.pdf")), 800, 600, 1000)
+    surface = draw_m.PdfCairo(str(output_dir.joinpath("test.pdf")), 800, 600, 5000)
+    surface.line_p(50, 50, 300, 300, "blue", 5)
+    surface.line_s(50, 100, 300, 400, "red", 5)
 
 # ----------------------------------------------------------------------
 
