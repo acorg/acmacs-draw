@@ -22,6 +22,12 @@ def main(args):
     surface = draw_m.PdfCairo(str(output_dir.joinpath("test.pdf")), 800, 600, 5000)
     surface.line_p(50, 50, 300, 300, "blue", 5)
     surface.line_s(50, 100, 300, 400, "red", 5)
+    surface.rectangle(1250, 50, 300, 320, "orange", 5)
+    surface.rectangle_filled(1050, 50, 300, 320, "black", 1, "yellow")
+    surface.circle_p(500, 800, 100, "blue3", 5, 1, 0)
+    surface.circle_s(500, 1300, 100, "blue3", 5, 0.5, 0.5)
+    surface.circle_filled_p(1000, 800, 100, "cyan2", 2, "cyan", 1, 0)
+    surface.circle_filled_s(1000, 1300, 100, "cyan2", 2, "cyan", 0.5, 0.5)
 
 # ----------------------------------------------------------------------
 
