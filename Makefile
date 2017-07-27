@@ -18,16 +18,7 @@ TEST_DISTINCT_COLORS_SOURCES = test-distinct-colors.cc
 
 # ----------------------------------------------------------------------
 
-CLANG = $(shell if g++ --version 2>&1 | grep -i llvm >/dev/null; then echo Y; else echo N; fi)
-ifeq ($(CLANG),Y)
-  WEVERYTHING = -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded
-  WARNINGS = -Wno-weak-vtables # -Wno-padded
-  STD = c++14
-else
-  WEVERYTHING = -Wall -Wextra
-  WARNINGS =
-  STD = c++14
-endif
+include $(ACMACSD_ROOT)/share/Makefile.g++
 
 # -fvisibility=hidden and -flto make resulting lib smaller (pybind11) but linking is much slower
 OPTIMIZATION = -O3 #-fvisibility=hidden -flto
@@ -73,15 +64,15 @@ install-headers:
 
 test-cairo: $(DIST)/test-cairo
 $(DIST)/test-cairo: $(patsubst %.cc,$(BUILD)/%.o,$(TEST_CAIRO_SOURCES)) $(ACMACS_DRAW_LIB) | $(DIST)
-	g++ $(LDFLAGS) -o $@ $^ $(TEST_CAIRO_LDLIBS)
+	$(GXX) $(LDFLAGS) -o $@ $^ $(TEST_CAIRO_LDLIBS)
 
 test-cairo-fonts: $(DIST)/test-cairo-fonts
 $(DIST)/test-cairo-fonts: $(patsubst %.cc,$(BUILD)/%.o,$(TEST_CAIRO_FONTS_SOURCES)) $(ACMACS_DRAW_LIB) | $(DIST)
-	g++ $(LDFLAGS) -o $@ $^ $(TEST_CAIRO_LDLIBS)
+	$(GXX) $(LDFLAGS) -o $@ $^ $(TEST_CAIRO_LDLIBS)
 
 test-distinct-colors: $(DIST)/test-distinct-colors
 $(DIST)/test-distinct-colors: $(patsubst %.cc,$(BUILD)/%.o,$(TEST_DISTINCT_COLORS_SOURCES)) $(ACMACS_DRAW_LIB) | $(DIST)
-	g++ $(LDFLAGS) -o $@ $^ $(TEST_CAIRO_LDLIBS)
+	$(GXX) $(LDFLAGS) -o $@ $^ $(TEST_CAIRO_LDLIBS)
 
 # ----------------------------------------------------------------------
 
@@ -90,10 +81,10 @@ $(DIST)/test-distinct-colors: $(patsubst %.cc,$(BUILD)/%.o,$(TEST_DISTINCT_COLOR
 # ----------------------------------------------------------------------
 
 $(ACMACS_DRAW_LIB): $(patsubst %.cc,$(BUILD)/%.o,$(ACMACS_DRAW_SOURCES)) | $(DIST)
-	g++ -shared $(LDFLAGS) -o $@ $^ $(ACMACS_DRAW_LDLIBS)
+	$(GXX) -shared $(LDFLAGS) -o $@ $^ $(ACMACS_DRAW_LDLIBS)
 
 $(BACKEND): $(patsubst %.cc,$(BUILD)/%.o,$(PY_SOURCES)) | $(DIST)
-	g++ -shared $(LDFLAGS) -o $@ $^ $(BACKEND_LDLIBS)
+	$(GXX) -shared $(LDFLAGS) -o $@ $^ $(BACKEND_LDLIBS)
 
 clean:
 	rm -rf $(DIST) $(BUILD)/*.o $(BUILD)/*.d
@@ -108,7 +99,7 @@ test: install $(DIST)/test-cairo $(DIST)/test-cairo-fonts $(DIST)/test-distinct-
 
 $(BUILD)/%.o: cc/%.cc | $(BUILD) install-headers
 	@echo $<
-	@g++ $(CXXFLAGS) -c -o $@ $<
+	@$(GXX) $(CXXFLAGS) -c -o $@ $<
 
 # ----------------------------------------------------------------------
 
