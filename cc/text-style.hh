@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "acmacs-base/throw.hh"
+
 // ----------------------------------------------------------------------
 
 class TextStyle
@@ -51,7 +53,7 @@ class TextStyle
             else if (aSlant == "italic")
                 mSlant = Slant::Italic;
             else
-                throw std::runtime_error("Unrecognized TextStyle slant: " + aSlant);
+                THROW_OR_CERR(std::runtime_error("Unrecognized TextStyle slant: " + aSlant));
         }
     inline void slant(const char* s, size_t len) { slant(std::string(s, len)); }
 
@@ -63,7 +65,7 @@ class TextStyle
             else if (aWeight == "bold")
                 mWeight = Weight::Bold;
             else
-                throw std::runtime_error("Unrecognized TextStyle weight: " + aWeight);
+                THROW_OR_CERR(std::runtime_error("Unrecognized TextStyle weight: " + aWeight));
         }
     inline void weight(const char* s, size_t len) { weight(std::string(s, len)); }
 

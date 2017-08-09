@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 
+#include "acmacs-base/throw.hh"
 #include "acmacs-base/color.hh"
 #include "acmacs-base/size-scale.hh"
 #include "acmacs-draw/text-style.hh"
@@ -17,7 +18,10 @@ class Surface
     enum class LineJoin { Miter, Round, Bevel };
     enum class Dash {NoDash, Dash1, Dash2};
 
-    [[noreturn]] inline Surface(const Surface&) { throw std::runtime_error("Surface copying forbidden!"); } // cannto make it private due to using vector<SurfaceCairoChild>
+#ifdef ACMACS_TARGET_OS
+    [[noreturn]]
+#endif
+        inline Surface(const Surface&) { THROW_OR_CERR(std::runtime_error("Surface copying forbidden!")); } // cannto make it private due to using vector<SurfaceCairoChild>
     virtual ~Surface() {}
 
     constexpr static const double default_canvas_width = 1000.0;
