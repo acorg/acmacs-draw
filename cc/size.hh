@@ -5,6 +5,7 @@
 #include <vector>
 #include <cmath>
 
+#include "acmacs-base/config.hh"
 #include "acmacs-base/float.hh"
 
 // ----------------------------------------------------------------------
@@ -42,10 +43,12 @@ class Location
 
 }; // class Location
 
+#ifdef ACMACS_TARGET_OS
 inline std::ostream& operator<<(std::ostream& out, const Location& loc)
 {
     return out << '{' << loc.x << ", " << loc.y << '}';
 }
+#endif
 
 // ----------------------------------------------------------------------
 
@@ -68,10 +71,12 @@ class Size
 
 }; // class Size
 
+#ifdef ACMACS_TARGET_OS
 inline std::ostream& operator<<(std::ostream& out, const Size& size)
 {
     return out << '{' << size.width << ", " << size.height << '}';
 }
+#endif
 
 // ----------------------------------------------------------------------
 

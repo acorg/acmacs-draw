@@ -64,6 +64,7 @@ class Viewport
 
 // ----------------------------------------------------------------------
 
+#ifdef ACMACS_TARGET_OS
 inline std::ostream& operator << (std::ostream& out, const Viewport& aViewport)
 {
     out << "Viewport[" << std::fixed << std::setw(5) << std::setprecision(2) << aViewport.origin.x << ", " << aViewport.origin.y << ", " << aViewport.size.width;
@@ -71,6 +72,7 @@ inline std::ostream& operator << (std::ostream& out, const Viewport& aViewport)
         out << ", " << aViewport.size.height;
     return out << ']';
 }
+#endif
 
 // ----------------------------------------------------------------------
 /// Local Variables:

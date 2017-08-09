@@ -88,10 +88,12 @@ class Surface
 
 }; // class Surface
 
+#ifdef ACMACS_TARGET_OS
 inline std::ostream& operator << (std::ostream& out, const Surface& aSurface)
 {
     return out << "Surface(" << aSurface.viewport() << ", Origin" << aSurface.origin_in_parent() << ", width=" << aSurface.width_in_parent() << ')';
 }
+#endif
 
 // ----------------------------------------------------------------------
 /// Local Variables:
