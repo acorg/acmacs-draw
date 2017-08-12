@@ -26,13 +26,14 @@ class Surface
 
     constexpr static const double default_canvas_width = 1000.0;
 
-    virtual const Viewport& viewport() const = 0;
+    const Viewport& viewport() const { return mViewport; }
+    inline void viewport(const Viewport& aViewport) { mViewport = aViewport; }
+
     virtual const Location& origin_in_parent() const = 0;
     virtual double width_in_parent() const = 0;
     inline double width_in_pixels() const { return viewport().size.width * scale(); }
     inline double height_in_pixels() const { return viewport().size.height * scale(); }
 
-    virtual void viewport(const Viewport& aViewport) = 0;
     virtual void move(const Location& aOriginInParent) = 0;
     virtual void move_resize(const Location& aOriginInParent, double aWidthInParent) = 0;
     inline void move_resize_viewport(const Location& aOriginInParent, double aWidthInParent, const Viewport& aViewport) { move_resize(aOriginInParent, aWidthInParent); viewport(aViewport); }
@@ -87,8 +88,12 @@ class Surface
 
  protected:
     inline Surface() = default;
+    inline Surface(const Viewport& aViewport) : mViewport{aViewport} {}
 
     virtual Location arrow_head(const Location& a, double angle, double sign, Color aColor, Pixels aArrowWidth) = 0;
+
+ private:
+    Viewport mViewport;
 
 }; // class Surface
 
