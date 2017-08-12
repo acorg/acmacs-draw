@@ -20,9 +20,6 @@ class SurfaceCairo : public Surface
     virtual Surface& subsurface(bool aClip);
     virtual Surface& subsurface(const Location& aOriginInParent, Pixels aWidthInParent, const Viewport& aViewport, bool aClip);
 
-    virtual inline const Location& origin_in_parent() const { return mOriginInParent; }
-    virtual inline double width_in_parent() const { return mWidthInParent; }
-
     virtual void line(const Location& a, const Location& b, Color aColor, Pixels aWidth, LineCap aLineCap = LineCap::Butt);
     virtual void line(const Location& a, const Location& b, Color aColor, Scaled aWidth, LineCap aLineCap = LineCap::Butt);
     virtual void rectangle(const Location& a, const Size& s, Color aColor, Pixels aWidth, LineCap aLineCap = LineCap::Butt);
@@ -67,18 +64,13 @@ class SurfaceCairo : public Surface
         }
 
  protected:
-    inline SurfaceCairo() : mOriginInParent{0, 0}, mWidthInParent{viewport().size.width} {}
+    inline SurfaceCairo() : Surface{} {}
     inline SurfaceCairo(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport)
-        : Surface{aViewport}, mOriginInParent{aOriginInParent}, mWidthInParent{aWidthInParent.value()} {}
+        : Surface{aOriginInParent, aWidthInParent, aViewport} {}
 
     virtual Location arrow_head(const Location& a, double angle, double sign, Color aColor, Pixels aArrowWidth);
 
-    inline void change_origin(const Location& aOriginInParent) { mOriginInParent = aOriginInParent; }
-    inline void change_width_in_parent(double aWidthInParent) { mWidthInParent = aWidthInParent; }
-
  private:
-    Location mOriginInParent;
-    double mWidthInParent;
     std::vector<std::shared_ptr<SurfaceCairoChild>> mChildren;
 
     friend class context;

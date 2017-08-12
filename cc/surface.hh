@@ -29,8 +29,9 @@ class Surface
     const Viewport& viewport() const { return mViewport; }
     inline void viewport(const Viewport& aViewport) { mViewport = aViewport; }
 
-    virtual const Location& origin_in_parent() const = 0;
-    virtual double width_in_parent() const = 0;
+    inline const Location& origin_in_parent() const { return mOriginInParent; }
+    inline double width_in_parent() const { return mWidthInParent; }
+
     inline double width_in_pixels() const { return viewport().size.width * scale(); }
     inline double height_in_pixels() const { return viewport().size.height * scale(); }
 
@@ -87,13 +88,19 @@ class Surface
     virtual void new_page() = 0;
 
  protected:
-    inline Surface() = default;
-    inline Surface(const Viewport& aViewport) : mViewport{aViewport} {}
+    inline Surface() : mOriginInParent{0, 0}, mWidthInParent{viewport().size.width} {}
+    inline Surface(const Location& aOriginInParent, Scaled aWidthInParent,  const Viewport& aViewport)
+        : mViewport{aViewport}, mOriginInParent{aOriginInParent}, mWidthInParent{aWidthInParent.value()} {}
 
     virtual Location arrow_head(const Location& a, double angle, double sign, Color aColor, Pixels aArrowWidth) = 0;
 
+    inline void change_origin(const Location& aOriginInParent) { mOriginInParent = aOriginInParent; }
+    inline void change_width_in_parent(double aWidthInParent) { mWidthInParent = aWidthInParent; }
+
  private:
     Viewport mViewport;
+    Location mOriginInParent;
+    double mWidthInParent;
 
 }; // class Surface
 
