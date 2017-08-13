@@ -19,6 +19,7 @@ TEST_DISTINCT_COLORS_SOURCES = test-distinct-colors.cc
 # ----------------------------------------------------------------------
 
 include $(ACMACSD_ROOT)/share/Makefile.g++
+include $(ACMACSD_ROOT)/share/Makefile.dist-build.vars
 
 # -fvisibility=hidden and -flto make resulting lib smaller (pybind11) but linking is much slower
 OPTIMIZATION = -O3 #-fvisibility=hidden -flto
@@ -39,11 +40,6 @@ PYTHON_CONFIG = python$(PYTHON_VERSION)-config
 PYTHON_MODULE_SUFFIX = $(shell $(PYTHON_CONFIG) --extension-suffix)
 
 # PYTHON_LD_LIB = $(shell $(PYTHON_CONFIG) --ldflags | sed -E 's/-Wl,-stack_size,[0-9]+//')
-
-# ----------------------------------------------------------------------
-
-BUILD = build
-DIST = $(abspath dist)
 
 # ----------------------------------------------------------------------
 
@@ -86,12 +82,6 @@ $(ACMACS_DRAW_LIB): $(patsubst %.cc,$(BUILD)/%.o,$(ACMACS_DRAW_SOURCES)) | $(DIS
 $(BACKEND): $(patsubst %.cc,$(BUILD)/%.o,$(PY_SOURCES)) | $(DIST)
 	$(CXX) -shared $(LDFLAGS) -o $@ $^ $(BACKEND_LDLIBS)
 
-clean:
-	rm -rf $(DIST) $(BUILD)/*.o $(BUILD)/*.d
-
-distclean: clean
-	rm -rf $(BUILD)
-
 test: install $(DIST)/test-cairo $(DIST)/test-cairo-fonts $(DIST)/test-distinct-colors
 	bin/test-acmacs-draw
 
@@ -113,11 +103,7 @@ endif
 check-python:
 	@printf 'import sys\nif sys.version_info < (3, 5):\n print("Python 3.5 is required")\n exit(1)' | python3
 
-$(DIST):
-	mkdir -p $(DIST)
-
-$(BUILD):
-	mkdir -p $(BUILD)
+include $(ACMACSD_ROOT)/share/Makefile.dist-build.rules
 
 .PHONY: check-acmacsd-root check-python
 
