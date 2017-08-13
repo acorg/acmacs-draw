@@ -75,7 +75,7 @@ class Surface
     virtual void path_fill(const double* first, const double* last, Color aFillColor) = 0;
 
     virtual void double_arrow(const Location& a, const Location& b, Color aColor, Pixels aLineWidth, Pixels aArrowWidth) = 0;
-    virtual void grid(Scaled aStep, Color aLineColor, Pixels aLineWidth) = 0;
+    virtual void grid(Scaled aStep, Color aLineColor, Pixels aLineWidth);
     virtual void border(Color aLineColor, Pixels aLineWidth) = 0;
     virtual void background(Color aColor) = 0;
 

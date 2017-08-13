@@ -53,6 +53,11 @@ class Viewport
     inline Location center() const { return origin + size * 0.5; }
     inline Location top_center() const { return origin + Size(size.width / 2, 0); }
 
+    inline Scaled left_scaled() const { return Scaled{left()}; }
+    inline Scaled right_scaled() const { return Scaled{right()}; }
+    inline Scaled top_scaled() const { return Scaled{top()}; }
+    inline Scaled bottom_scaled() const { return Scaled{bottom()}; }
+
     inline bool empty() const { return size.empty(); }
 
     Location origin;

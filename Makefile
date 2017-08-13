@@ -8,7 +8,7 @@ MAKEFLAGS = -w
 
 SRC_DIR = $(abspath $(ACMACSD_ROOT)/sources)
 
-ACMACS_DRAW_SOURCES = surface-cairo.cc continent-path.cc continent-map.cc geographic-path.cc geographic-map.cc
+ACMACS_DRAW_SOURCES = surface.cc surface-cairo.cc continent-path.cc continent-map.cc geographic-path.cc geographic-map.cc
 PY_SOURCES = py.cc $(ACMACS_DRAW_SOURCES)
 BACKEND = $(DIST)/acmacs_draw_backend$(PYTHON_MODULE_SUFFIX)
 

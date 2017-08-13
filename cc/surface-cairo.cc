@@ -551,29 +551,36 @@ Location SurfaceCairo::arrow_head(const Location& a, double angle, double sign, 
 
 // ----------------------------------------------------------------------
 
-void SurfaceCairo::grid(Scaled aStep, Color aLineColor, Pixels aLineWidth)
-{
-      // cannot use move_to_line_to because viewport().origin is usually negative
+// void SurfaceCairo::grid(Scaled aStep, Color aLineColor, Pixels aLineWidth)
+// {
+//     const Viewport& v = viewport();
 
-    context ctx{*this};
-    ctx.set_line_width(aLineWidth)
-            .set_source_rgba(aLineColor)
-            .set_line_cap(LineCap::Butt);
+//     for (auto x = v.left_scaled() + aStep; x < v.right_scaled(); x += aStep)
+//         line({x, v.top_scaled()}, {x, v.bottom_scaled()}, aLineColor, aLineWidth);
+//     for (auto y = v.top_scaled() + aStep; y < v.bottom_scaled(); y += aStep)
+//         line({v.left_scaled(), y}, {v.right_scaled(), y}, aLineColor, aLineWidth);
 
-    const Viewport& v = viewport();
-    const double step = aStep.value();
-    for (double x = v.left() + step; x < v.right(); x += step) {
-        ctx.move_to(x, v.top());
-        ctx.line_to(x, v.bottom());
-    }
-    for (double y = v.top() + step; y < v.bottom(); y += step) {
-        ctx.move_to(v.left(),  y);
-        ctx.line_to(v.right(), y);
-    }
+//       // ----------------------------------------------------------------------
+//       // cannot use move_to_line_to because viewport().origin is usually negative
+//       // context ctx{*this};
+//       // ctx.set_line_width(aLineWidth)
+//       //         .set_source_rgba(aLineColor)
+//       //         .set_line_cap(LineCap::Butt);
 
-    ctx.stroke();
+//       // const Viewport& v = viewport();
+//       // const double step = aStep.value();
+//       // for (double x = v.left() + step; x < v.right(); x += step) {
+//       //     ctx.move_to(x, v.top());
+//       //     ctx.line_to(x, v.bottom());
+//       // }
+//       // for (double y = v.top() + step; y < v.bottom(); y += step) {
+//       //     ctx.move_to(v.left(),  y);
+//       //     ctx.line_to(v.right(), y);
+//       // }
 
-} // SurfaceCairo::grid
+//       // ctx.stroke();
+
+// } // SurfaceCairo::grid
 
 // ----------------------------------------------------------------------
 

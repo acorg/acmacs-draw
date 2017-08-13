@@ -12,8 +12,6 @@ class SurfaceCairoChild;
 class SurfaceCairo : public Surface
 {
  public:
-    // virtual SurfaceCairo* parent() = 0;
-    // virtual const SurfaceCairo* parent() const = 0;
     virtual cairo_t* cairo_context() = 0;
 
     void line(const Location& a, const Location& b, Color aColor, Pixels aWidth, LineCap aLineCap = LineCap::Butt) override;
@@ -38,7 +36,7 @@ class SurfaceCairo : public Surface
     void path_fill(const double* first, const double* last, Color aFillColor) override;
 
     void double_arrow(const Location& a, const Location& b, Color aColor, Pixels aLineWidth, Pixels aArrowWidth) override;
-    void grid(Scaled aStep, Color aLineColor, Pixels aLineWidth) override;
+    // void grid(Scaled aStep, Color aLineColor, Pixels aLineWidth) override;
     void border(Color aLineColor, Pixels aLineWidth) override;
     void background(Color aColor) override;
 

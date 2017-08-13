@@ -7,6 +7,7 @@
 
 #include "acmacs-base/config.hh"
 #include "acmacs-base/float.hh"
+#include "acmacs-base/size-scale.hh"
 
 // ----------------------------------------------------------------------
 
@@ -19,6 +20,7 @@ class Location
 
     inline Location() : x(0), y(0) {}
     inline Location(double aX, double aY) : x(aX), y(aY) {}
+    inline Location(Scaled aX, Scaled aY) : x(aX.value()), y(aY.value()) {}
     inline Location(const std::vector<double>& aCoord) : x(aCoord[0]), y(aCoord[1]) {}
     Location(const Size& s);
     inline void set(double aX, double aY) { x = aX; y = aY; }
