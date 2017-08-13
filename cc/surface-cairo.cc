@@ -203,29 +203,37 @@ class context
 
 // ----------------------------------------------------------------------
 
-Surface& SurfaceCairo::subsurface(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip)
+Surface* SurfaceCairo::make_child(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip)
 {
-    SurfaceCairoChild* child = new SurfaceCairoChild(*this, aOriginInParent, aWidthInParent, aViewport, aClip);
-    mChildren.emplace_back(child);
-    return *child;
+    return new SurfaceCairoChild(*this, aOriginInParent, aWidthInParent, aViewport, aClip);
 
-} // SurfaceCairo::subsurface
+} // SurfaceCairo::make_child
 
 // ----------------------------------------------------------------------
 
-Surface& SurfaceCairo::subsurface(bool aClip)
-{
-    return subsurface(Location{}, Scaled{}, Viewport{}, aClip);
+// Surface& SurfaceCairo::subsurface(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip)
+// {
+//     SurfaceCairoChild* child = new SurfaceCairoChild(*this, aOriginInParent, aWidthInParent, aViewport, aClip);
+//     mChildren.emplace_back(child);
+//     return *child;
 
-} // SurfaceCairo::subsurface
+// } // SurfaceCairo::subsurface
 
-// ----------------------------------------------------------------------
+// // ----------------------------------------------------------------------
 
-Surface& SurfaceCairo::subsurface(const Location& aOriginInParent, Pixels aWidthInParent, const Viewport& aViewport, bool aClip)
-{
-    return subsurface(aOriginInParent / scale(), Scaled{aWidthInParent.value() / scale()}, aViewport, aClip);
+// Surface& SurfaceCairo::subsurface(bool aClip)
+// {
+//     return subsurface(Location{}, Scaled{}, Viewport{}, aClip);
 
-} // SurfaceCairo::subsurface
+// } // SurfaceCairo::subsurface
+
+// // ----------------------------------------------------------------------
+
+// Surface& SurfaceCairo::subsurface(const Location& aOriginInParent, Pixels aWidthInParent, const Viewport& aViewport, bool aClip)
+// {
+//     return subsurface(aOriginInParent / scale(), Scaled{aWidthInParent.value() / scale()}, aViewport, aClip);
+
+// } // SurfaceCairo::subsurface
 
 // ----------------------------------------------------------------------
 

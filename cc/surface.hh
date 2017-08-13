@@ -41,9 +41,10 @@ class Surface
 
     inline double aspect() const { return viewport().aspect(); }
 
-    virtual Surface& subsurface(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip) = 0;
-    virtual Surface& subsurface(bool aClip) = 0;
-    virtual Surface& subsurface(const Location& aOriginInParent, Pixels aWidthInParent, const Viewport& aViewport, bool aClip) = 0; // origin is in pixels
+    Surface& subsurface(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip);
+    inline Surface& subsurface(bool aClip) { return subsurface(Location{}, Scaled{}, Viewport{}, aClip); }
+    inline Surface& subsurface(const Location& aOriginInParent, Pixels aWidthInParent, const Viewport& aViewport, bool aClip) // origin is in pixels
+        { return subsurface(aOriginInParent / scale(), Scaled{aWidthInParent.value() / scale()}, aViewport, aClip); }
 
     virtual void line(const Location& a, const Location& b, Color aColor, Pixels aWidth, LineCap aLineCap = LineCap::Butt) = 0;
     virtual void line(const Location& a, const Location& b, Color aColor, Scaled aWidth, LineCap aLineCap = LineCap::Butt) = 0;
@@ -82,18 +83,26 @@ class Surface
 
     inline Scaled convert(Pixels a) const { return Scaled{a.value() / scale()}; }
 
-    virtual double scale() const = 0;
-    virtual Location origin_offset() const = 0;
+    virtual inline double scale() const { return width_in_parent() / viewport().size.width; }
+    virtual inline Location origin_offset() const { return origin_in_parent(); }
 
     virtual void new_page() = 0;
+
+    virtual inline Surface& root() { return *this; }
+    virtual inline const Surface& root() const { return *this; }
 
  protected:
     inline Surface() : mOriginInParent{0, 0}, mWidthInParent{viewport().size.width} {}
     inline Surface(const Location& aOriginInParent, Scaled aWidthInParent,  const Viewport& aViewport)
         : mViewport{aViewport}, mOriginInParent{aOriginInParent}, mWidthInParent{aWidthInParent.value()} {}
 
-    virtual Location arrow_head(const Location& a, double angle, double sign, Color aColor, Pixels aArrowWidth) = 0;
+    // virtual inline Surface* parent() { return nullptr; }
+    // virtual inline const Surface* parent() const { return nullptr; }
 
+    virtual Location arrow_head(const Location& a, double angle, double sign, Color aColor, Pixels aArrowWidth) = 0;
+    virtual Surface* make_child(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip) = 0;
+
+    virtual inline bool clip() const { return false; }
     inline void change_origin(const Location& aOriginInParent) { mOriginInParent = aOriginInParent; }
     inline void change_width_in_parent(double aWidthInParent) { mWidthInParent = aWidthInParent; }
 
@@ -101,8 +110,20 @@ class Surface
     Viewport mViewport;
     Location mOriginInParent;
     double mWidthInParent;
+    std::vector<std::shared_ptr<Surface>> mChildren;
 
 }; // class Surface
+
+// ----------------------------------------------------------------------
+
+inline Surface& Surface::subsurface(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip)
+{
+    auto* child = make_child(aOriginInParent, aWidthInParent, aViewport, aClip);
+    mChildren.emplace_back(child);
+    return *child;
+}
+
+// ----------------------------------------------------------------------
 
 #ifdef ACMACS_TARGET_OS
 inline std::ostream& operator << (std::ostream& out, const Surface& aSurface)
