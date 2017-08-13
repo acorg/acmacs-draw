@@ -75,6 +75,7 @@ class Surface
     virtual void path_fill(const double* first, const double* last, Color aFillColor) = 0;
 
     void double_arrow(const Location& a, const Location& b, Color aColor, Pixels aLineWidth, Pixels aArrowWidth);
+    virtual Location arrow_head(const Location& a, double angle, double sign, Color aColor, Pixels aArrowWidth) = 0;
     void grid(Scaled aStep, Color aLineColor, Pixels aLineWidth);
     inline void border(Color aLineColor, Pixels aLineWidth) { const Viewport& v = viewport(); rectangle(v.origin, v.size, aLineColor, aLineWidth * 2); }
     inline void background(Color aColor) { const Viewport& v = viewport(); rectangle_filled(v.origin, v.size, aColor, Pixels{0}, aColor); }
@@ -101,7 +102,6 @@ class Surface
     inline Surface(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport)
         : mViewport{aViewport}, mOriginInParent{aOriginInParent}, mWidthInParent{aWidthInParent.value()} {}
 
-    virtual Location arrow_head(const Location& a, double angle, double sign, Color aColor, Pixels aArrowWidth) = 0;
     virtual Surface* make_child(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip) = 0;
 
     virtual inline bool clip() const { return false; }
