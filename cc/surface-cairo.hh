@@ -35,10 +35,10 @@ class SurfaceCairo : public Surface
     void path_fill(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last, Color aFillColor) override;
     void path_fill(const double* first, const double* last, Color aFillColor) override;
 
-    void double_arrow(const Location& a, const Location& b, Color aColor, Pixels aLineWidth, Pixels aArrowWidth) override;
+    // void double_arrow(const Location& a, const Location& b, Color aColor, Pixels aLineWidth, Pixels aArrowWidth) override;
     // void grid(Scaled aStep, Color aLineColor, Pixels aLineWidth) override;
-    void border(Color aLineColor, Pixels aLineWidth) override;
-    void background(Color aColor) override;
+    // void border(Color aLineColor, Pixels aLineWidth) override;
+    // void background(Color aColor) override;
 
     void text(const Location& a, std::string aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle = TextStyle(), Rotation aRotation = Rotation{0}) override;
     void text(const Location& a, std::string aText, Color aColor, Scaled aSize, const TextStyle& aTextStyle = TextStyle(), Rotation aRotation = Rotation{0}) override;

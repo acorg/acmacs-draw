@@ -14,6 +14,19 @@ void Surface::grid(Scaled aStep, Color aLineColor, Pixels aLineWidth)
 
 // ----------------------------------------------------------------------
 
+void Surface::double_arrow(const Location& a, const Location& b, Color aColor, Pixels aLineWidth, Pixels aArrowWidth)
+{
+    const bool x_eq = float_equal(b.x, a.x);
+    const double sign2 = x_eq ? (a.y < b.y ? 1.0 : -1.0) : (b.x < a.x ? 1.0 : -1.0);
+    const double angle = x_eq ? -M_PI_2 : std::atan((b.y - a.y) / (b.x - a.x));
+    auto const la = arrow_head(a, angle, - sign2, aColor, aArrowWidth);
+    auto const lb = arrow_head(b, angle,   sign2, aColor, aArrowWidth);
+    line(la, lb, aColor, aLineWidth);
+
+} // Surface::double_arrow
+
+// ----------------------------------------------------------------------
+
 
 // ----------------------------------------------------------------------
 /// Local Variables:

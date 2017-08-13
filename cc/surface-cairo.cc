@@ -513,16 +513,16 @@ void SurfaceCairo::path_fill(const double* first, const double* last, Color aFil
 
 // ----------------------------------------------------------------------
 
-void SurfaceCairo::double_arrow(const Location& a, const Location& b, Color aColor, Pixels aLineWidth, Pixels aArrowWidth)
-{
-    const bool x_eq = float_equal(b.x, a.x);
-    const double sign2 = x_eq ? (a.y < b.y ? 1.0 : -1.0) : (b.x < a.x ? 1.0 : -1.0);
-    const double angle = x_eq ? -M_PI_2 : std::atan((b.y - a.y) / (b.x - a.x));
-    auto const la = arrow_head(a, angle, - sign2, aColor, aArrowWidth);
-    auto const lb = arrow_head(b, angle,   sign2, aColor, aArrowWidth);
-    line(la, lb, aColor, aLineWidth);
+// void SurfaceCairo::double_arrow(const Location& a, const Location& b, Color aColor, Pixels aLineWidth, Pixels aArrowWidth)
+// {
+//     const bool x_eq = float_equal(b.x, a.x);
+//     const double sign2 = x_eq ? (a.y < b.y ? 1.0 : -1.0) : (b.x < a.x ? 1.0 : -1.0);
+//     const double angle = x_eq ? -M_PI_2 : std::atan((b.y - a.y) / (b.x - a.x));
+//     auto const la = arrow_head(a, angle, - sign2, aColor, aArrowWidth);
+//     auto const lb = arrow_head(b, angle,   sign2, aColor, aArrowWidth);
+//     line(la, lb, aColor, aLineWidth);
 
-} // SurfaceCairo::double_arrow
+// } // SurfaceCairo::double_arrow
 
 // ----------------------------------------------------------------------
 
@@ -584,19 +584,19 @@ Location SurfaceCairo::arrow_head(const Location& a, double angle, double sign, 
 
 // ----------------------------------------------------------------------
 
-void SurfaceCairo::border(Color aLineColor, Pixels aLineWidth)
-{
-    rectangle(viewport().origin, viewport().size, aLineColor, aLineWidth * 2);
+// void SurfaceCairo::border(Color aLineColor, Pixels aLineWidth)
+// {
+//     rectangle(viewport().origin, viewport().size, aLineColor, aLineWidth * 2);
 
-} // SurfaceCairo::border
+// } // SurfaceCairo::border
 
 // ----------------------------------------------------------------------
 
-void SurfaceCairo::background(Color aColor)
-{
-    rectangle_filled(viewport().origin, viewport().size, aColor, Pixels{0}, aColor);
+// void SurfaceCairo::background(Color aColor)
+// {
+//     rectangle_filled(viewport().origin, viewport().size, aColor, Pixels{0}, aColor);
 
-} // SurfaceCairo::background
+// } // SurfaceCairo::background
 
 // ----------------------------------------------------------------------
 

@@ -74,10 +74,10 @@ class Surface
     virtual void path_fill(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last, Color aFillColor) = 0;
     virtual void path_fill(const double* first, const double* last, Color aFillColor) = 0;
 
-    virtual void double_arrow(const Location& a, const Location& b, Color aColor, Pixels aLineWidth, Pixels aArrowWidth) = 0;
-    virtual void grid(Scaled aStep, Color aLineColor, Pixels aLineWidth);
-    virtual void border(Color aLineColor, Pixels aLineWidth) = 0;
-    virtual void background(Color aColor) = 0;
+    void double_arrow(const Location& a, const Location& b, Color aColor, Pixels aLineWidth, Pixels aArrowWidth);
+    void grid(Scaled aStep, Color aLineColor, Pixels aLineWidth);
+    inline void border(Color aLineColor, Pixels aLineWidth) { const Viewport& v = viewport(); rectangle(v.origin, v.size, aLineColor, aLineWidth * 2); }
+    inline void background(Color aColor) { const Viewport& v = viewport(); rectangle_filled(v.origin, v.size, aColor, Pixels{0}, aColor); }
 
     virtual void text(const Location& a, std::string aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle = TextStyle(), Rotation aRotation = Rotation{0}) = 0;
     virtual void text(const Location& a, std::string aText, Color aColor, Scaled aSize, const TextStyle& aTextStyle = TextStyle(), Rotation aRotation = Rotation{0}) = 0;
