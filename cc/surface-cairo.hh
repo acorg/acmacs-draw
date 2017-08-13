@@ -58,42 +58,26 @@ class SurfaceCairo : public Surface
     Surface* make_child(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip) override;
 
  private:
-    // std::vector<std::shared_ptr<SurfaceCairoChild>> mChildren;
-
     friend class context;
 
 }; // class SurfaceCairo
 
 // ----------------------------------------------------------------------
 
-class SurfaceCairoChild : public SurfaceCairo
+class SurfaceCairoChild : public SurfaceChild<SurfaceCairo>
 {
  public:
     inline cairo_t* cairo_context() override { return dynamic_cast<SurfaceCairo&>(root()).cairo_context(); }
 
-    inline Surface& root() override { return mParent.root(); }
-    inline const Surface& root() const override { return mParent.root(); }
- //    virtual inline SurfaceCairo* parent() { return &mParent; }
- //    virtual inline const SurfaceCairo* parent() const { return &mParent; }
-
-    inline void new_page() override { root().new_page(); }
-    inline void move(const Location& aOriginInParent) override { change_origin(aOriginInParent); }
-    inline void move_resize(const Location& aOriginInParent, double aWidthInParent) override { change_origin(aOriginInParent); change_width_in_parent(aWidthInParent); }
-
-    inline double scale() const override { return mParent.scale() * (width_in_parent() / viewport().size.width); }
-    inline Location origin_offset() const override { return mParent.origin_offset() + origin_in_parent() * mParent.scale(); }
+    inline SurfaceCairo& parent() override { return mParent; }
+    inline const SurfaceCairo& parent() const override { return mParent; }
 
  protected:
-    inline bool clip() const override { return mClip; }
+    inline SurfaceCairoChild(SurfaceCairo& aParent, const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip)
+        : SurfaceChild{aOriginInParent, aWidthInParent, aViewport, aClip}, mParent{aParent} {}
 
  private:
     SurfaceCairo& mParent;
-    bool mClip;                 // force surface area clipping
-
-    inline SurfaceCairoChild(SurfaceCairo& aParent, const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip)
-        : SurfaceCairo{aOriginInParent, aWidthInParent, aViewport}, mParent{aParent}, mClip{aClip} {}
-    // inline SurfaceCairoChild(SurfaceCairo& aParent, const Size& aOffset, const Size& aSize, double aScale, bool aClip)
-    //     : mParent(aParent), mOffset(aOffset), mSize(aSize), mScale(aScale), mClip(aClip) {}
 
     friend class SurfaceCairo;
 

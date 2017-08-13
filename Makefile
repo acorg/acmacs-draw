@@ -60,15 +60,18 @@ install-headers:
 
 test-cairo: $(DIST)/test-cairo
 $(DIST)/test-cairo: $(patsubst %.cc,$(BUILD)/%.o,$(TEST_CAIRO_SOURCES)) $(ACMACS_DRAW_LIB) | $(DIST)
-	$(CXX) $(LDFLAGS) -o $@ $^ $(TEST_CAIRO_LDLIBS)
+	@echo "LINK       " $@ # '<--' $^
+	@$(CXX) $(LDFLAGS) -o $@ $^ $(TEST_CAIRO_LDLIBS)
 
 test-cairo-fonts: $(DIST)/test-cairo-fonts
 $(DIST)/test-cairo-fonts: $(patsubst %.cc,$(BUILD)/%.o,$(TEST_CAIRO_FONTS_SOURCES)) $(ACMACS_DRAW_LIB) | $(DIST)
-	$(CXX) $(LDFLAGS) -o $@ $^ $(TEST_CAIRO_LDLIBS)
+	@echo "LINK       " $@ # '<--' $^
+	@$(CXX) $(LDFLAGS) -o $@ $^ $(TEST_CAIRO_LDLIBS)
 
 test-distinct-colors: $(DIST)/test-distinct-colors
 $(DIST)/test-distinct-colors: $(patsubst %.cc,$(BUILD)/%.o,$(TEST_DISTINCT_COLORS_SOURCES)) $(ACMACS_DRAW_LIB) | $(DIST)
-	$(CXX) $(LDFLAGS) -o $@ $^ $(TEST_CAIRO_LDLIBS)
+	@echo "LINK       " $@ # '<--' $^
+	@$(CXX) $(LDFLAGS) -o $@ $^ $(TEST_CAIRO_LDLIBS)
 
 # ----------------------------------------------------------------------
 
@@ -77,10 +80,12 @@ $(DIST)/test-distinct-colors: $(patsubst %.cc,$(BUILD)/%.o,$(TEST_DISTINCT_COLOR
 # ----------------------------------------------------------------------
 
 $(ACMACS_DRAW_LIB): $(patsubst %.cc,$(BUILD)/%.o,$(ACMACS_DRAW_SOURCES)) | $(DIST)
-	$(CXX) -shared $(LDFLAGS) -o $@ $^ $(ACMACS_DRAW_LDLIBS)
+	@echo "SHARED     " $@ # '<--' $^
+	@$(CXX) -shared $(LDFLAGS) -o $@ $^ $(ACMACS_DRAW_LDLIBS)
 
 $(BACKEND): $(patsubst %.cc,$(BUILD)/%.o,$(PY_SOURCES)) | $(DIST)
-	$(CXX) -shared $(LDFLAGS) -o $@ $^ $(BACKEND_LDLIBS)
+	@echo "SHARED     " $@ # '<--' $^
+	@$(CXX) -shared $(LDFLAGS) -o $@ $^ $(BACKEND_LDLIBS)
 
 test: install $(DIST)/test-cairo $(DIST)/test-cairo-fonts $(DIST)/test-distinct-colors
 	bin/test-acmacs-draw
@@ -90,7 +95,7 @@ include $(ACMACSD_ROOT)/share/Makefile.rtags
 # ----------------------------------------------------------------------
 
 $(BUILD)/%.o: cc/%.cc | $(BUILD) install-headers
-	@echo $<
+	@echo "C++        " $<
 	@$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 # ----------------------------------------------------------------------
