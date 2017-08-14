@@ -171,7 +171,7 @@ class context
               case Surface::LineJoin::Round:
                   return CAIRO_LINE_JOIN_ROUND;
               case Surface::LineJoin::Bevel:
-                  return CAIRO_LINE_JOIN_ROUND;
+                  return CAIRO_LINE_JOIN_BEVEL;
             }
             return CAIRO_LINE_JOIN_MITER; // gcc wants return
         }

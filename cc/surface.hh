@@ -35,8 +35,8 @@ class Surface
     inline double width_in_pixels() const { return viewport().size.width * scale(); }
     inline double height_in_pixels() const { return viewport().size.height * scale(); }
 
-    virtual void move(const Location& aOriginInParent) = 0;
-    virtual void move_resize(const Location& aOriginInParent, double aWidthInParent) = 0;
+    virtual void move(const Location& /*aOriginInParent*/) { THROW_OR_CERR(std::logic_error("cannot move this surface")); }
+    virtual void move_resize(const Location& /*aOriginInParent*/, double /*aWidthInParent*/) { THROW_OR_CERR(std::logic_error("cannot move/resize this surface")); }
     inline void move_resize_viewport(const Location& aOriginInParent, double aWidthInParent, const Viewport& aViewport) { move_resize(aOriginInParent, aWidthInParent); viewport(aViewport); }
 
     inline double aspect() const { return viewport().aspect(); }
@@ -97,6 +97,8 @@ class Surface
     virtual inline Surface& root() { return *this; }
     virtual inline const Surface& root() const { return *this; }
 
+    virtual inline bool clip() const { return false; }
+
  protected:
     inline Surface() : mOriginInParent{0, 0}, mWidthInParent{viewport().size.width} {}
     inline Surface(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport)
@@ -104,7 +106,6 @@ class Surface
 
     virtual Surface* make_child(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip) = 0;
 
-    virtual inline bool clip() const { return false; }
     inline void change_origin(const Location& aOriginInParent) { mOriginInParent = aOriginInParent; }
     inline void change_width_in_parent(double aWidthInParent) { mWidthInParent = aWidthInParent; }
 
@@ -134,11 +135,11 @@ template <typename Parent> class SurfaceChild : public Parent
     inline double scale() const override { return parent().scale() * (this->width_in_parent() / this->viewport().size.width); }
     inline Location origin_offset() const override { return parent().origin_offset() + this->origin_in_parent() * parent().scale(); }
 
+    inline bool clip() const override { return mClip; }
+
  protected:
     inline SurfaceChild(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip)
         : Parent{aOriginInParent, aWidthInParent, aViewport}, mClip{aClip} {}
-
-    inline bool clip() const override { return mClip; }
 
  private:
     bool mClip;                 // force surface area clipping

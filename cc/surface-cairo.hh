@@ -88,9 +88,6 @@ class PdfCairo : public SurfaceCairo
     // virtual inline const SurfaceCairo* parent() const { return nullptr; }
     inline void new_page() override { cairo_show_page(cairo_context()); }
 
-    inline void move(const Location&) override { throw std::logic_error("cannot move PdfCairo surface"); }
-    inline void move_resize(const Location&, double) override { throw std::logic_error("cannot move/resize PdfCairo surface"); }
-
  private:
     cairo_t* mCairoContext;
 
