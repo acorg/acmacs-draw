@@ -4,10 +4,17 @@
 #include <memory>
 
 #include "acmacs-base/throw.hh"
-#include "acmacs-base/color.hh"
 #include "acmacs-base/size-scale.hh"
 #include "acmacs-draw/text-style.hh"
 #include "acmacs-draw/viewport.hh"
+
+#ifdef ACMACS_TARGET_OS
+#include "acmacs-base/color.hh"
+#endif
+
+#ifdef ACMACS_TARGET_BROWSER
+#include "client/color.hh"
+#endif
 
 // ----------------------------------------------------------------------
 
