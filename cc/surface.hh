@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "acmacs-base/throw.hh"
+#include "acmacs-base/log.hh"
 #include "acmacs-base/color-target.hh"
 #include "acmacs-base/size-scale.hh"
 #include "acmacs-draw/text-style.hh"
