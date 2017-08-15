@@ -2,8 +2,15 @@
 
 #include <map>
 
-#include "acmacs-base/color.hh"
 #include "acmacs-draw/size.hh"
+
+#ifdef ACMACS_TARGET_OS
+#include "acmacs-base/color.hh"
+#endif
+
+#ifdef ACMACS_TARGET_BROWSER
+#include "client/color.hh"
+#endif
 
 class Surface;
 
