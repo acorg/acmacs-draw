@@ -18,18 +18,18 @@ TEST_DISTINCT_COLORS_SOURCES = test-distinct-colors.cc
 
 # ----------------------------------------------------------------------
 
-include $(ACMACSD_ROOT)/share/Makefile.g++
-include $(ACMACSD_ROOT)/share/Makefile.dist-build.vars
+TARGET_ROOT=$(shell if [ -f /Volumes/rdisk/ramdisk-id ]; then echo /Volumes/rdisk/AD; else echo $(ACMACSD_ROOT); fi)
+include $(TARGET_ROOT)/share/Makefile.g++
+include $(TARGET_ROOT)/share/Makefile.dist-build.vars
 
 # -fvisibility=hidden and -flto make resulting lib smaller (pybind11) but linking is much slower
 OPTIMIZATION = -O3 #-fvisibility=hidden -flto
 PROFILE = # -pg
-CXXFLAGS = -MMD -g $(OPTIMIZATION) $(PROFILE) -fPIC -std=$(STD) $(WEVERYTHING) $(WARNINGS) -Icc -I$(BUILD)/include -I$(ACMACSD_ROOT)/include $(PKG_INCLUDES)
+CXXFLAGS = -MMD -g $(OPTIMIZATION) $(PROFILE) -fPIC -std=$(STD) $(WEVERYTHING) $(WARNINGS) -Icc -I$(AD_INCLUDE) $(PKG_INCLUDES)
 LDFLAGS = $(OPTIMIZATION) $(PROFILE)
 PKG_INCLUDES = $(shell pkg-config --cflags cairo) $(shell $(PYTHON_CONFIG) --includes)
 
-LIB_DIR = $(ACMACSD_ROOT)/lib
-ACMACSD_LIBS = -L$(LIB_DIR) -lacmacsbase
+ACMACSD_LIBS = -L$(AD_LIB) -lacmacsbase
 ACMACS_DRAW_LIB = $(DIST)/libacmacsdraw.so
 ACMACS_DRAW_LDLIBS = $(ACMACSD_LIBS) $(shell pkg-config --libs cairo)
 TEST_CAIRO_LDLIBS = $(ACMACS_DRAW_LDLIBS) -L$(DIST) -lacmacsdraw
@@ -46,15 +46,15 @@ PYTHON_MODULE_SUFFIX = $(shell $(PYTHON_CONFIG) --extension-suffix)
 all: check-python install $(DIST)/test-cairo $(DIST)/test-cairo-fonts $(DIST)/test-distinct-colors $(BACKEND)
 
 install: check-acmacsd-root install-headers $(ACMACS_DRAW_LIB) $(BACKEND)
-	ln -sf $(ACMACS_DRAW_LIB) $(ACMACSD_ROOT)/lib
-	if [ $$(uname) = "Darwin" ]; then /usr/bin/install_name_tool -id $(ACMACSD_ROOT)/lib/$(notdir $(ACMACS_DRAW_LIB)) $(ACMACSD_ROOT)/lib/$(notdir $(ACMACS_DRAW_LIB)); fi
-	if [ -d $(SRC_DIR)/acmacs-draw/py/acmacs_draw ]; then ln -sf $(SRC_DIR)/acmacs-draw/py/acmacs_draw $(ACMACSD_ROOT)/py; fi
-	if [ -d $(SRC_DIR)/acmacs-draw/bin ]; then ln -sf $(SRC_DIR)/acmacs-draw/bin/* $(ACMACSD_ROOT)/bin; fi
-	ln -sf $(BACKEND) $(ACMACSD_ROOT)/py
+	ln -sf $(ACMACS_DRAW_LIB) $(AD_LIB)
+	if [ $$(uname) = "Darwin" ]; then /usr/bin/install_name_tool -id $(AD_LIB)/$(notdir $(ACMACS_DRAW_LIB)) $(AD_LIB)/$(notdir $(ACMACS_DRAW_LIB)); fi
+	if [ -d $(SRC_DIR)/acmacs-draw/py/acmacs_draw ]; then ln -sf $(SRC_DIR)/acmacs-draw/py/acmacs_draw $(AD_PY); fi
+	if [ -d $(SRC_DIR)/acmacs-draw/bin ]; then ln -sf $(SRC_DIR)/acmacs-draw/bin/* $(AD_BIN); fi
+	ln -sf $(BACKEND) $(AD_PY)
 
 install-headers:
-	if [ ! -d $(ACMACSD_ROOT)/include/acmacs-draw ]; then mkdir $(ACMACSD_ROOT)/include/acmacs-draw; fi
-	ln -sf $(abspath cc)/*.hh $(ACMACSD_ROOT)/include/acmacs-draw
+	if [ ! -d $(AD_INCLUDE)/acmacs-draw ]; then mkdir $(AD_INCLUDE)/acmacs-draw; fi
+	ln -sf $(abspath cc)/*.hh $(AD_INCLUDE)/acmacs-draw
 
 # ----------------------------------------------------------------------
 
@@ -90,7 +90,7 @@ $(BACKEND): $(patsubst %.cc,$(BUILD)/%.o,$(PY_SOURCES)) | $(DIST)
 test: install $(DIST)/test-cairo $(DIST)/test-cairo-fonts $(DIST)/test-distinct-colors
 	bin/test-acmacs-draw
 
-include $(ACMACSD_ROOT)/share/Makefile.rtags
+include $(AD_SHARE)/Makefile.rtags
 
 # ----------------------------------------------------------------------
 
@@ -100,17 +100,7 @@ $(BUILD)/%.o: cc/%.cc | $(BUILD) install-headers
 
 # ----------------------------------------------------------------------
 
-check-acmacsd-root:
-ifndef ACMACSD_ROOT
-	$(error ACMACSD_ROOT is not set)
-endif
-
-check-python:
-	@printf 'import sys\nif sys.version_info < (3, 5):\n print("Python 3.5 is required")\n exit(1)' | python3
-
-include $(ACMACSD_ROOT)/share/Makefile.dist-build.rules
-
-.PHONY: check-acmacsd-root check-python
+include $(AD_SHARE)/Makefile.dist-build.rules
 
 # ======================================================================
 ### Local Variables:
