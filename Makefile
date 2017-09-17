@@ -47,9 +47,6 @@ install: check-acmacsd-root install-headers $(ACMACS_DRAW_LIB) $(BACKEND)
 	if [ -d $(SRC_DIR)/acmacs-draw/bin ]; then ln -sf $(SRC_DIR)/acmacs-draw/bin/* $(AD_BIN); fi
 	ln -sf $(BACKEND) $(AD_PY)
 
-install-headers:
-	$(call install_headers,acmacs-draw)
-
 # ----------------------------------------------------------------------
 
 test-cairo: $(DIST)/test-cairo
