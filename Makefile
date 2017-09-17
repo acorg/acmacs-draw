@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# Eugene Skepner 2016
+# Eugene Skepner 2017
 # ======================================================================
 
 MAKEFLAGS = -w
@@ -21,7 +21,7 @@ TEST_DISTINCT_COLORS_SOURCES = test-distinct-colors.cc
 include $(ACMACSD_ROOT)/share/makefiles/Makefile.g++
 include $(ACMACSD_ROOT)/share/makefiles/Makefile.dist-build.vars
 
-CXXFLAGS = -MMD -g $(OPTIMIZATION) $(PROFILE) -fPIC -std=$(STD) $(WEVERYTHING) $(WARNINGS) -Icc -I$(AD_INCLUDE) $(PKG_INCLUDES)
+CXXFLAGS = -MMD -g $(OPTIMIZATION) $(PROFILE) -fPIC -std=$(STD) $(WARNINGS) -Icc -I$(AD_INCLUDE) $(PKG_INCLUDES)
 LDFLAGS = $(OPTIMIZATION) $(PROFILE)
 PKG_INCLUDES = $(shell pkg-config --cflags cairo) $(shell $(PYTHON_CONFIG) --includes)
 
