@@ -81,7 +81,7 @@ class PdfCairo : public SurfaceCairo
 {
  public:
     PdfCairo(std::string aFilename, double aWidth, double aHeight, double aViewportWidth = default_canvas_width);
-    virtual ~PdfCairo();
+    ~PdfCairo() override;
 
     inline cairo_t* cairo_context() override { return mCairoContext; }
     // virtual inline SurfaceCairo* parent() { return nullptr; }

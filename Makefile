@@ -18,9 +18,8 @@ TEST_DISTINCT_COLORS_SOURCES = test-distinct-colors.cc
 
 # ----------------------------------------------------------------------
 
-TARGET_ROOT=$(shell if [ -f /Volumes/rdisk/ramdisk-id ]; then echo /Volumes/rdisk/AD; else echo $(ACMACSD_ROOT); fi)
-include $(TARGET_ROOT)/share/Makefile.g++
-include $(TARGET_ROOT)/share/Makefile.dist-build.vars
+include $(ACMACSD_ROOT)/share/makefiles/Makefile.g++
+include $(ACMACSD_ROOT)/share/makefiles/Makefile.dist-build.vars
 
 CXXFLAGS = -MMD -g $(OPTIMIZATION) $(PROFILE) -fPIC -std=$(STD) $(WEVERYTHING) $(WARNINGS) -Icc -I$(AD_INCLUDE) $(PKG_INCLUDES)
 LDFLAGS = $(OPTIMIZATION) $(PROFILE)
@@ -43,15 +42,13 @@ PYTHON_MODULE_SUFFIX = $(shell $(PYTHON_CONFIG) --extension-suffix)
 all: check-python install $(DIST)/test-cairo $(DIST)/test-cairo-fonts $(DIST)/test-distinct-colors $(BACKEND)
 
 install: check-acmacsd-root install-headers $(ACMACS_DRAW_LIB) $(BACKEND)
-	ln -sf $(ACMACS_DRAW_LIB) $(AD_LIB)
-	if [ $$(uname) = "Darwin" ]; then /usr/bin/install_name_tool -id $(AD_LIB)/$(notdir $(ACMACS_DRAW_LIB)) $(AD_LIB)/$(notdir $(ACMACS_DRAW_LIB)); fi
+	$(call install_lib,$(ACMACS_DRAW_LIB))
 	if [ -d $(SRC_DIR)/acmacs-draw/py/acmacs_draw ]; then ln -sf $(SRC_DIR)/acmacs-draw/py/acmacs_draw $(AD_PY); fi
 	if [ -d $(SRC_DIR)/acmacs-draw/bin ]; then ln -sf $(SRC_DIR)/acmacs-draw/bin/* $(AD_BIN); fi
 	ln -sf $(BACKEND) $(AD_PY)
 
 install-headers:
-	if [ ! -d $(AD_INCLUDE)/acmacs-draw ]; then mkdir $(AD_INCLUDE)/acmacs-draw; fi
-	ln -sf $(abspath cc)/*.hh $(AD_INCLUDE)/acmacs-draw
+	$(call install_headers,acmacs-draw)
 
 # ----------------------------------------------------------------------
 
@@ -73,6 +70,8 @@ $(DIST)/test-distinct-colors: $(patsubst %.cc,$(BUILD)/%.o,$(TEST_DISTINCT_COLOR
 # ----------------------------------------------------------------------
 
 -include $(BUILD)/*.d
+include $(ACMACSD_ROOT)/share/makefiles/Makefile.dist-build.rules
+include $(ACMACSD_ROOT)/share/makefiles/Makefile.rtags
 
 # ----------------------------------------------------------------------
 
@@ -86,18 +85,6 @@ $(BACKEND): $(patsubst %.cc,$(BUILD)/%.o,$(PY_SOURCES)) | $(DIST)
 
 test: install $(DIST)/test-cairo $(DIST)/test-cairo-fonts $(DIST)/test-distinct-colors
 	bin/test-acmacs-draw
-
-include $(AD_SHARE)/Makefile.rtags
-
-# ----------------------------------------------------------------------
-
-$(BUILD)/%.o: cc/%.cc | $(BUILD) install-headers
-	@echo $(CXX_NAME) $(OPTIMIZATION) $<
-	@$(CXX) $(CXXFLAGS) -c -o $@ $<
-
-# ----------------------------------------------------------------------
-
-include $(AD_SHARE)/Makefile.dist-build.rules
 
 # ======================================================================
 ### Local Variables:
