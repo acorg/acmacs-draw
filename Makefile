@@ -39,7 +39,7 @@ PYTHON_MODULE_SUFFIX = $(shell $(PYTHON_CONFIG) --extension-suffix)
 
 # ----------------------------------------------------------------------
 
-all: check-python install $(DIST)/test-cairo $(DIST)/test-cairo-fonts $(DIST)/test-distinct-colors $(BACKEND)
+all: install $(DIST)/test-cairo $(DIST)/test-cairo-fonts $(DIST)/test-distinct-colors $(BACKEND)
 
 install: check-acmacsd-root install-headers $(ACMACS_DRAW_LIB) $(BACKEND)
 	$(call install_lib,$(ACMACS_DRAW_LIB))
