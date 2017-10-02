@@ -8,6 +8,7 @@
 #include "acmacs-base/config.hh"
 #include "acmacs-base/float.hh"
 #include "acmacs-base/size-scale.hh"
+#include "acmacs-base/transformation.hh"
 
 // ----------------------------------------------------------------------
 
@@ -79,6 +80,32 @@ inline std::ostream& operator<<(std::ostream& out, const Size& size)
     return out << '{' << size.width << ", " << size.height << '}';
 }
 #endif
+
+// ----------------------------------------------------------------------
+
+class Rectangle
+{
+ public:
+    inline Rectangle(double x1, double y1, double x2, double y2)
+        : top_left(std::min(x1, x2), std::min(y1, y2)), bottom_right(std::max(x1, x2), std::max(y1, y2)) {}
+
+    inline Rectangle transform(const Transformation& aTransformation) const
+        {
+            const auto [x1, y1] = aTransformation.transform(top_left.x, top_left.y);
+            const auto [x2, y2] = aTransformation.transform(bottom_right.x, bottom_right.y);
+            return {x1, y1, x2, y2};
+        }
+
+      // returns if passed point is within the rectangle
+    inline bool within(double x, double y) const
+        {
+            return x >= top_left.x && x <= bottom_right.x && y >= top_left.y && y <= bottom_right.y;
+        }
+
+    Location top_left;
+    Location bottom_right;
+
+}; // class Rectangle
 
 // ----------------------------------------------------------------------
 
