@@ -19,7 +19,7 @@ PYBIND11_MODULE(acmacs_draw_backend, m)
             .def("light", &Color::light)
             ;
 
-    m.def("distinct_colors", &Color::distinct_colors);
+    m.def("distinct_colors", &Color::distinct_s);
 
     py::class_<Surface>(m, "Surface")
             .def("subsurface_s", [](Surface& aSurface, double x, double y, double width, double sub_width, double sub_height, bool clip) -> Surface& { return aSurface.subsurface({x, y}, Scaled{width}, Size{sub_width, sub_height}, clip); }, py::arg("origin_x"), py::arg("origin_y"), py::arg("width_in_parent"), py::arg("viewport_width"), py::arg("viewport_height"), py::arg("clip"), py::return_value_policy::reference)
