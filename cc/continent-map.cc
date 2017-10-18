@@ -45,8 +45,8 @@ void continent_map_draw(Surface& aSurface)
 {
     for (const auto& continent: ContinentLabels) {
         const auto& path = continent_path::continent_map_path(continent);
-          // aSurface.path_outline(path.first, path.second, geographic_map_outline_color, geographic_map_outline_width);
-        aSurface.path_fill(path.first, path.second, continent_color(continent));
+          // aSurface.path_outline_negative_move(path.first, path.second, geographic_map_outline_color, geographic_map_outline_width);
+        aSurface.path_fill_negative_move(path.first, path.second, continent_color(continent));
     }
 
 } // continent_map_draw

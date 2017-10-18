@@ -104,7 +104,7 @@ class context
     inline context& text_extents(std::string aText, cairo_text_extents_t& extents) { cairo_text_extents(cairo_context(), aText.c_str(), &extents); return *this; }
 
       // if Location::x is negative - move_to, else - path_to. It assumes origin is {0,0}!!!
-    inline context& move_to_line_to(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last)
+    inline context& move_to_negative_line_to_positive(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last)
         {
             for ( ; first != last; ++first) {
                 if (first->x < 0)
@@ -116,7 +116,7 @@ class context
         }
 
       // the same as above but with raw data
-    inline context& move_to_line_to(const double* first, const double* last)
+    inline context& move_to_negative_line_to_positive(const double* first, const double* last)
         {
             for ( ; first != last; first += 2) {
                 if (*first < 0)
@@ -124,6 +124,22 @@ class context
                 else
                     line_to({*first, *(first+1)});
             }
+            return *this;
+        }
+
+    inline context& move_to_first_line_to_rest(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last)
+        {
+            move_to(*first);
+            for (++first; first != last; ++first)
+                line_to(*first);
+            return *this;
+        }
+
+    inline context& move_to_first_line_to_rest(const double* first, const double* last)
+        {
+            move_to({*first, *(first+1)});
+            for (first += 2; first != last; first += 2)
+                line_to({*first, *(first+1)});
             return *this;
         }
 
@@ -463,7 +479,7 @@ void SurfaceCairo::path_outline(std::vector<Location>::const_iterator first, std
             .set_line_join(LineJoin::Miter)
             .set_line_width(aOutlineWidth)
             .set_source_rgba(aOutlineColor)
-            .move_to_line_to(first, last)
+            .move_to_first_line_to_rest(first, last)
             .close_path_if(aClose)
             .stroke();
 
@@ -479,7 +495,7 @@ void SurfaceCairo::path_outline(const double* first, const double* last, Color a
             .set_line_join(LineJoin::Miter)
             .set_line_width(aOutlineWidth)
             .set_source_rgba(aOutlineColor)
-            .move_to_line_to(first, last)
+            .move_to_first_line_to_rest(first, last)
             .close_path_if(aClose)
             .stroke();
 
@@ -492,7 +508,7 @@ void SurfaceCairo::path_fill(std::vector<Location>::const_iterator first, std::v
     context(*this)
             .new_path()
             .set_source_rgba(aFillColor)
-            .move_to_line_to(first, last)
+            .move_to_first_line_to_rest(first, last)
             .close_path()
             .fill();
 
@@ -505,11 +521,69 @@ void SurfaceCairo::path_fill(const double* first, const double* last, Color aFil
     context(*this)
             .new_path()
             .set_source_rgba(aFillColor)
-            .close_move_to_line_to(first, last)
+            .move_to_first_line_to_rest(first, last)
             .close_path()
             .fill();
 
 } // SurfaceCairo::path_fill
+
+// ----------------------------------------------------------------------
+
+void SurfaceCairo::path_outline_negative_move(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last, Color aOutlineColor, Pixels aOutlineWidth, bool aClose, LineCap aLineCap)
+{
+    context(*this)
+            .new_path()
+            .set_line_cap(aLineCap)
+            .set_line_join(LineJoin::Miter)
+            .set_line_width(aOutlineWidth)
+            .set_source_rgba(aOutlineColor)
+            .move_to_negative_line_to_positive(first, last)
+            .close_path_if(aClose)
+            .stroke();
+
+} // SurfaceCairo::path_outline_negative_move
+
+// ----------------------------------------------------------------------
+
+void SurfaceCairo::path_outline_negative_move(const double* first, const double* last, Color aOutlineColor, Pixels aOutlineWidth, bool aClose, LineCap aLineCap)
+{
+    context(*this)
+            .new_path()
+            .set_line_cap(aLineCap)
+            .set_line_join(LineJoin::Miter)
+            .set_line_width(aOutlineWidth)
+            .set_source_rgba(aOutlineColor)
+            .move_to_negative_line_to_positive(first, last)
+            .close_path_if(aClose)
+            .stroke();
+
+} // SurfaceCairo::path_outline_negative_move
+
+// ----------------------------------------------------------------------
+
+void SurfaceCairo::path_fill_negative_move(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last, Color aFillColor)
+{
+    context(*this)
+            .new_path()
+            .set_source_rgba(aFillColor)
+            .move_to_negative_line_to_positive(first, last)
+            .close_path()
+            .fill();
+
+} // SurfaceCairo::path_fill_negative_move
+
+// ----------------------------------------------------------------------
+
+void SurfaceCairo::path_fill_negative_move(const double* first, const double* last, Color aFillColor)
+{
+    context(*this)
+            .new_path()
+            .set_source_rgba(aFillColor)
+            .close_move_to_line_to(first, last)
+            .close_path()
+            .fill();
+
+} // SurfaceCairo::path_fill_negative_move
 
 // ----------------------------------------------------------------------
 

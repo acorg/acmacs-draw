@@ -1,3 +1,4 @@
+#include "acmacs-base/stream.hh"
 #include "acmacs-draw/surface.hh"
 
 // ----------------------------------------------------------------------
