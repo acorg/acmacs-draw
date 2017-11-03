@@ -7,7 +7,7 @@
 #include "acmacs-base/log.hh"
 #include "acmacs-base/color-target.hh"
 #include "acmacs-base/size-scale.hh"
-#include "acmacs-draw/text-style.hh"
+#include "acmacs-base/text-style.hh"
 #include "acmacs-draw/viewport.hh"
 
 // ----------------------------------------------------------------------
