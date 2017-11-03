@@ -18,6 +18,7 @@ class Surface
     using Location = acmacs::Location;
     using Size = acmacs::Size;
     using Viewport = acmacs::Viewport;
+    using TextStyle = acmacs::TextStyle;
 
     enum class LineCap { Butt, Round, Square };
     enum class LineJoin { Miter, Round, Bevel };

@@ -27,6 +27,7 @@ class context
     using Location = acmacs::Location;
     using Size = acmacs::Size;
     using Viewport = acmacs::Viewport;
+    using TextStyle = acmacs::TextStyle;
 
     context(SurfaceCairo& aSurface)
         : mSurface(aSurface), mScale(aSurface.scale())
@@ -591,7 +592,7 @@ void SurfaceCairo::path_fill_negative_move(const double* first, const double* la
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_text(SurfaceCairo& aSurface, const acmacs::Location& a, std::string aText, Color aColor, S aSize, const TextStyle& aTextStyle, Rotation aRotation)
+template <typename S> static inline void s_text(SurfaceCairo& aSurface, const acmacs::Location& a, std::string aText, Color aColor, S aSize, const acmacs::TextStyle& aTextStyle, Rotation aRotation)
 {
     context(aSurface)
             .prepare_for_text(aSize, aTextStyle)
@@ -602,7 +603,7 @@ template <typename S> static inline void s_text(SurfaceCairo& aSurface, const ac
             .new_path();        // clear text path (bug in cairo?)
 }
 
-template <typename S> static inline acmacs::Size s_text_size(SurfaceCairo& aSurface, std::string aText, S aSize, const TextStyle& aTextStyle, double* x_bearing)
+template <typename S> static inline acmacs::Size s_text_size(SurfaceCairo& aSurface, std::string aText, S aSize, const acmacs::TextStyle& aTextStyle, double* x_bearing)
 {
     cairo_text_extents_t text_extents;
     context(aSurface)

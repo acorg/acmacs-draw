@@ -57,7 +57,7 @@ double show(Surface& aSurface, const acmacs::Location& origin, double size, std:
 {
     // std::cout << font_name << std::endl;
     const double interline = 1.1;
-    TextStyle style(font_name);
+    acmacs::TextStyle style(font_name);
     auto text_size = aSurface.text_size("W", Scaled{size}, style);
     aSurface.text({origin.x, origin.y + text_size.height * interline}, font_name, "black", Scaled{size}, style);
     return text_size.height * interline;
