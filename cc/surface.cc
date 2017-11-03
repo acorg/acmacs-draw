@@ -28,7 +28,7 @@ void Surface::double_arrow(const Location& a, const Location& b, Color aColor, P
 
 // ----------------------------------------------------------------------
 
-Location Surface::arrow_head(const Location& arrow_end, double angle, double sign, Color aColor, Pixels aArrowWidth, bool aFilled)
+Surface::Location Surface::arrow_head(const Location& arrow_end, double angle, double sign, Color aColor, Pixels aArrowWidth, bool aFilled)
 {
     constexpr double ARROW_WIDTH_TO_LENGTH_RATIO = 2.0;
 

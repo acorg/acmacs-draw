@@ -15,6 +15,10 @@
 class Surface
 {
  public:
+    using Location = acmacs::Location;
+    using Size = acmacs::Size;
+    using Viewport = acmacs::Viewport;
+
     enum class LineCap { Butt, Round, Square };
     enum class LineJoin { Miter, Round, Bevel };
     enum class Dash {NoDash, Dash1, Dash2};
@@ -130,6 +134,10 @@ class Surface
 template <typename Parent> class SurfaceChild : public Parent
 {
  public:
+    using Location = typename Parent::Location;
+    using Size = typename Parent::Size;
+    using Viewport = typename Parent::Viewport;
+
     inline Surface& root() override { return parent().root(); }
     inline const Surface& root() const override { return parent().root(); }
 

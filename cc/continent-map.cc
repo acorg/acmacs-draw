@@ -53,7 +53,7 @@ void continent_map_draw(Surface& aSurface)
 
 // ----------------------------------------------------------------------
 
-Size continent_map_size()
+acmacs::Size continent_map_size()
 {
     return {continent_path::continent_map_size[0], continent_path::continent_map_size[1]};
 

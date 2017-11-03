@@ -5,6 +5,8 @@
 
 PYBIND11_MODULE(acmacs_draw_backend, m)
 {
+    using Size = acmacs::Size;
+
     m.doc() = "Acmacs draw plugin";
 
       // ----------------------------------------------------------------------

@@ -13,7 +13,7 @@ void geographic_map_draw(Surface& aSurface, Color outline_color, Pixels outline_
 
 // ----------------------------------------------------------------------
 
-Size geographic_map_size()
+acmacs::Size geographic_map_size()
 {
     return {geographic_path::geographic_map_size[0], geographic_path::geographic_map_size[1]};
 
@@ -29,10 +29,10 @@ double geographic_map_aspect()
 
 // ----------------------------------------------------------------------
 
-Viewport geographic_map_viewport()
+acmacs::Viewport geographic_map_viewport()
 {
     using namespace geographic_path;
-    return {Location{geographic_map_bounds[0], -geographic_map_bounds[1]}, Location{geographic_map_bounds[2], -geographic_map_bounds[3]}};
+    return {acmacs::Location{geographic_map_bounds[0], -geographic_map_bounds[1]}, acmacs::Location{geographic_map_bounds[2], -geographic_map_bounds[3]}};
 
 } // geographic_map_viewport
 
