@@ -104,7 +104,7 @@ class context
     inline context& append_path(CairoPath& aPath) { cairo_append_path(cairo_context(), aPath); return *this; }
     inline CairoPath copy_path() { return std::move(cairo_copy_path(cairo_context())); }
 
-    template <typename S> inline context& prepare_for_text(S aSize, const TextStyle& aTextStyle) { cairo_select_font_face(cairo_context(), aTextStyle.font_family().c_str(), cairo_font_slant(aTextStyle.slant()), cairo_font_weight(aTextStyle.weight())); cairo_set_font_size(cairo_context(), convert(aSize)); return *this; }
+    template <typename S> inline context& prepare_for_text(S aSize, const TextStyle& aTextStyle) { cairo_select_font_face(cairo_context(), (*aTextStyle.font_family).c_str(), cairo_font_slant(*aTextStyle.slant), cairo_font_weight(*aTextStyle.weight)); cairo_set_font_size(cairo_context(), convert(aSize)); return *this; }
     inline context& show_text(std::string aText) { cairo_show_text(cairo_context(), aText.c_str()); return *this; }
     inline context& text_extents(std::string aText, cairo_text_extents_t& extents) { cairo_text_extents(cairo_context(), aText.c_str(), &extents); return *this; }
 
@@ -197,12 +197,12 @@ class context
             return CAIRO_LINE_JOIN_MITER; // gcc wants return
         }
 
-    inline cairo_font_slant_t  cairo_font_slant(TextStyle::Slant aSlant) const
+    inline cairo_font_slant_t cairo_font_slant(acmacs::FontSlant::Value aSlant) const
         {
             switch (aSlant) {
-              case TextStyle::Slant::Normal:
+              case acmacs::FontSlant::Normal:
                   return CAIRO_FONT_SLANT_NORMAL;
-              case TextStyle::Slant::Italic:
+              case acmacs::FontSlant::Italic:
                   return CAIRO_FONT_SLANT_ITALIC;
                     // case TextStyle::Slant::Oblique:
                     //     return CAIRO_FONT_SLANT_OBLIQUE;
@@ -210,12 +210,12 @@ class context
             return CAIRO_FONT_SLANT_NORMAL; // gcc wants return
         }
 
-    inline cairo_font_weight_t  cairo_font_weight(TextStyle::Weight aWeight) const
+    inline cairo_font_weight_t  cairo_font_weight(acmacs::FontWeight::Value aWeight) const
         {
             switch (aWeight) {
-              case TextStyle::Weight::Normal:
+              case acmacs::FontWeight::Normal:
                   return CAIRO_FONT_WEIGHT_NORMAL;
-              case TextStyle::Weight::Bold:
+              case acmacs::FontWeight::Bold:
                   return CAIRO_FONT_WEIGHT_BOLD;
             }
             return CAIRO_FONT_WEIGHT_NORMAL; // gcc wants return
