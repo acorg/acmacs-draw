@@ -25,7 +25,7 @@ CXXFLAGS = -MMD -g $(OPTIMIZATION) $(PROFILE) -fPIC -std=$(STD) $(WARNINGS) -Icc
 LDFLAGS = $(OPTIMIZATION) $(PROFILE)
 PKG_INCLUDES = $(shell pkg-config --cflags cairo) $(shell $(PYTHON_CONFIG) --includes)
 
-ACMACSD_LIBS = -L$(AD_LIB) -lacmacsbase
+ACMACSD_LIBS = $(AD_LIB)/$(call shared_lib_name,libacmacsbase,1,0)
 ACMACS_DRAW_LIB = $(DIST)/libacmacsdraw.so
 ACMACS_DRAW_LDLIBS = $(ACMACSD_LIBS) $(shell pkg-config --libs cairo)
 TEST_CAIRO_LDLIBS = $(ACMACS_DRAW_LDLIBS) -L$(DIST) -lacmacsdraw
@@ -73,11 +73,11 @@ include $(ACMACSD_ROOT)/share/makefiles/Makefile.rtags
 # ----------------------------------------------------------------------
 
 $(ACMACS_DRAW_LIB): $(patsubst %.cc,$(BUILD)/%.o,$(ACMACS_DRAW_SOURCES)) | $(DIST)
-	@echo "SHARED     " $@ # '<--' $^
+	@printf "%-16s %s\n" "SHARED" $@
 	@$(CXX) -shared $(LDFLAGS) -o $@ $^ $(ACMACS_DRAW_LDLIBS)
 
 $(BACKEND): $(patsubst %.cc,$(BUILD)/%.o,$(PY_SOURCES)) | $(DIST)
-	@echo "SHARED     " $@ # '<--' $^
+	@printf "%-16s %s\n" "SHARED" $@
 	@$(CXX) -shared $(LDFLAGS) -o $@ $^ $(BACKEND_LDLIBS)
 
 test: install $(DIST)/test-cairo $(DIST)/test-cairo-fonts $(DIST)/test-distinct-colors
