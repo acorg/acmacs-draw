@@ -42,9 +42,9 @@ LDLIBS = $(AD_LIB)/$(call shared_lib_name,libacmacsbase,1,0) $(shell pkg-config 
 
 # ----------------------------------------------------------------------
 
-all: install $(DIST)/test-cairo $(DIST)/test-cairo-fonts $(DIST)/test-distinct-colors $(BACKEND)
+all: $(TARGETS)
 
-install: check-acmacsd-root install-headers $(ACMACS_DRAW_LIB) $(BACKEND)
+install: check-acmacsd-root install-headers $(TARGETS)
 	$(call install_lib,$(ACMACS_DRAW_LIB))
 	$(call install_py_lib,$(ACMACS_DRAW_PY_LIB))
 	@#ln -sf $(SRC_DIR)/acmacs-draw/bin/* $(AD_BIN)
