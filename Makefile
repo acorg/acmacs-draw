@@ -49,6 +49,9 @@ install: check-acmacsd-root install-headers $(ACMACS_DRAW_LIB) $(BACKEND)
 	$(call install_py_lib,$(ACMACS_DRAW_PY_LIB))
 	@#ln -sf $(SRC_DIR)/acmacs-draw/bin/* $(AD_BIN)
 
+test: install $(DIST)/test-cairo $(DIST)/test-cairo-fonts $(DIST)/test-distinct-colors
+	bin/test-acmacs-draw
+
 # ----------------------------------------------------------------------
 
 -include $(BUILD)/*.d
@@ -68,9 +71,6 @@ $(ACMACS_DRAW_PY_LIB): $(patsubst %.cc,$(BUILD)/%.o,$(ACMACS_DRAW_PY_SOURCES)) |
 $(DIST)/%: $(BUILD)/%.o | $(ACMACS_DRAW_LIB)
 	@printf "%-16s %s\n" "LINK" $@
 	@$(CXX) $(LDFLAGS) -o $@ $^ $(ACMACS_DRAW_LIB) $(LDLIBS)
-
-test: install $(DIST)/test-cairo $(DIST)/test-cairo-fonts $(DIST)/test-distinct-colors
-	bin/test-acmacs-draw
 
 # ======================================================================
 ### Local Variables:
