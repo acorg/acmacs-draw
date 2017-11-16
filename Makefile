@@ -16,7 +16,7 @@ TARGETS = \
 SRC_DIR = $(abspath $(ACMACSD_ROOT)/sources)
 
 ACMACS_DRAW_SOURCES = surface.cc surface-cairo.cc continent-path.cc continent-map.cc geographic-path.cc geographic-map.cc
-PY_SOURCES = py.cc $(ACMACS_DRAW_SOURCES)
+ACMACS_DRAW_PY_SOURCES = py.cc $(ACMACS_DRAW_SOURCES)
 
 ACMACS_DRAW_LIB_MAJOR = 1
 ACMACS_DRAW_LIB_MINOR = 0
