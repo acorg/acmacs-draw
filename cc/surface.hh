@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory>
+#include <cassert>
 
 #include "acmacs-base/throw.hh"
 #include "acmacs-base/log.hh"
@@ -147,7 +148,12 @@ template <typename Parent> class SurfaceChild : public Parent
 
     inline void new_page() override { root().new_page(); }
     inline void move(const Location& aOriginInParent) override { this->change_origin(aOriginInParent); }
-    inline void move_resize(const Location& aOriginInParent, double aWidthInParent) override { this->change_origin(aOriginInParent); this->change_width_in_parent(aWidthInParent); }
+    inline void move_resize(const Location& aOriginInParent, double aWidthInParent) override
+        {
+            assert(aWidthInParent > 0);
+            this->change_origin(aOriginInParent);
+            this->change_width_in_parent(aWidthInParent);
+        }
 
     inline double scale() const override { return parent().scale() * (this->width_in_parent() / this->viewport().size.width); }
     inline Location origin_offset() const override { return parent().origin_offset() + this->origin_in_parent() * parent().scale(); }
