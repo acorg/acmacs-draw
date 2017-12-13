@@ -611,7 +611,8 @@ template <typename S> static inline acmacs::Size s_text_size(SurfaceCairo& aSurf
             .text_extents(aText, text_extents);
     if (x_bearing != nullptr)
         *x_bearing = text_extents.x_bearing;
-    return {text_extents.x_advance, - text_extents.y_bearing};
+      // std::cerr << "s_text_size [" << aText << "] " << text_extents.x_advance << ' ' << text_extents.y_bearing << ' ' << text_extents.x_bearing << '\n';
+    return {text_extents.x_advance < 0 ? 0.0 : text_extents.x_advance, - text_extents.y_bearing};
 }
 
 // ----------------------------------------------------------------------
