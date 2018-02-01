@@ -53,7 +53,7 @@ void draw(Surface& aSurface)
     double x = diameter * 2, y = 60;
     for (auto entry: Color::distinct()) {
         aSurface.circle_filled({x, y}, Pixels{diameter}, AspectNormal, NoRotation, "black", Pixels{1}, entry);
-        aSurface.text({x + diameter * 2, y + diameter * 0.5}, entry, entry, Pixels{12});
+        aSurface.text({x + diameter * 2, y + diameter * 0.5}, entry.to_string(), entry, Pixels{12});
         y += diameter * 3;
     }
 }
