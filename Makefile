@@ -38,7 +38,7 @@ CXXFLAGS = -MMD -g $(OPTIMIZATION) $(PROFILE) -fPIC -std=$(STD) $(WARNINGS) -Icc
 LDFLAGS = $(OPTIMIZATION) $(PROFILE)
 PKG_INCLUDES = $(shell pkg-config --cflags cairo) $(PYTHON_INCLUDES)
 
-LDLIBS = $(AD_LIB)/$(call shared_lib_name,libacmacsbase,1,0) $(shell pkg-config --libs cairo)
+LDLIBS = $(AD_LIB)/$(call shared_lib_name,libacmacsbase,1,0) $(shell pkg-config --libs cairo) $(CXX_LIB)
 
 # ----------------------------------------------------------------------
 
