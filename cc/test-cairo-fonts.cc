@@ -6,8 +6,8 @@
 
 // ----------------------------------------------------------------------
 
-void draw(Surface& aSurface, const std::vector<std::string>& fonts);
-double show(Surface& aSurface, const acmacs::Location& origin, double size, std::string font_name);
+void draw(acmacs::surface::Surface& aSurface, const std::vector<std::string>& fonts);
+double show(acmacs::surface::Surface& aSurface, const acmacs::Location& origin, double size, std::string font_name);
 void get_fonts(std::vector<std::string>& fonts);
 
 // ----------------------------------------------------------------------
@@ -20,7 +20,7 @@ int main(int /*argc*/, const char */*argv*/[])
         get_fonts(fonts);
           // std::cout << fonts.back() << std::endl;
           // fonts.erase(fonts.begin() + 418, fonts.end());
-        PdfCairo surface("/tmp/cairo-fonts.pdf", 500, 850);
+        acmacs::surface::PdfCairo surface("/tmp/cairo-fonts.pdf", 500, 850);
         draw(surface, fonts);
     }
     catch (std::exception& err) {
@@ -32,7 +32,7 @@ int main(int /*argc*/, const char */*argv*/[])
 
 // ----------------------------------------------------------------------
 
-void draw(Surface& aSurface, const std::vector<std::string>& fonts)
+void draw(acmacs::surface::Surface& aSurface, const std::vector<std::string>& fonts)
 {
     const size_t columns = 3;
     const size_t column_size = fonts.size() / columns + 1;
@@ -53,7 +53,7 @@ void draw(Surface& aSurface, const std::vector<std::string>& fonts)
 
 // ----------------------------------------------------------------------
 
-double show(Surface& aSurface, const acmacs::Location& origin, double size, std::string font_name)
+double show(acmacs::surface::Surface& aSurface, const acmacs::Location& origin, double size, std::string font_name)
 {
     // std::cout << font_name << std::endl;
     const double interline = 1.1;

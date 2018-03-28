@@ -3,7 +3,6 @@
 #include <memory>
 
 #include "acmacs-draw/surface.hh"
-#include "acmacs-draw/cairo.hh"
 
 // ----------------------------------------------------------------------
 
@@ -11,12 +10,12 @@ namespace acmacs::surface
 {
     namespace internal
     {
-        class CairoChild;
+        class JavascriptChild;
 
-        class Cairo : public acmacs::surface::Surface
+        class Javascript : public acmacs::surface::Surface
         {
           public:
-            virtual cairo_t* cairo_context() = 0;
+              // virtual cairo_t* cairo_context() = 0;
 
             void line(const Location& a, const Location& b, Color aColor, Pixels aWidth, LineCap aLineCap = LineCap::Butt) override;
             void line(const Location& a, const Location& b, Color aColor, Scaled aWidth, LineCap aLineCap = LineCap::Butt) override;
@@ -62,58 +61,56 @@ namespace acmacs::surface
             Size text_size(std::string aText, Scaled aSize, const TextStyle& aTextStyle = TextStyle(), double* x_bearing = nullptr) override;
 
           protected:
-            Cairo() : Surface{} {}
-            Cairo(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport) : Surface{aOriginInParent, aWidthInParent, aViewport} {}
+            Javascript() : Surface{} {}
+            Javascript(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport) : Surface{aOriginInParent, aWidthInParent, aViewport} {}
 
             Surface* make_child(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip) override;
 
           private:
-            friend class context;
+              // friend class context;
 
-        }; // class Cairo
+        }; // class Javascript
 
         // ----------------------------------------------------------------------
 
-        class CairoChild : public acmacs::surface::SurfaceChild<Cairo>
+        class JavascriptChild : public acmacs::surface::SurfaceChild<Javascript>
         {
           public:
-            cairo_t* cairo_context() override { return dynamic_cast<Cairo&>(root()).cairo_context(); }
+              // cairo_t* cairo_context() override { return dynamic_cast<Javascript&>(root()).cairo_context(); }
 
-            Cairo& parent() override { return mParent; }
-            const Cairo& parent() const override { return mParent; }
+            Javascript& parent() override { return mParent; }
+            const Javascript& parent() const override { return mParent; }
 
           protected:
-            CairoChild(Cairo& aParent, const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip)
-                : acmacs::surface::SurfaceChild<Cairo>(aOriginInParent, aWidthInParent, aViewport, aClip), mParent(aParent)
+            JavascriptChild(Javascript& aParent, const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip)
+                : acmacs::surface::SurfaceChild<Javascript>{aOriginInParent, aWidthInParent, aViewport, aClip}, mParent{aParent}
             {
             }
 
           private:
-            Cairo& mParent;
+            Javascript& mParent;
 
-            friend class Cairo;
+            friend class Javascript;
 
-        }; // class CairoChild
+        }; // class JavascriptChild
 
     } // namespace internal
 
     // ----------------------------------------------------------------------
 
-    class PdfCairo : public internal::Cairo
+    class Html : public internal::Javascript
     {
       public:
-        PdfCairo(std::string aFilename, double aWidth, double aHeight, double aViewportWidth = default_canvas_width);
-        ~PdfCairo() override;
+        Html(std::string aFilename, double aWidth, double aHeight, double aViewportWidth = default_canvas_width);
+        ~Html() override;
 
-        cairo_t* cairo_context() override { return mCairoContext; }
-        // virtual Cairo* parent() { return nullptr; }
-        // virtual const Cairo* parent() const { return nullptr; }
-        void new_page() override { cairo_show_page(cairo_context()); }
+          // cairo_t* cairo_context() override { return mCairoContext; }
+        void new_page() override { }
 
       private:
-        cairo_t* mCairoContext;
+          // cairo_t* mCairoContext;
 
-    }; // class PdfCairo
+    }; // class Html
 
 } // namespace acmacs::surface
 

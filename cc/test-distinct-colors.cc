@@ -2,7 +2,7 @@
 
 // ----------------------------------------------------------------------
 
-static void draw(Surface& aSurface);
+static void draw(acmacs::surface::Surface& aSurface);
 
 // ----------------------------------------------------------------------
 
@@ -14,7 +14,7 @@ int main(int argc, const char *argv[])
         exit_code = 2;
     }
     try {
-        PdfCairo surface(argv[1], 500, 500);
+        acmacs::surface::PdfCairo surface(argv[1], 500, 500);
         draw(surface);
     }
     catch (std::exception& err) {
@@ -46,7 +46,7 @@ int main(int argc, const char *argv[])
 //     "#00939f",
 // };
 
-void draw(Surface& aSurface)
+void draw(acmacs::surface::Surface& aSurface)
 {
     aSurface.text({10, 20}, "Ana", "black", Pixels{12});
     double diameter = 15;

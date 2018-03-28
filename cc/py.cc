@@ -7,6 +7,7 @@ PYBIND11_MODULE(acmacs_draw_backend, m)
 {
     using Size = acmacs::Size;
     using TextStyle = acmacs::TextStyle;
+    using namespace acmacs::surface;
 
     m.doc() = "Acmacs draw plugin";
 
@@ -24,7 +25,7 @@ PYBIND11_MODULE(acmacs_draw_backend, m)
 
     m.def("distinct_colors", &Color::distinct_s);
 
-    py::class_<Surface>(m, "Surface")
+    py::class_<acmacs::surface::Surface>(m, "Surface")
             .def("subsurface_s", [](Surface& aSurface, double x, double y, double width, double sub_width, double sub_height, bool clip) -> Surface& { return aSurface.subsurface({x, y}, Scaled{width}, Size{sub_width, sub_height}, clip); }, py::arg("origin_x"), py::arg("origin_y"), py::arg("width_in_parent"), py::arg("viewport_width"), py::arg("viewport_height"), py::arg("clip"), py::return_value_policy::reference)
             .def("subsurface_p", [](Surface& aSurface, double x, double y, double width, double sub_width, double sub_height, bool clip) -> Surface& { return aSurface.subsurface({x, y}, Pixels{width}, Size{sub_width, sub_height}, clip); }, py::arg("origin_x_pixels"), py::arg("origin_y_pixels"), py::arg("width_in_parent"), py::arg("viewport_width"), py::arg("viewport_height"), py::arg("clip"), py::return_value_policy::reference)
             .def("new_page", &Surface::new_page)
@@ -50,10 +51,10 @@ PYBIND11_MODULE(acmacs_draw_backend, m)
             .def("text_right_aligned_s", [](Surface& aSurface, double x, double y, std::string text, std::string color, double size, double rotation) { aSurface.text_right_aligned({x, y}, text, Color(color), Scaled{size}, TextStyle(), Rotation(rotation)); }, py::arg("x"), py::arg("y"), py::arg("text"), py::arg("color"), py::arg("size"), py::arg("rotation") = 0)
             ;
 
-    py::class_<SurfaceCairo, Surface>(m, "SurfaceCairo")
+    py::class_<acmacs::surface::internal::Cairo, acmacs::surface::Surface>(m, "SurfaceCairo")
             ;
 
-    py::class_<PdfCairo, SurfaceCairo>(m, "PdfCairo")
+    py::class_<acmacs::surface::PdfCairo, acmacs::surface::internal::Cairo>(m, "PdfCairo")
             .def(py::init<std::string, double, double, double>(), py::arg("filename"), py::arg("width"), py::arg("height"), py::arg("viewport_width") = 1000.0)
             ;
 }

@@ -4,7 +4,7 @@
 
 // ----------------------------------------------------------------------
 
-void geographic_map_draw(Surface& aSurface, Color outline_color, Pixels outline_width)
+void geographic_map_draw(acmacs::surface::Surface& aSurface, Color outline_color, Pixels outline_width)
 {
     const auto& path = geographic_path::geographic_map_path();
     aSurface.path_outline_negative_move(path.first, path.second, outline_color, outline_width);

@@ -41,7 +41,7 @@ Color continent_color(std::string aContinent)
 
 // ----------------------------------------------------------------------
 
-void continent_map_draw(Surface& aSurface)
+void continent_map_draw(acmacs::surface::Surface& aSurface)
 {
     for (const auto& continent: ContinentLabels) {
         const auto& path = continent_path::continent_map_path(continent);

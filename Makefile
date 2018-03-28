@@ -7,15 +7,17 @@ MAKEFLAGS = -w
 # ----------------------------------------------------------------------
 
 TARGETS = \
-	$(ACMACS_DRAW_LIB) \
-	$(ACMACS_DRAW_PY_LIB) \
-	$(DIST)/test-cairo \
-	$(DIST)/test-cairo-fonts \
-	$(DIST)/test-distinct-colors
+  $(ACMACS_DRAW_LIB) \
+  $(ACMACS_DRAW_PY_LIB) \
+  $(DIST)/test-cairo \
+  $(DIST)/test-cairo-fonts \
+  $(DIST)/test-distinct-colors
+
 
 SRC_DIR = $(abspath $(ACMACSD_ROOT)/sources)
 
-ACMACS_DRAW_SOURCES = surface.cc surface-cairo.cc continent-path.cc continent-map.cc geographic-path.cc geographic-map.cc
+ACMACS_DRAW_SOURCES = continent-path.cc continent-map.cc geographic-path.cc geographic-map.cc \
+  surface.cc surface-cairo.cc surface-html.cc
 ACMACS_DRAW_PY_SOURCES = py.cc $(ACMACS_DRAW_SOURCES)
 
 ACMACS_DRAW_LIB_MAJOR = 1
@@ -46,7 +48,7 @@ all: $(TARGETS)
 
 install: check-acmacsd-root install-headers $(TARGETS)
 	$(call install_lib,$(ACMACS_DRAW_LIB))
-	$(call install_py_lib,$(ACMACS_DRAW_PY_LIB))
+	@#$(call install_py_lib,$(ACMACS_DRAW_PY_LIB))
 	@#ln -sf $(SRC_DIR)/acmacs-draw/bin/* $(AD_BIN)
 
 test: install $(DIST)/test-cairo $(DIST)/test-cairo-fonts $(DIST)/test-distinct-colors

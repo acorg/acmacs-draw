@@ -5,14 +5,17 @@
 #include "acmacs-base/color.hh"
 #include "acmacs-base/size.hh"
 
-class Surface;
+namespace acmacs::surface
+{
+    class Surface;
+}
 
 // ----------------------------------------------------------------------
 
 extern const char* const ContinentLabels[9];
 
 Color continent_color(std::string aContinent);
-void continent_map_draw(Surface& aSurface);
+void continent_map_draw(acmacs::surface::Surface& aSurface);
 acmacs::Size continent_map_size();
 double continent_map_aspect();
 

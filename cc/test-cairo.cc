@@ -6,8 +6,8 @@
 
 // ----------------------------------------------------------------------
 
-void draw(Surface& aSurface);
-void draw1(Surface& aSurface);
+void draw(acmacs::surface::Surface& aSurface);
+void draw1(acmacs::surface::Surface& aSurface);
 
 // ----------------------------------------------------------------------
 
@@ -15,7 +15,7 @@ int main(int /*argc*/, const char */*argv*/[])
 {
     int exit_code = 0;
     try {
-        PdfCairo surface("/tmp/tc.pdf", 500, 850);
+        acmacs::surface::PdfCairo surface("/tmp/tc.pdf", 500, 850);
         draw(surface);
         auto& sub1 = surface.subsurface({110, 720}, Scaled{500}, {acmacs::Location{}, acmacs::Size{1000, 1000}}, false);
         draw(sub1);
@@ -31,7 +31,7 @@ int main(int /*argc*/, const char */*argv*/[])
 
 // ----------------------------------------------------------------------
 
-void draw(Surface& aSurface)
+void draw(acmacs::surface::Surface& aSurface)
 {
     aSurface.background("white");
     aSurface.grid(Scaled{aSurface.viewport().size.width / 10}, 0xC0808080, Pixels{1});
@@ -61,7 +61,7 @@ void draw(Surface& aSurface)
 
 // ----------------------------------------------------------------------
 
-void draw1(Surface& /*aSurface*/)
+void draw1(acmacs::surface::Surface& /*aSurface*/)
 {
     // aSurface.background(0x40F0F0FF);
     // aSurface.grid(200, "grey80", 5);

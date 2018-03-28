@@ -1,6 +1,8 @@
 #include "acmacs-base/stream.hh"
 #include "acmacs-draw/surface.hh"
 
+using namespace acmacs::surface;
+
 // ----------------------------------------------------------------------
 
 void Surface::grid(Scaled aStep, Color aLineColor, Pixels aLineWidth)
