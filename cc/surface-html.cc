@@ -1,11 +1,14 @@
 #include "acmacs-draw/surface-html.hh"
 
+static void write_header(std::ostream& output);
+static void write_html_body(std::ostream& output);
+
 // ----------------------------------------------------------------------
 
 acmacs::surface::Html::Html(std::string aFilename, double aWidth, double aHeight, double aViewportWidth)
+    : output_(aFilename)
 {
-      // open file
-      // write html header
+    write_header(output_);
     // auto surface = cairo_pdf_surface_create(aFilename.empty() ? nullptr : aFilename.c_str(), aWidth, aHeight);
     // mCairoContext = cairo_create(surface);
     change_width_in_parent(aWidth);
@@ -18,7 +21,7 @@ acmacs::surface::Html::Html(std::string aFilename, double aWidth, double aHeight
 
 acmacs::surface::Html::~Html()
 {
-      // write body
+    write_html_body(output_);
 
 } // acmacs::surface::Html::~Html
 
@@ -222,8 +225,25 @@ acmacs::Size acmacs::surface::internal::Javascript::text_size(std::string aText,
 
 acmacs::surface::Surface* acmacs::surface::internal::Javascript::make_child(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip)
 {
+    return new acmacs::surface::internal::JavascriptChild(*this, aOriginInParent, aWidthInParent, aViewport, aClip);
 
 } // acmacs::surface::internal::Javascript::make_child
+
+// ----------------------------------------------------------------------
+
+void write_header(std::ostream& output)
+{
+    output << "<html>\n<head>\n";
+
+} // write_header
+
+// ----------------------------------------------------------------------
+
+void write_html_body(std::ostream& output)
+{
+    output << "</head>\n<body></body>\n</html>\n";
+
+} // write_html_body
 
 // ----------------------------------------------------------------------
 

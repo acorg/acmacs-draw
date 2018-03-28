@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <fstream>
 
 #include "acmacs-draw/surface.hh"
 
@@ -107,7 +108,8 @@ namespace acmacs::surface
           // cairo_t* cairo_context() override { return mCairoContext; }
         void new_page() override { }
 
-      private:
+     private:
+        std::ofstream output_;
           // cairo_t* mCairoContext;
 
     }; // class Html
