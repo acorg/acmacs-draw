@@ -2,7 +2,7 @@
 
 #include <map>
 
-#include "acmacs-base/color-target.hh"
+#include "acmacs-base/color.hh"
 #include "acmacs-base/size.hh"
 
 class Surface;

@@ -4,9 +4,8 @@
 #include <memory>
 #include <cassert>
 
-#include "acmacs-base/throw.hh"
 #include "acmacs-base/log.hh"
-#include "acmacs-base/color-target.hh"
+#include "acmacs-base/color.hh"
 #include "acmacs-base/size-scale.hh"
 #include "acmacs-base/text-style.hh"
 #include "acmacs-draw/viewport.hh"
@@ -25,37 +24,34 @@ class Surface
     enum class LineJoin { Miter, Round, Bevel };
     enum class Dash {NoDash, Dash1, Dash2};
 
-#ifdef ACMACS_TARGET_OS
-    [[noreturn]]
-#endif
-        inline Surface(const Surface&) { THROW_OR_CERR(std::runtime_error("Surface copying forbidden!")); } // cannto make it private due to using vector<SurfaceCairoChild>
+    [[noreturn]] Surface(const Surface&) { throw std::runtime_error("Surface copying forbidden!"); } // cannto make it private due to using vector<SurfaceCairoChild>
     virtual ~Surface() {}
 
     constexpr static const double default_canvas_width = 1000.0;
 
     const Viewport& viewport() const { return mViewport; }
-    inline void viewport(const Viewport& aViewport) { mViewport = aViewport; }
+    void viewport(const Viewport& aViewport) { mViewport = aViewport; }
 
-    inline const Location& origin_in_parent() const { return mOriginInParent; }
-    inline double width_in_parent() const { return mWidthInParent; }
+    const Location& origin_in_parent() const { return mOriginInParent; }
+    double width_in_parent() const { return mWidthInParent; }
 
-    inline double width_in_pixels() const { return viewport().size.width * scale(); }
-    inline double height_in_pixels() const { return viewport().size.height * scale(); }
+    double width_in_pixels() const { return viewport().size.width * scale(); }
+    double height_in_pixels() const { return viewport().size.height * scale(); }
 
-    virtual void move(const Location& /*aOriginInParent*/) { THROW_OR_CERR(std::logic_error("cannot move this surface")); }
-    virtual void move_resize(const Location& /*aOriginInParent*/, double /*aWidthInParent*/) { THROW_OR_CERR(std::logic_error("cannot move/resize this surface")); }
-    inline void move_resize_viewport(const Location& aOriginInParent, double aWidthInParent, const Viewport& aViewport) { move_resize(aOriginInParent, aWidthInParent); viewport(aViewport); }
+    virtual void move(const Location& /*aOriginInParent*/) { throw std::logic_error("cannot move this surface"); }
+    virtual void move_resize(const Location& /*aOriginInParent*/, double /*aWidthInParent*/) { throw std::logic_error("cannot move/resize this surface"); }
+    void move_resize_viewport(const Location& aOriginInParent, double aWidthInParent, const Viewport& aViewport) { move_resize(aOriginInParent, aWidthInParent); viewport(aViewport); }
 
-    inline double aspect() const { return viewport().aspect(); }
+    double aspect() const { return viewport().aspect(); }
 
-    inline Surface& subsurface(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip)
+    Surface& subsurface(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip)
         {
             auto* child = make_child(aOriginInParent, aWidthInParent, aViewport, aClip);
             mChildren.emplace_back(child);
             return *child;
         }
-    inline Surface& subsurface(bool aClip) { return subsurface(Location{}, Scaled{}, Viewport{}, aClip); }
-    inline Surface& subsurface(const Location& aOriginInParent, Pixels aWidthInParent, const Viewport& aViewport, bool aClip) // origin is in pixels
+    Surface& subsurface(bool aClip) { return subsurface(Location{}, Scaled{}, Viewport{}, aClip); }
+    Surface& subsurface(const Location& aOriginInParent, Pixels aWidthInParent, const Viewport& aViewport, bool aClip) // origin is in pixels
         { return subsurface(aOriginInParent / scale(), Scaled{aWidthInParent.value() / scale()}, aViewport, aClip); }
 
     virtual void line(const Location& a, const Location& b, Color aColor, Pixels aWidth, LineCap aLineCap = LineCap::Butt) = 0;
@@ -65,8 +61,8 @@ class Surface
 
     virtual void circle(const Location& aCenter, Pixels aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth) = 0;
     virtual void circle(const Location& aCenter, Scaled aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth) = 0;
-    inline void circle(const Location& aCenter, Pixels aDiameter, Color aOutlineColor, Pixels aOutlineWidth) { circle(aCenter, aDiameter, Aspect{1}, Rotation{0}, aOutlineColor, aOutlineWidth); }
-    inline void circle(const Location& aCenter, Scaled aDiameter, Color aOutlineColor, Pixels aOutlineWidth) { circle(aCenter, aDiameter, Aspect{1}, Rotation{0}, aOutlineColor, aOutlineWidth); }
+    void circle(const Location& aCenter, Pixels aDiameter, Color aOutlineColor, Pixels aOutlineWidth) { circle(aCenter, aDiameter, Aspect{1}, Rotation{0}, aOutlineColor, aOutlineWidth); }
+    void circle(const Location& aCenter, Scaled aDiameter, Color aOutlineColor, Pixels aOutlineWidth) { circle(aCenter, aDiameter, Aspect{1}, Rotation{0}, aOutlineColor, aOutlineWidth); }
     virtual void circle_filled(const Location& aCenter, Pixels aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor) = 0;
     virtual void circle_filled(const Location& aCenter, Scaled aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor) = 0;
     virtual void sector_filled(const Location& aCenter, Scaled aDiameter, Rotation aStart, Rotation aEnd, Color aOutlineColor, Pixels aOutlineWidth, Color aRadiusColor, Pixels aRadiusWidth, Dash aRadiusDash, Color aFillColor) = 0;
@@ -91,8 +87,8 @@ class Surface
     void double_arrow(const Location& a, const Location& b, Color aColor, Pixels aLineWidth, Pixels aArrowWidth);
     Location arrow_head(const Location& a, double angle, double sign, Color aColor, Pixels aArrowWidth, bool aFilled);
     void grid(Scaled aStep, Color aLineColor, Pixels aLineWidth);
-    inline void border(Color aLineColor, Pixels aLineWidth) { const Viewport& v = viewport(); rectangle(v.origin, v.size, aLineColor, aLineWidth * 2); }
-    inline void background(Color aColor) { const Viewport& v = viewport(); rectangle_filled(v.origin, v.size, aColor, Pixels{0}, aColor); }
+    void border(Color aLineColor, Pixels aLineWidth) { const Viewport& v = viewport(); rectangle(v.origin, v.size, aLineColor, aLineWidth * 2); }
+    void background(Color aColor) { const Viewport& v = viewport(); rectangle_filled(v.origin, v.size, aColor, Pixels{0}, aColor); }
 
     virtual void text(const Location& a, std::string aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle = TextStyle(), Rotation aRotation = Rotation{0}) = 0;
     virtual void text(const Location& a, std::string aText, Color aColor, Scaled aSize, const TextStyle& aTextStyle = TextStyle(), Rotation aRotation = Rotation{0}) = 0;
@@ -101,27 +97,27 @@ class Surface
     virtual Size text_size(std::string aText, Pixels aSize, const TextStyle& aTextStyle = TextStyle(), double* x_bearing = nullptr) = 0;
     virtual Size text_size(std::string aText, Scaled aSize, const TextStyle& aTextStyle = TextStyle(), double* x_bearing = nullptr) = 0;
 
-    inline Scaled convert(Pixels a) const { return Scaled{a.value() / scale()}; }
+    Scaled convert(Pixels a) const { return Scaled{a.value() / scale()}; }
 
-    virtual inline double scale() const { return width_in_parent() / viewport().size.width; }
-    virtual inline Location origin_offset() const { return origin_in_parent(); }
+    virtual double scale() const { return width_in_parent() / viewport().size.width; }
+    virtual Location origin_offset() const { return origin_in_parent(); }
 
     virtual void new_page() = 0;
 
-    virtual inline Surface& root() { return *this; }
-    virtual inline const Surface& root() const { return *this; }
+    virtual Surface& root() { return *this; }
+    virtual const Surface& root() const { return *this; }
 
-    virtual inline bool clip() const { return false; }
+    virtual bool clip() const { return false; }
 
  protected:
-    inline Surface() : mOriginInParent{0, 0}, mWidthInParent{viewport().size.width} {}
-    inline Surface(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport)
+    Surface() : mOriginInParent{0, 0}, mWidthInParent{viewport().size.width} {}
+    Surface(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport)
         : mViewport{aViewport}, mOriginInParent{aOriginInParent}, mWidthInParent{aWidthInParent.value()} {}
 
     virtual Surface* make_child(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip) = 0;
 
-    inline void change_origin(const Location& aOriginInParent) { mOriginInParent = aOriginInParent; }
-    inline void change_width_in_parent(double aWidthInParent) { mWidthInParent = aWidthInParent; }
+    void change_origin(const Location& aOriginInParent) { mOriginInParent = aOriginInParent; }
+    void change_width_in_parent(double aWidthInParent) { mWidthInParent = aWidthInParent; }
 
  private:
     Viewport mViewport;
@@ -140,28 +136,28 @@ template <typename Parent> class SurfaceChild : public Parent
     using Size = typename Parent::Size;
     using Viewport = typename Parent::Viewport;
 
-    inline Surface& root() override { return parent().root(); }
-    inline const Surface& root() const override { return parent().root(); }
+    Surface& root() override { return parent().root(); }
+    const Surface& root() const override { return parent().root(); }
 
     virtual Surface& parent() = 0;
     virtual const Surface& parent() const = 0;
 
-    inline void new_page() override { root().new_page(); }
-    inline void move(const Location& aOriginInParent) override { this->change_origin(aOriginInParent); }
-    inline void move_resize(const Location& aOriginInParent, double aWidthInParent) override
+    void new_page() override { root().new_page(); }
+    void move(const Location& aOriginInParent) override { this->change_origin(aOriginInParent); }
+    void move_resize(const Location& aOriginInParent, double aWidthInParent) override
         {
             assert(aWidthInParent > 0);
             this->change_origin(aOriginInParent);
             this->change_width_in_parent(aWidthInParent);
         }
 
-    inline double scale() const override { return parent().scale() * (this->width_in_parent() / this->viewport().size.width); }
-    inline Location origin_offset() const override { return parent().origin_offset() + this->origin_in_parent() * parent().scale(); }
+    double scale() const override { return parent().scale() * (this->width_in_parent() / this->viewport().size.width); }
+    Location origin_offset() const override { return parent().origin_offset() + this->origin_in_parent() * parent().scale(); }
 
-    inline bool clip() const override { return mClip; }
+    bool clip() const override { return mClip; }
 
  protected:
-    inline SurfaceChild(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip)
+    SurfaceChild(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip)
         : Parent{aOriginInParent, aWidthInParent, aViewport}, mClip{aClip} {}
 
  private:
@@ -171,12 +167,10 @@ template <typename Parent> class SurfaceChild : public Parent
 
 // ----------------------------------------------------------------------
 
-#ifdef ACMACS_TARGET_OS
 inline std::ostream& operator << (std::ostream& out, const Surface& aSurface)
 {
     return out << "Surface(" << aSurface.viewport() << ", Origin" << aSurface.origin_in_parent() << ", width=" << aSurface.width_in_parent() << ')';
 }
-#endif
 
 // ----------------------------------------------------------------------
 /// Local Variables:
