@@ -27,15 +27,109 @@ acmacs::surface::Html::~Html()
 
 // ----------------------------------------------------------------------
 
-void acmacs::surface::internal::Javascript::line(const Location& a, const Location& b, Color aColor, Pixels aWidth, LineCap aLineCap)
+class context
 {
+ public:
+    context(acmacs::surface::internal::Javascript& surface)
+        : output_(surface.output()), scale_(surface.scale()), indent_("        ")
+        {
+            const auto& viewport = surface.viewport();
+            const auto origin = surface.origin_offset();
+            output_ << indent_ << "__context.save()\n"
+                    << indent_ << "__context.translate(" << origin.x << ',' << origin.y << ");\n"
+                    << indent_ << "__context.scale(" << scale_ << ',' << scale_ << ");\n"
+                    << indent_ << "__context.translate(" << viewport.origin.x << ',' << viewport.origin.y << ");\n";
+            // if (surface.clip()) {
+            //     new_path();
+            //     move_to(viewport.origin);
+            //     line_to(viewport.top_right());
+            //     line_to(viewport.bottom_right());
+            //     line_to(viewport.bottom_left());
+            //     close_path();
+            //     clip();
+            // }
+        }
 
-} // acmacs::surface::internal::Javascript::line
+    ~context()
+        {
+            output_ << indent_ << "__context.restore()\n";
+        }
+
+    template <typename S> context& set_line_width(S aWidth) { output_ << indent_ << "__context.lineWidth = " << convert(aWidth) << ";\n"; return *this; }
+    context& set_stroke(Color aColor) { output_ << indent_ << "__context.strokeStyle = \"" << aColor.to_hex_string() << "\";\n"; return *this; }
+    context& set_line_cap(acmacs::surface::Surface::LineCap aLineCap) { output_ << indent_ << "__context.lineCap = \"" << canvas_line_cap(aLineCap) << "\";\n"; return *this; }
+    context& set_line_join(acmacs::surface::Surface::LineJoin aLineJoin) { output_ << indent_ << "__context.lineJoin = \"" << canvas_line_join(aLineJoin) << "\";\n"; return *this; }
+
+    context& move_to(double x, double y) { output_ << indent_ << "__context.moveTo(" << x << ',' << y << ");\n"; return *this; }
+    context& move_to() { return move_to(0, 0); }
+    context& move_to(const acmacs::Location& a) { return move_to(a.x, a.y); }
+    template <typename S> context& move_to(S x, S y) { return move_to(convert(x), convert(y)); }
+    context& line_to(double x, double y) { output_ << indent_ << "__context.lineTo(" << x << ',' << y << ");\n"; return *this; }
+    context& line_to(const acmacs::Location& a) { return line_to(a.x, a.y); }
+    template <typename S> context& line_to(S x, S y) { return line_to(convert(x), convert(y)); }
+
+    context& stroke() { output_ << indent_ << "__context.stroke();\n"; return *this; }
+    // context& stroke_preserve() { cairo_stroke_preserve(cairo_context()); return *this; }
+
+ private:
+    std::ostream& output_;
+    const double scale_;
+    const char* const indent_;
+
+    double convert(double aValue) { return aValue; }
+    double convert(Scaled aValue) { return aValue.value(); }
+    double convert(Pixels aValue) { return aValue.value() / scale_; }
+
+    const char* const canvas_line_cap(acmacs::surface::Surface::LineCap aLineCap) const
+        {
+            switch (aLineCap) {
+              case acmacs::surface::Surface::LineCap::Butt:
+                  return "butt";
+              case acmacs::surface::Surface::LineCap::Round:
+                  return "round";
+              case acmacs::surface::Surface::LineCap::Square:
+                  return "square";
+            }
+            return "butt"; // gcc wants return
+        }
+
+    const char* const canvas_line_join(acmacs::surface::Surface::LineJoin aLineJoin) const
+        {
+            switch (aLineJoin) {
+              case acmacs::surface::Surface::LineJoin::Miter:
+                  return "miter";
+              case acmacs::surface::Surface::LineJoin::Round:
+                  return "round";
+              case acmacs::surface::Surface::LineJoin::Bevel:
+                  return "bevel";
+            }
+            return "miter"; // gcc wants return
+        }
+
+}; // class context
 
 // ----------------------------------------------------------------------
 
+template <typename S> static inline void s_line(acmacs::surface::internal::Javascript& surface, const acmacs::Location& a, const acmacs::Location& b, Color aColor, S aWidth, acmacs::surface::Surface::LineCap aLineCap)
+{
+    context(surface)
+            .set_line_width(aWidth)
+            .set_stroke(aColor)
+            .set_line_cap(aLineCap)
+            .move_to(a)
+            .line_to(b)
+            .stroke();
+}
+
+void acmacs::surface::internal::Javascript::line(const Location& a, const Location& b, Color aColor, Pixels aWidth, LineCap aLineCap)
+{
+    s_line(*this, a, b, aColor, aWidth, aLineCap);
+
+} // acmacs::surface::internal::Javascript::line
+
 void acmacs::surface::internal::Javascript::line(const Location& a, const Location& b, Color aColor, Scaled aWidth, LineCap aLineCap)
 {
+    s_line(*this, a, b, aColor, aWidth, aLineCap);
 
 } // acmacs::surface::internal::Javascript::line
 
@@ -211,6 +305,7 @@ void acmacs::surface::internal::Javascript::text_right_aligned(const Location& a
 
 acmacs::Size acmacs::surface::internal::Javascript::text_size(std::string aText, Pixels aSize, const TextStyle& aTextStyle, double* x_bearing)
 {
+    return {1, 1};
 
 } // acmacs::surface::internal::Javascript::text_size
 
@@ -218,6 +313,7 @@ acmacs::Size acmacs::surface::internal::Javascript::text_size(std::string aText,
 
 acmacs::Size acmacs::surface::internal::Javascript::text_size(std::string aText, Scaled aSize, const TextStyle& aTextStyle, double* x_bearing)
 {
+    return {1, 1};
 
 } // acmacs::surface::internal::Javascript::text_size
 
@@ -233,7 +329,24 @@ acmacs::surface::Surface* acmacs::surface::internal::Javascript::make_child(cons
 
 void write_header(std::ostream& output)
 {
-    output << "<html>\n<head>\n";
+    output << R"(<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      #canvas {
+        margin: 1em;
+        border: 1px solid black;
+      }
+    </style>
+    <title>acmacs-draw</title>
+    <script>
+      function main() {
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+        draw(ctx);
+      }
+      function draw(__context) {
+)";
 
 } // write_header
 
@@ -241,7 +354,15 @@ void write_header(std::ostream& output)
 
 void write_html_body(std::ostream& output)
 {
-    output << "</head>\n<body></body>\n</html>\n";
+    output << R"(          }
+      document.addEventListener('DOMContentLoaded', main, false);
+    </script>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+  </body>
+</html>
+)";
 
 } // write_html_body
 

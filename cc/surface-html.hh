@@ -16,7 +16,7 @@ namespace acmacs::surface
         class Javascript : public acmacs::surface::Surface
         {
           public:
-              // virtual cairo_t* cairo_context() = 0;
+            virtual std::ostream& output() = 0;
 
             void line(const Location& a, const Location& b, Color aColor, Pixels aWidth, LineCap aLineCap = LineCap::Butt) override;
             void line(const Location& a, const Location& b, Color aColor, Scaled aWidth, LineCap aLineCap = LineCap::Butt) override;
@@ -77,7 +77,7 @@ namespace acmacs::surface
         class JavascriptChild : public acmacs::surface::SurfaceChild<Javascript>
         {
           public:
-              // cairo_t* cairo_context() override { return dynamic_cast<Javascript&>(root()).cairo_context(); }
+            std::ostream& output() override { return dynamic_cast<Javascript&>(root()).output(); }
 
             Javascript& parent() override { return mParent; }
             const Javascript& parent() const override { return mParent; }
@@ -105,12 +105,11 @@ namespace acmacs::surface
         Html(std::string aFilename, double aWidth, double aHeight, double aViewportWidth = default_canvas_width);
         ~Html() override;
 
-          // cairo_t* cairo_context() override { return mCairoContext; }
+        std::ostream& output() override { return output_; }
         void new_page() override { }
 
      private:
         std::ofstream output_;
-          // cairo_t* mCairoContext;
 
     }; // class Html
 
