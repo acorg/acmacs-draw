@@ -24,14 +24,12 @@ void acmacs::draw::DrawElements::draw() const
 
 template <typename E> inline E& replace_or_add(std::unique_ptr<E> element, std::vector<std::unique_ptr<acmacs::draw::Element>>& elements)
 {
-    if (auto found = std::find_if(elements.begin(), elements.end(), [](const auto& elt) { return dynamic_cast<E*>(elt.get()) != nullptr; }); found != elements.end()) {
+    auto& result = *element;
+    if (auto found = std::find_if(elements.begin(), elements.end(), [](const auto& elt) { return dynamic_cast<E*>(elt.get()) != nullptr; }); found != elements.end())
         *found = std::move(element);
-        return dynamic_cast<E&>(**found);
-    }
-    else {
+    else
         elements.push_back(std::move(element));
-        return dynamic_cast<E&>(*elements.back());
-    }
+    return result;
 }
 
 // ----------------------------------------------------------------------
