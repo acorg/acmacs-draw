@@ -18,7 +18,7 @@ SRC_DIR = $(abspath $(ACMACSD_ROOT)/sources)
 
 ACMACS_DRAW_SOURCES = continent-path.cc continent-map.cc geographic-path.cc geographic-map.cc \
   surface.cc surface-cairo.cc surface-html.cc \
-  draw-elements.cc draw-elements-pdf.cc
+  draw-elements.cc draw-grid.cc
 
 ACMACS_DRAW_PY_SOURCES = py.cc $(ACMACS_DRAW_SOURCES)
 

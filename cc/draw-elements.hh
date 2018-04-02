@@ -4,25 +4,30 @@
 #include <vector>
 #include <string>
 
+#include "acmacs-base/color.hh"
+#include "acmacs-draw/viewport.hh"
+
 // ----------------------------------------------------------------------
 
-namespace acmacs::surface { class PdfCairo; }
+namespace acmacs::surface { class Surface; }
 
 namespace acmacs::draw
 {
-    enum class drawing_stage : size_t { __first, grid, points, labels, serum_circles, procrustes_arrows, title, __last };
+    enum class drawing_stage : size_t { __first, grid, points, labels, serum_circles, procrustes_arrows, legend, title, __last };
 
     inline void increment(drawing_stage& value)
     {
         value = static_cast<drawing_stage>(static_cast<size_t>(value) + 1);
     }
 
-    template <typename Surface> class Element
+// ----------------------------------------------------------------------
+
+    class Element
     {
      public:
         Element() {}
         virtual ~Element() = default;
-        virtual void draw(drawing_stage stage, Surface& surface) const = 0;
+        virtual void draw(drawing_stage stage, surface::Surface& surface) const = 0;
 
     }; // class Element
 
@@ -31,24 +36,22 @@ namespace acmacs::draw
     class DrawElements
     {
      public:
-        DrawElements() = default;
-        virtual ~DrawElements() = default;
+        DrawElements(std::string filename, double size) : filename_(filename), size_(size) {}
+        // virtual ~DrawElements() = default;
 
-        virtual void draw() const = 0;
-        virtual void grid(double step) = 0;
+        void draw() const;
 
-    }; // class DrawElements
+        void viewport(const acmacs::Viewport& viewport) { viewport_ = viewport; }
+        void grid(Scaled step, Color line_color, Pixels line_width);
 
-// ----------------------------------------------------------------------
+     private:
+        std::string filename_;
+        double size_;
+        std::vector<std::unique_ptr<Element>> elements_;
+        acmacs::Viewport viewport_;
 
-    template <typename Surface> class DrawElementsOn : public DrawElements
-    {
-     public:
-        DrawElementsOn(std::string filename, double size) : filename_(filename), size_(size) {}
-
-        void draw() const override
+        template <typename Surface> void draw(Surface&& surface) const
             {
-                Surface surface(filename_, size_, size_);
                 for (auto stage = drawing_stage::__first; stage != drawing_stage::__last; increment(stage)) {
                     for (auto& element : elements_) {
                         element->draw(stage, surface);
@@ -56,21 +59,9 @@ namespace acmacs::draw
                 }
             }
 
-        void grid(double step) override;
-
-     protected:
-        void add(std::unique_ptr<Element<Surface>> element) { elements_.push_back(std::move(element)); }
-
-     private:
-        std::string filename_;
-        double size_;
-        std::vector<std::unique_ptr<Element<Surface>>> elements_;
-
-    }; // class DrawElementsOn
+    }; // class DrawElements
 
     // ----------------------------------------------------------------------
-
-    std::shared_ptr<DrawElements> factory(std::string filename, double size);
 
 } // namespace acmacs::draw
 
