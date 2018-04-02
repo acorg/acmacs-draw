@@ -13,7 +13,7 @@ namespace acmacs::surface { class Surface; }
 
 namespace acmacs::draw
 {
-    enum class drawing_stage : size_t { __first, grid, points, labels, serum_circles, procrustes_arrows, legend, title, __last };
+    enum class drawing_stage : size_t { __first, background, grid, points, labels, serum_circles, procrustes_arrows, legend, title, border, __last };
 
     inline void increment(drawing_stage& value)
     {
@@ -42,7 +42,9 @@ namespace acmacs::draw
         void draw() const;
 
         void viewport(const acmacs::Viewport& viewport) { viewport_ = viewport; }
+        void background(Color color);
         void grid(Scaled step, Color line_color, Pixels line_width);
+        void border(Color line_color, Pixels line_width);
 
      private:
         std::string filename_;

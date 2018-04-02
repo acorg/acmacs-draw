@@ -17,6 +17,26 @@ void acmacs::draw::Grid::draw(drawing_stage stage, surface::Surface& surface) co
 
 // ----------------------------------------------------------------------
 
+void acmacs::draw::Background::draw(drawing_stage stage, surface::Surface& surface) const
+{
+    if (stage == drawing_stage::background) {
+        surface.background(color_);
+    }
+
+} // acmacs::draw::Background::draw
+
+// ----------------------------------------------------------------------
+
+void acmacs::draw::Border::draw(drawing_stage stage, surface::Surface& surface) const
+{
+    if (stage == drawing_stage::border) {
+        surface.border(line_color_, line_width_);
+    }
+
+} // acmacs::draw::Border::draw
+
+// ----------------------------------------------------------------------
+
 
 // ----------------------------------------------------------------------
 /// Local Variables:

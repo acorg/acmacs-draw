@@ -21,15 +21,42 @@ void acmacs::draw::DrawElements::draw() const
 
 // ----------------------------------------------------------------------
 
+template <typename E> inline void replace_or_add(std::unique_ptr<E> element, std::vector<std::unique_ptr<acmacs::draw::Element>>& elements)
+{
+    if (auto found = std::find_if(elements.begin(), elements.end(), [](const auto& elt) { return dynamic_cast<E*>(elt.get()) != nullptr; }); found != elements.end())
+        *found = std::move(element);
+    else
+        elements.push_back(std::move(element));
+}
+
+// ----------------------------------------------------------------------
+
 void acmacs::draw::DrawElements::grid(Scaled step, Color line_color, Pixels line_width)
 {
-    auto grid = std::make_unique<Grid>(step, line_color, line_width);
-    if (auto found = std::find_if(elements_.begin(), elements_.end(), [](const auto& elt) { return dynamic_cast<Grid*>(elt.get()) != nullptr; }); found != elements_.end())
-        *found = std::move(grid);
-    else
-        elements_.push_back(std::move(grid));
+    replace_or_add(std::make_unique<Grid>(step, line_color, line_width), elements_);
+    // auto grid = std::make_unique<Grid>(step, line_color, line_width);
+    // if (auto found = std::find_if(elements_.begin(), elements_.end(), [](const auto& elt) { return dynamic_cast<Grid*>(elt.get()) != nullptr; }); found != elements_.end())
+    //     *found = std::move(grid);
+    // else
+    //     elements_.push_back(std::move(grid));
 
 } // acmacs::draw::DrawElements::grid
+
+// ----------------------------------------------------------------------
+
+void acmacs::draw::DrawElements::background(Color color)
+{
+    replace_or_add(std::make_unique<Background>(color), elements_);
+
+} // acmacs::draw::DrawElements::background
+
+// ----------------------------------------------------------------------
+
+void acmacs::draw::DrawElements::border(Color line_color, Pixels line_width)
+{
+    replace_or_add(std::make_unique<Border>(line_color, line_width), elements_);
+
+} // acmacs::draw::DrawElements::border
 
 // ----------------------------------------------------------------------
 
