@@ -1,6 +1,7 @@
 #include "acmacs-draw/surface-cairo.hh"
 #include "acmacs-draw/draw-elements.hh"
 #include "acmacs-draw/draw-grid.hh"
+#include "acmacs-draw/draw-legend.hh"
 
 // ----------------------------------------------------------------------
 
@@ -21,12 +22,16 @@ void acmacs::draw::DrawElements::draw() const
 
 // ----------------------------------------------------------------------
 
-template <typename E> inline void replace_or_add(std::unique_ptr<E> element, std::vector<std::unique_ptr<acmacs::draw::Element>>& elements)
+template <typename E> inline E& replace_or_add(std::unique_ptr<E> element, std::vector<std::unique_ptr<acmacs::draw::Element>>& elements)
 {
-    if (auto found = std::find_if(elements.begin(), elements.end(), [](const auto& elt) { return dynamic_cast<E*>(elt.get()) != nullptr; }); found != elements.end())
+    if (auto found = std::find_if(elements.begin(), elements.end(), [](const auto& elt) { return dynamic_cast<E*>(elt.get()) != nullptr; }); found != elements.end()) {
         *found = std::move(element);
-    else
+        return dynamic_cast<E&>(**found);
+    }
+    else {
         elements.push_back(std::move(element));
+        return dynamic_cast<E&>(*elements.back());
+    }
 }
 
 // ----------------------------------------------------------------------
@@ -57,6 +62,14 @@ void acmacs::draw::DrawElements::border(Color line_color, Pixels line_width)
     replace_or_add(std::make_unique<Border>(line_color, line_width), elements_);
 
 } // acmacs::draw::DrawElements::border
+
+// ----------------------------------------------------------------------
+
+acmacs::draw::Title& acmacs::draw::DrawElements::title(const std::vector<std::string>& lines)
+{
+    return replace_or_add(std::make_unique<Title>(lines), elements_);
+
+} // acmacs::draw::DrawElements::title
 
 // ----------------------------------------------------------------------
 

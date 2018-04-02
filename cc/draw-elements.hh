@@ -33,6 +33,8 @@ namespace acmacs::draw
 
 // ----------------------------------------------------------------------
 
+    class Title;
+
     class DrawElements
     {
      public:
@@ -45,6 +47,7 @@ namespace acmacs::draw
         void background(Color color);
         void grid(Scaled step, Color line_color, Pixels line_width);
         void border(Color line_color, Pixels line_width);
+        Title& title(const std::vector<std::string>& lines);
 
      private:
         std::string filename_;

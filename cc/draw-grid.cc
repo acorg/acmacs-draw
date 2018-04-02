@@ -1,4 +1,4 @@
-#include "acmacs-draw/surface-cairo.hh"
+#include "acmacs-draw/surface.hh"
 #include "acmacs-draw/draw-grid.hh"
 
 // ----------------------------------------------------------------------
