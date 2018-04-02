@@ -33,17 +33,18 @@ int main(int /*argc*/, const char */*argv*/[])
 
 void draw(acmacs::surface::Surface& aSurface)
 {
-    aSurface.background("white");
+    const auto& v = aSurface.viewport();
+    aSurface.rectangle_filled(v.origin, v.size, WHITE, Pixels{0}, WHITE);
     aSurface.grid(Scaled{aSurface.viewport().size.width / 10}, 0xC0808080, Pixels{1});
-    aSurface.border(0xC0808080, Pixels{1});
+    aSurface.rectangle(v.origin, v.size, 0xC0808080, Pixels{2});
 
     aSurface.line({150, 50}, {950, 160}, "red2", Pixels{2});
-    aSurface.circle_filled({100, 200}, Scaled{50}, Aspect{0.5}, Rotation{0.25}, "black", Pixels{1}, 0xC0FF0000);
-    aSurface.circle_filled({150, 200}, Pixels{10}, Aspect{1.4}, Rotation{0.75}, "black", Pixels{1}, 0xC0FFB000);
-    aSurface.square_filled({200, 200}, Scaled{50}, Aspect{1.0}, Rotation{1.0}, "black", Pixels{1}, 0xC0FF00B0);
-    aSurface.square_filled({250, 200}, Pixels{10}, Aspect{1.0}, Rotation{0.0}, "black", Pixels{1}, 0xC0FF00B0);
-    aSurface.triangle_filled({300, 200}, Scaled{50}, Aspect{1.0}, Rotation{0.0}, "black", Pixels{1}, 0xC000B0B0);
-    aSurface.triangle_filled({350, 200}, Pixels{10}, Aspect{1.0}, Rotation{0.0}, "black", Pixels{1}, 0xC000B0B0);
+    aSurface.circle_filled({100, 200}, Scaled{50}, Aspect{0.5}, Rotation{0.25}, BLACK, Pixels{1}, 0xC0FF0000);
+    aSurface.circle_filled({150, 200}, Pixels{10}, Aspect{1.4}, Rotation{0.75}, BLACK, Pixels{1}, 0xC0FFB000);
+    aSurface.square_filled({200, 200}, Scaled{50}, Aspect{1.0}, Rotation{1.0}, BLACK, Pixels{1}, 0xC0FF00B0);
+    aSurface.square_filled({250, 200}, Pixels{10}, Aspect{1.0}, Rotation{0.0}, BLACK, Pixels{1}, 0xC0FF00B0);
+    aSurface.triangle_filled({300, 200}, Scaled{50}, Aspect{1.0}, Rotation{0.0}, BLACK, Pixels{1}, 0xC000B0B0);
+    aSurface.triangle_filled({350, 200}, Pixels{10}, Aspect{1.0}, Rotation{0.0}, BLACK, Pixels{1}, 0xC000B0B0);
 
     aSurface.double_arrow({100, 300}, {600, 250}, "blue", Pixels{2}, Pixels{6});
 
@@ -66,9 +67,9 @@ void draw1(acmacs::surface::Surface& /*aSurface*/)
     // aSurface.background(0x40F0F0FF);
     // aSurface.grid(200, "grey80", 5);
     // aSurface.border("grey50", 20);
-    // aSurface.circle({500, 100}, 200, 1.0, 0.0, "black", 10);
-    // aSurface.circle({1000, 0}, 200, 1.0, 0.0, "black", 10);
-    // aSurface.circle({1000, 1700}, 200, 1.0, 0.0, "black", 10);
+    // aSurface.circle({500, 100}, 200, 1.0, 0.0, BLACK, 10);
+    // aSurface.circle({1000, 0}, 200, 1.0, 0.0, BLACK, 10);
+    // aSurface.circle({1000, 1700}, 200, 1.0, 0.0, BLACK, 10);
     // aSurface.line({100, 100}, {300, 300}, "red", 10);
     // aSurface.rectangle({100, 170}, {50, 70}, "orange", 5);
     // aSurface.rectangle_filled({120, 200}, {250, 70}, "brown", 5, "#8080ffff");

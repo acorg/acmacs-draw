@@ -105,16 +105,6 @@ namespace acmacs::surface
         void double_arrow(const Location& a, const Location& b, Color aColor, Pixels aLineWidth, Pixels aArrowWidth);
         Location arrow_head(const Location& a, double angle, double sign, Color aColor, Pixels aArrowWidth, bool aFilled);
         void grid(Scaled aStep, Color aLineColor, Pixels aLineWidth);
-        void border(Color aLineColor, Pixels aLineWidth)
-        {
-            const Viewport& v = viewport();
-            rectangle(v.origin, v.size, aLineColor, aLineWidth * 2);
-        }
-        void background(Color aColor)
-        {
-            const Viewport& v = viewport();
-            rectangle_filled(v.origin, v.size, aColor, Pixels{0}, aColor);
-        }
 
         virtual void text(const Location& a, std::string aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle = TextStyle(), Rotation aRotation = Rotation{0}) = 0;
         virtual void text(const Location& a, std::string aText, Color aColor, Scaled aSize, const TextStyle& aTextStyle = TextStyle(), Rotation aRotation = Rotation{0}) = 0;

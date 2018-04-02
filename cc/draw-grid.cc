@@ -20,7 +20,8 @@ void acmacs::draw::Grid::draw(drawing_stage stage, surface::Surface& surface) co
 void acmacs::draw::Background::draw(drawing_stage stage, surface::Surface& surface) const
 {
     if (stage == drawing_stage::background) {
-        surface.background(color_);
+        const Viewport& v = surface.viewport();
+        surface.rectangle_filled(v.origin, v.size, color_, Pixels{0}, color_);
     }
 
 } // acmacs::draw::Background::draw
@@ -30,7 +31,8 @@ void acmacs::draw::Background::draw(drawing_stage stage, surface::Surface& surfa
 void acmacs::draw::Border::draw(drawing_stage stage, surface::Surface& surface) const
 {
     if (stage == drawing_stage::border) {
-        surface.border(line_color_, line_width_);
+        const Viewport& v = surface.viewport();
+        surface.rectangle(v.origin, v.size, line_color_, line_width_ * 2);
     }
 
 } // acmacs::draw::Border::draw

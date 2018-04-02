@@ -40,7 +40,7 @@ void draw(acmacs::surface::Surface& aSurface, const std::vector<std::string>& fo
     const double size = aSurface.viewport().size.height / (column_size * f_size.height * 1.15);
     std::cout << "fonts:" << fonts.size() << " size:" << size << std::endl;
 
-    aSurface.background("white");
+    // aSurface.background("white");
     acmacs::Location loc;
     for (size_t column = 0, font_no = 0; column < columns; ++column) {
         for (; font_no < fonts.size() && font_no < (column + 1) * column_size; ++font_no) {
