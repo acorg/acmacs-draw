@@ -18,12 +18,11 @@ namespace acmacs::draw
         const acmacs::Location& to() const { return to_; }
         Color line_color() const { return line_color_; }
         Pixels line_width() const { return line_width_; }
-        
+
      private:
-        acmacs::Location from_;
-        acmacs::Location to_;
-        Color line_color_;
-        Pixels line_width_;
+        const acmacs::Location from_, to_;
+        const Color line_color_;
+        const Pixels line_width_;
 
     }; // class Line
 
@@ -38,11 +37,29 @@ namespace acmacs::draw
         void draw(drawing_stage stage, surface::Surface& surface) const override;
 
      private:
-        Color arrow_head_color_;
-        bool arrow_head_filled_;
-        Pixels arrow_width_;
+        const Color arrow_head_color_;
+        const bool arrow_head_filled_;
+        const Pixels arrow_width_;
 
     }; // class Arrow
+
+// ----------------------------------------------------------------------
+
+    class Rectangle : public Element
+    {
+     public:
+        Rectangle(const acmacs::Location& corner1, const acmacs::Location& corner2, Color color, bool filled, Pixels line_width)
+            : corner1_(corner1), corner2_(corner2), color_(color), filled_(filled), line_width_(line_width) {}
+
+        void draw(drawing_stage stage, surface::Surface& surface) const override;
+
+     private:
+        const acmacs::Location corner1_, corner2_;
+        const Color color_;
+        const bool filled_;
+        const Pixels line_width_;
+
+    }; // class Rectangle
 
 } // namespace acmacs::draw
 

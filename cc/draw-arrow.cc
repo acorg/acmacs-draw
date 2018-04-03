@@ -26,6 +26,20 @@ void acmacs::draw::Arrow::draw(drawing_stage stage, surface::Surface& surface) c
 
 // ----------------------------------------------------------------------
 
+void acmacs::draw::Rectangle::draw(drawing_stage stage, surface::Surface& surface) const
+{
+    if (stage == drawing_stage::procrustes_arrows) {
+        const std::vector<acmacs::Location> path{corner1_, {corner1_.x, corner2_.y}, corner2_, {corner2_.x, corner1_.y}};
+        if (filled_)
+            surface.path_fill(path.begin(), path.end(), color_);
+        else
+            surface.path_outline(path.begin(), path.end(), color_, line_width_, true);
+    }
+
+} // acmacs::draw::Rectangle::draw
+
+// ----------------------------------------------------------------------
+
 
 // ----------------------------------------------------------------------
 /// Local Variables:

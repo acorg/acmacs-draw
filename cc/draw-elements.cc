@@ -5,11 +5,9 @@
 #include "acmacs-draw/draw-points.hh"
 #include "acmacs-draw/draw-arrow.hh"
 
-// Points
 // ContinentMap
 // LegendPointLabel
 // SerumCircle
-// Rectangle
 // Circle
 // Sector
 // Point (circle of size in Pixels)
@@ -106,6 +104,14 @@ void acmacs::draw::DrawElements::arrow(const acmacs::Location& from, const acmac
     elements_.push_back(std::make_unique<Arrow>(from ,to, line_color, line_width, arrow_head_color, arrow_head_filled, arrow_width));
 
 } // acmacs::draw::DrawElements::arrow
+
+// ----------------------------------------------------------------------
+
+void acmacs::draw::DrawElements::rectangle(const acmacs::Location& corner1, const acmacs::Location& corner2, Color color, bool filled, Pixels line_width)
+{
+    elements_.push_back(std::make_unique<Rectangle>(corner1, corner2, color, filled, line_width));
+
+} // acmacs::draw::DrawElements::rectangle
 
 // ----------------------------------------------------------------------
 
