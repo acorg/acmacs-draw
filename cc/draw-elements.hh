@@ -9,7 +9,16 @@
 
 // ----------------------------------------------------------------------
 
-namespace acmacs::surface { class Surface; }
+namespace acmacs
+{
+    class LayoutInterface;
+    class Transformation;
+}
+
+namespace acmacs::surface
+{
+    class Surface;
+}
 
 namespace acmacs::draw
 {
@@ -34,6 +43,7 @@ namespace acmacs::draw
 // ----------------------------------------------------------------------
 
     class Title;
+    class Points;
 
     class DrawElements
     {
@@ -48,6 +58,7 @@ namespace acmacs::draw
         void grid(Scaled step, Color line_color, Pixels line_width);
         void border(Color line_color, Pixels line_width);
         Title& title(const std::vector<std::string>& lines);
+        Points& points(std::shared_ptr<acmacs::LayoutInterface> layout, const acmacs::Transformation& transformation);
 
      private:
         std::string filename_;

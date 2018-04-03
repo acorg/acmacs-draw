@@ -2,6 +2,7 @@
 #include "acmacs-draw/draw-elements.hh"
 #include "acmacs-draw/draw-grid.hh"
 #include "acmacs-draw/draw-legend.hh"
+#include "acmacs-draw/draw-points.hh"
 
 // Points
 // ContinentMap
@@ -85,7 +86,13 @@ acmacs::draw::Title& acmacs::draw::DrawElements::title(const std::vector<std::st
 
 // ----------------------------------------------------------------------
 
+acmacs::draw::Points& acmacs::draw::DrawElements::points(std::shared_ptr<acmacs::LayoutInterface> layout, const acmacs::Transformation& transformation)
+{
+    return replace_or_add(std::make_unique<Points>(layout, transformation), elements_);
 
+} // acmacs::draw::DrawElements::points
+
+// ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
 /// Local Variables:
