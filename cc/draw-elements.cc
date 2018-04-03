@@ -3,6 +3,20 @@
 #include "acmacs-draw/draw-grid.hh"
 #include "acmacs-draw/draw-legend.hh"
 
+// Points
+// ContinentMap
+// LegendPointLabel
+// SerumCircle
+// Line
+// Arrow
+// Rectangle
+// Circle
+// Sector
+// Point (circle of size in Pixels)
+// Tree
+// Tree time series
+// Clade regions
+
 // ----------------------------------------------------------------------
 
 void acmacs::draw::DrawElements::draw() const
