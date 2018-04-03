@@ -74,6 +74,7 @@ namespace acmacs::draw
 
         Points& drawing_order(const DrawingOrder& drawing_order) { drawing_order_ = drawing_order; return *this; }
         Points& styles(std::shared_ptr<PointStyles> styles) { styles_ = styles; return *this; }
+        Points& labels(const PointLabels& labels) { labels_ = &labels; return *this; }
 
         void draw(drawing_stage stage, surface::Surface& surface) const override;
 
@@ -83,8 +84,10 @@ namespace acmacs::draw
         DrawingOrder drawing_order_;
         PointStyle default_style_;
         std::shared_ptr<PointStyles> styles_;
+        const PointLabels* labels_ = nullptr;
 
         void draw_points(surface::Surface& surface) const;
+        void draw_labels(surface::Surface& surface) const;
 
         PointStyle style(size_t point_no) const
             {

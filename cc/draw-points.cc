@@ -38,6 +38,7 @@ void acmacs::draw::Points::draw(drawing_stage stage, surface::Surface& surface) 
           draw_points(surface);
           break;
       case drawing_stage::labels:
+          draw_labels(surface);
           break;
       case drawing_stage::__first: case drawing_stage::background: case drawing_stage::grid: case drawing_stage::serum_circles: case drawing_stage::procrustes_arrows: case drawing_stage::legend: case drawing_stage::title: case drawing_stage::border: case drawing_stage::__last:
           break;
@@ -70,6 +71,28 @@ void acmacs::draw::Points::draw_points(surface::Surface& surface) const
     }
 
 } // acmacs::draw::Points::draw_points
+
+// ----------------------------------------------------------------------
+
+void acmacs::draw::Points::draw_labels(surface::Surface& surface) const
+{
+    if (labels_) {
+        std::unique_ptr<LayoutInterface> layout{layout_->transform(transformation_)};
+        for (const auto& label : *labels_) {
+            const auto index = label.index();
+            if (const auto styl = style(index); *styl.shown) {
+                if (auto text_origin = layout->get(index); !text_origin.empty()) { // point is not disconnected
+                    const double scaled_point_size = surface.convert(Pixels{*styl.size}).value();
+                    const acmacs::Size ts = surface.text_size(label.display_name(), label.text_size(), label.text_style());
+                    text_origin[0] += label.text_offset(label.offset().x, scaled_point_size, ts.width, false);
+                    text_origin[1] += label.text_offset(label.offset().y, scaled_point_size, ts.height, true);
+                    surface.text(text_origin, label.display_name(), label.text_color(), label.text_size(), label.text_style());
+                }
+            }
+        }
+    }
+
+} // acmacs::draw::Points::draw_labels
 
 // ----------------------------------------------------------------------
 
