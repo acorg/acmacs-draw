@@ -40,6 +40,8 @@ namespace acmacs::draw
         Pixels text_size() const { return text_size_; }
         const acmacs::TextStyle text_style() const { return text_style_; }
 
+        static double text_offset(double offset_hint, double point_size, double text_size, bool text_origin_at_opposite);
+
      private:
         size_t index_;
         acmacs::Location offset_;
@@ -49,6 +51,15 @@ namespace acmacs::draw
         acmacs::TextStyle text_style_;
 
     }; // class PointLabel
+
+    class PointLabels : public std::vector<PointLabel>
+    {
+     public:
+        PointLabels() = default;
+
+        void remove(size_t index) { erase(std::remove_if(begin(), end(), [index](const auto& label) { return label.index() == index; }), end()); }
+
+    }; // class PointLabels
 
 // ----------------------------------------------------------------------
 

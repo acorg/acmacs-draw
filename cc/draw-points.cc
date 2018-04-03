@@ -5,6 +5,24 @@
 
 // ----------------------------------------------------------------------
 
+double acmacs::draw::PointLabel::text_offset(double offset_hint, double point_size, double text_size, bool text_origin_at_opposite)
+{
+    double offset = 0;
+    if (offset_hint < -1) {
+        offset += point_size * (offset_hint + 0.5) - (text_origin_at_opposite ? 0 : text_size);
+    }
+    else if (offset_hint < 1) {
+        offset += point_size * offset_hint / 2 + (text_origin_at_opposite ? (text_size * (offset_hint + 1) / 2) : (text_size * (offset_hint - 1) / 2));
+    }
+    else {
+        offset += point_size * (offset_hint - 0.5) + (text_origin_at_opposite ? text_size : 0);
+    }
+    return offset;
+
+} // acmacs::draw::PointLabel::text_offset
+
+// ----------------------------------------------------------------------
+
 acmacs::draw::Points::Points(std::shared_ptr<acmacs::LayoutInterface> layout, const acmacs::Transformation& transformation)
     : layout_(layout), transformation_(transformation), drawing_order_(acmacs::filled_with_indexes(layout->number_of_points()))
 {
