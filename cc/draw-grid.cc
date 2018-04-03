@@ -1,4 +1,3 @@
-#include "acmacs-draw/surface.hh"
 #include "acmacs-draw/draw-grid.hh"
 
 // ----------------------------------------------------------------------

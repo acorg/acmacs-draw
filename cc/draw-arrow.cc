@@ -1,4 +1,3 @@
-#include "acmacs-draw/surface.hh"
 #include "acmacs-draw/draw-arrow.hh"
 
 // ----------------------------------------------------------------------
@@ -46,6 +45,19 @@ void acmacs::draw::Circle::draw(drawing_stage stage, surface::Surface& surface) 
         surface.circle_filled(center_, size_, aspect_, rotation_, outline_color_, outline_width_, fill_color_);
 
 } // acmacs::draw::Circle::draw
+
+// ----------------------------------------------------------------------
+
+void acmacs::draw::Sector::draw(drawing_stage stage, surface::Surface& surface) const
+{
+    if (stage == stage_) {
+        if (start_ == end_)
+            surface.circle_filled(center_, size_, AspectNormal, NoRotation, outline_color_, outline_width_, fill_color_);
+        else
+            surface.sector_filled(center_, size_, start_, end_, outline_color_, outline_width_, radius_color_, radius_width_, radius_dash_, fill_color_);
+    }
+
+} // acmacs::draw::Sector::draw
 
 // ----------------------------------------------------------------------
 

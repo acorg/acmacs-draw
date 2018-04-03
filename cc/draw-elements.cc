@@ -8,7 +8,6 @@
 // ContinentMap
 // LegendPointLabel
 // SerumCircle
-// Sector
 // Point (circle of size in Pixels)
 // Tree
 // Tree time series
@@ -119,6 +118,14 @@ void acmacs::draw::DrawElements::circle(const acmacs::Location& center, Scaled s
     elements_.push_back(std::make_unique<Circle>(center, size, fill_color, outline_color, outline_width, aspect, rotation));
 
 } // acmacs::draw::DrawElements::circle
+
+// ----------------------------------------------------------------------
+
+void acmacs::draw::DrawElements::sector(const acmacs::Location& center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Surface::Dash radius_dash, Rotation start, Rotation end)
+{
+    elements_.push_back(std::make_unique<Sector>(center, size, fill_color, outline_color, outline_width, radius_color, radius_width, radius_dash, start, end));
+
+} // acmacs::draw::DrawElements::sector
 
 // ----------------------------------------------------------------------
 
