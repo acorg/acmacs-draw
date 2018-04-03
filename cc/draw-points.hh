@@ -1,9 +1,12 @@
+#pragma once
+
 #include <optional>
 #include <memory>
 #include <vector>
 
 #include "acmacs-base/transformation.hh"
 #include "acmacs-base/point-style.hh"
+#include "acmacs-base/text-style.hh"
 #include "acmacs-draw/draw-elements.hh"
 
 // ----------------------------------------------------------------------
@@ -15,6 +18,40 @@ namespace acmacs
 
 namespace acmacs::draw
 {
+// ----------------------------------------------------------------------
+
+    class PointLabel
+    {
+     public:
+        PointLabel(size_t index) : index_(index), offset_{0, 1}, text_color_{BLACK}, text_size_{12} {}
+
+        PointLabel& offset(double x, double y) { offset_.set(x, y); return *this; }
+        PointLabel& display_name(std::string_view display_name) { display_name_ = display_name; return *this; }
+        PointLabel& color(Color color) { text_color_ = color; return *this; }
+        PointLabel& size(double size) { text_size_ = size; return *this; }
+        PointLabel& weight(std::string weight) { text_style_.weight = weight; return *this; }
+        PointLabel& slant(std::string slant) { text_style_.slant = slant; return *this; }
+        PointLabel& font_family(std::string family) { text_style_.font_family = family; return *this; }
+
+        constexpr size_t index() const { return index_; }
+        const std::string& display_name() const { return display_name_; }
+        const acmacs::Location& offset() const { return offset_; }
+        Color text_color() const { return text_color_; }
+        Pixels text_size() const { return text_size_; }
+        const acmacs::TextStyle text_style() const { return text_style_; }
+
+     private:
+        size_t index_;
+        acmacs::Location offset_;
+        std::string display_name_;
+        Color text_color_;
+        Pixels text_size_;
+        acmacs::TextStyle text_style_;
+
+    }; // class PointLabel
+
+// ----------------------------------------------------------------------
+
     class Points : public Element
     {
      public:
