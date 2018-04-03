@@ -6,7 +6,6 @@
 #include "acmacs-draw/draw-arrow.hh"
 
 // ContinentMap
-// LegendPointLabel
 // Point (circle of size in Pixels)
 // Tree
 // Tree time series
@@ -72,6 +71,14 @@ acmacs::draw::Title& acmacs::draw::DrawElements::title(const std::vector<std::st
     return replace_or_add(std::make_unique<Title>(lines), elements_);
 
 } // acmacs::draw::DrawElements::title
+
+// ----------------------------------------------------------------------
+
+acmacs::draw::Legend& acmacs::draw::DrawElements::legend()
+{
+    return replace_or_add(std::make_unique<Legend>(), elements_);
+
+} // acmacs::draw::DrawElements::legend
 
 // ----------------------------------------------------------------------
 

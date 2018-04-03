@@ -105,16 +105,39 @@ namespace acmacs::draw
             void text_size(Pixels text_size) { text_size_ = text_size; }
             void text_style(const acmacs::TextStyle& text_style) { text_style_ = text_style; }
 
-            void draw(surface::Surface& surface, const acmacs::Location& origin, double height) const { surface.text({origin.x, origin.y + height}, text_, text_color_, text_size_, text_style_); }
+            Pixels text_size() const { return text_size_; }
+            const auto& text_style() const { return text_style_; }
+
+            void draw(surface::Surface& surface, const acmacs::Location& origin, double height) const { draw(surface, {origin.x, origin.y + height}); }
             acmacs::Size size(surface::Surface& surface) const { return surface.text_size(text_, text_size_, text_style_); }
 
-          private:
+         protected:
+            void draw(surface::Surface& surface, const acmacs::Location& origin) const { surface.text(origin, text_, text_color_, text_size_, text_style_); }
+
+         private:
             std::string text_;
-            Color text_color_ = BLACK;
+            Color text_color_{BLACK};
             Pixels text_size_{12};
             acmacs::TextStyle text_style_;
 
         }; // class TitleLine
+
+        class LegendPointLabel : public TitleLine
+        {
+         public:
+            LegendPointLabel() = default;
+            LegendPointLabel(std::string text, Color point_outline, Color point_fill) : TitleLine(text), point_outline_(point_outline), point_fill_(point_fill) {}
+
+            void point_size(double point_size) { point_size_ = point_size; }
+
+            void draw(surface::Surface& surface, const acmacs::Location& origin, double height) const;
+            acmacs::Size size(surface::Surface& surface) const;
+
+         private:
+            Pixels point_size_{12};
+            Color point_outline_{BLACK}, point_fill_{TRANSPARENT};
+
+        }; // class LegendPointLabel
 
     } // namespace internal
 
@@ -133,18 +156,14 @@ namespace acmacs::draw
 
     }; // class Title
 
-    // class Legend : public Window
-    // {
-    //  public:
-    //     Border(Color line_color, Pixels line_width) : line_color_(line_color), line_width_(line_width) {}
+    class Legend : public internal::Box<internal::LegendPointLabel>
+    {
+     public:
+        Legend() : internal::Box<internal::LegendPointLabel>(drawing_stage::legend) {}
 
-    //     void draw(drawing_stage stage, surface::Surface& surface) const override;
+        void add(std::string text, Color point_outline, Color point_fill) { lines().emplace_back(text, point_outline, point_fill); }
 
-    //  private:
-    //     Color line_color_;
-    //     Pixels line_width_;
-
-    // }; // class Legend
+    }; // class Legend
 
 } // namespace acmacs::draw
 

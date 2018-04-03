@@ -39,6 +39,7 @@ namespace acmacs::draw
 // ----------------------------------------------------------------------
 
     class Title;
+    class Legend;
     class Points;
 
     class DrawElements
@@ -53,6 +54,7 @@ namespace acmacs::draw
         void grid(Scaled step, Color line_color, Pixels line_width);
         void border(Color line_color, Pixels line_width);
         Title& title(const std::vector<std::string>& lines);
+        Legend& legend();
         Points& points(std::shared_ptr<acmacs::LayoutInterface> layout, const acmacs::Transformation& transformation);
         void line(const acmacs::Location& from, const acmacs::Location& to, Color line_color, Pixels line_width);
         void arrow(const acmacs::Location& from, const acmacs::Location& to, Color line_color, Pixels line_width, Color arrow_head_color, bool arrow_head_filled, Pixels arrow_width);
