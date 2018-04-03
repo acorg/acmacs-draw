@@ -33,7 +33,7 @@ void acmacs::draw::Points::draw_points(surface::Surface& surface) const
 {
     std::unique_ptr<LayoutInterface> layout{layout_->transform(transformation_)};
 
-    for (auto point_no : *drawing_order_) {
+    for (auto point_no : drawing_order_) {
         if (layout->point_has_coordinates(point_no)) {
             if (const auto& styl = style(point_no); *styl.shown) {
                 switch (*styl.shape) {
@@ -52,16 +52,6 @@ void acmacs::draw::Points::draw_points(surface::Surface& surface) const
     }
 
 } // acmacs::draw::Points::draw_points
-
-// ----------------------------------------------------------------------
-
-const acmacs::PointStyle& acmacs::draw::Points::style(size_t point_no) const
-{
-    if (unpacked_styles_)
-        return (*unpacked_styles_)[point_no];
-    return default_style_;
-
-} // acmacs::draw::Points::style
 
 // ----------------------------------------------------------------------
 
