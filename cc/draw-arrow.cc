@@ -61,6 +61,17 @@ void acmacs::draw::Sector::draw(drawing_stage stage, surface::Surface& surface) 
 
 // ----------------------------------------------------------------------
 
+void acmacs::draw::SerumCircle::draw(drawing_stage stage, surface::Surface& surface) const
+{
+    if (stage == drawing_stage::serum_circles) {
+        center(coordinates_.transform(transformation_));
+        Sector::draw(stage, surface);
+    }
+
+} // acmacs::draw::SerumCircle::draw
+
+// ----------------------------------------------------------------------
+
 
 // ----------------------------------------------------------------------
 /// Local Variables:

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "acmacs-base/layout.hh"
 #include "acmacs-draw/surface.hh"
 #include "acmacs-draw/draw-elements.hh"
 
@@ -93,12 +94,12 @@ namespace acmacs::draw
 
         void draw(drawing_stage stage, surface::Surface& surface) const override;
 
-        void center(const acmacs::Location& center) { center_ = center; }
+        void center(const acmacs::Location& center) const { center_ = center; }
         void stage(drawing_stage stage) { stage_ = stage; }
 
      private:
         drawing_stage stage_{drawing_stage::procrustes_arrows};
-        acmacs::Location center_;
+        mutable acmacs::Location center_;
         const Scaled size_;
         const Color fill_color_, outline_color_;
         const Pixels outline_width_;
@@ -109,6 +110,23 @@ namespace acmacs::draw
         const Rotation end_;
 
     }; // class Circle
+
+// ----------------------------------------------------------------------
+
+    class SerumCircle : public Sector
+    {
+     public:
+        SerumCircle(const Coordinates& coordinates, const acmacs::Transformation& transformation, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Surface::Dash radius_dash, Rotation start, Rotation end)
+            : Sector(acmacs::Location{}, size, fill_color, outline_color, outline_width, radius_color, radius_width, radius_dash, start, end), coordinates_(coordinates), transformation_(transformation)
+            { stage(drawing_stage::serum_circles); }
+
+        void draw(drawing_stage stage, surface::Surface& surface) const override;
+
+     private:
+        const acmacs::Coordinates coordinates_;
+        const acmacs::Transformation transformation_;
+
+    }; // class SerumCircle
 
 } // namespace acmacs::draw
 
