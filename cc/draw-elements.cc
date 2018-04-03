@@ -3,13 +3,12 @@
 #include "acmacs-draw/draw-grid.hh"
 #include "acmacs-draw/draw-legend.hh"
 #include "acmacs-draw/draw-points.hh"
+#include "acmacs-draw/draw-arrow.hh"
 
 // Points
 // ContinentMap
 // LegendPointLabel
 // SerumCircle
-// Line
-// Arrow
 // Rectangle
 // Circle
 // Sector
@@ -93,6 +92,23 @@ acmacs::draw::Points& acmacs::draw::DrawElements::points(std::shared_ptr<acmacs:
 } // acmacs::draw::DrawElements::points
 
 // ----------------------------------------------------------------------
+
+void acmacs::draw::DrawElements::line(const acmacs::Location& from, const acmacs::Location& to, Color line_color, Pixels line_width)
+{
+    elements_.push_back(std::make_unique<Line>(from ,to, line_color, line_width));
+
+} // acmacs::draw::DrawElements::line
+
+// ----------------------------------------------------------------------
+
+void acmacs::draw::DrawElements::arrow(const acmacs::Location& from, const acmacs::Location& to, Color line_color, Pixels line_width, Color arrow_head_color, bool arrow_head_filled, Pixels arrow_width)
+{
+    elements_.push_back(std::make_unique<Arrow>(from ,to, line_color, line_width, arrow_head_color, arrow_head_filled, arrow_width));
+
+} // acmacs::draw::DrawElements::arrow
+
+// ----------------------------------------------------------------------
+
 
 // ----------------------------------------------------------------------
 /// Local Variables:
