@@ -22,7 +22,7 @@ namespace acmacs::draw
         virtual void draw_window(surface::Surface& surface) const;
         virtual void draw_content(surface::Surface& surface) const = 0;
 
-        double height() const { return size_.height; }
+          // double height() const { return size_.height; }
         void size(const acmacs::Size& size) const { size_ = size; }
 
      private:
@@ -31,6 +31,8 @@ namespace acmacs::draw
         Color background_ = GREY97;
         Color border_color_ = BLACK;
         Pixels border_width_{0.1};
+
+        acmacs::Location scaled_origin(surface::Surface& surface) const;
 
     }; // class Window
 
@@ -57,6 +59,7 @@ namespace acmacs::draw
         acmacs::TextStyle text_style_;
         double interline_{2};
         Pixels padding_{10};
+        mutable double line_height_ = 0;
 
         void set_size(surface::Surface& surface) const;
 
