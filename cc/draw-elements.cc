@@ -8,7 +8,6 @@
 // ContinentMap
 // LegendPointLabel
 // SerumCircle
-// Circle
 // Sector
 // Point (circle of size in Pixels)
 // Tree
@@ -112,6 +111,14 @@ void acmacs::draw::DrawElements::rectangle(const acmacs::Location& corner1, cons
     elements_.push_back(std::make_unique<Rectangle>(corner1, corner2, color, filled, line_width));
 
 } // acmacs::draw::DrawElements::rectangle
+
+// ----------------------------------------------------------------------
+
+void acmacs::draw::DrawElements::circle(const acmacs::Location& center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Aspect aspect, Rotation rotation)
+{
+    elements_.push_back(std::make_unique<Circle>(center, size, fill_color, outline_color, outline_width, aspect, rotation));
+
+} // acmacs::draw::DrawElements::circle
 
 // ----------------------------------------------------------------------
 

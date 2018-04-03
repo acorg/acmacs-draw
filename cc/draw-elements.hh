@@ -49,7 +49,6 @@ namespace acmacs::draw
     {
      public:
         DrawElements(std::string filename, double size) : filename_(filename), size_(size) {}
-        // virtual ~DrawElements() = default;
 
         void draw() const;
 
@@ -62,6 +61,7 @@ namespace acmacs::draw
         void line(const acmacs::Location& from, const acmacs::Location& to, Color line_color, Pixels line_width);
         void arrow(const acmacs::Location& from, const acmacs::Location& to, Color line_color, Pixels line_width, Color arrow_head_color, bool arrow_head_filled, Pixels arrow_width);
         void rectangle(const acmacs::Location& corner1, const acmacs::Location& corner2, Color color, bool filled, Pixels line_width);
+        void circle(const acmacs::Location& center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Aspect aspect, Rotation rotation);
 
      private:
         std::string filename_;

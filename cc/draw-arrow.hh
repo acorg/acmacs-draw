@@ -61,6 +61,26 @@ namespace acmacs::draw
 
     }; // class Rectangle
 
+// ----------------------------------------------------------------------
+
+    class Circle : public Element
+    {
+     public:
+        Circle(const acmacs::Location& center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Aspect aspect, Rotation rotation)
+            : center_(center), size_(size), fill_color_(fill_color), outline_color_(outline_color), outline_width_(outline_width), aspect_(aspect), rotation_(rotation) {}
+
+        void draw(drawing_stage stage, surface::Surface& surface) const override;
+
+     private:
+        const acmacs::Location center_;
+        const Scaled size_;
+        const Color fill_color_, outline_color_;
+        const Pixels outline_width_;
+        const Aspect aspect_;
+        const Rotation rotation_;
+
+    }; // class Circle
+
 } // namespace acmacs::draw
 
 // ----------------------------------------------------------------------
