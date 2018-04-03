@@ -46,11 +46,6 @@ template <typename E> inline E& replace_or_add(std::unique_ptr<E> element, std::
 void acmacs::draw::DrawElements::grid(Scaled step, Color line_color, Pixels line_width)
 {
     replace_or_add(std::make_unique<Grid>(step, line_color, line_width), elements_);
-    // auto grid = std::make_unique<Grid>(step, line_color, line_width);
-    // if (auto found = std::find_if(elements_.begin(), elements_.end(), [](const auto& elt) { return dynamic_cast<Grid*>(elt.get()) != nullptr; }); found != elements_.end())
-    //     *found = std::move(grid);
-    // else
-    //     elements_.push_back(std::move(grid));
 
 } // acmacs::draw::DrawElements::grid
 
