@@ -41,7 +41,7 @@ acmacs::Size acmacs::draw::internal::LegendPointLabel::size(surface::Surface& su
     const auto txt_sz = TitleLine::size(surface);
     const auto point_lable_sep = surface.text_size("O", text_size(), text_style());
     const auto scaled_point_size = surface.convert(point_size_).value();
-    return {txt_sz.width + point_lable_sep.width * 3 + scaled_point_size, txt_sz.height};
+    return {txt_sz.width + point_lable_sep.width + scaled_point_size, txt_sz.height};
 
 } // acmacs::draw::internal::LegendPointLabel::size
 
@@ -56,51 +56,6 @@ void acmacs::draw::internal::LegendPointLabel::draw(surface::Surface& surface, c
     TitleLine::draw(surface, {text_x, origin.y + height});
 
 } // acmacs::draw::internal::LegendPointLabel::draw
-
-// ----------------------------------------------------------------------
-
-// void acmacs::draw::Title::draw(drawing_stage stage, surface::Surface& surface) const
-// {
-//     if (stage == drawing_stage::title) {
-//         set_size(surface);
-//         Window::draw(stage, surface);
-//     }
-
-// } // acmacs::draw::Title::draw
-
-// ----------------------------------------------------------------------
-
-// void acmacs::draw::Title::draw_content(surface::Surface& surface) const
-// {
-//     const double padding = surface.convert(padding_).value();
-//     const double text_x = padding;
-//     double y = padding + line_height_;
-//     for (const auto& line: lines_) {
-//         surface.text({text_x, y}, line, text_color_, text_size_, text_style_);
-//         y += line_height_ * interline_;
-//     }
-
-// } // acmacs::draw::Window::draw_content
-
-// ----------------------------------------------------------------------
-
-// void acmacs::draw::Title::set_size(surface::Surface& surface) const
-// {
-//     double width = 0;
-//     for (const auto& line : lines_) {
-//         const acmacs::Size line_size = surface.text_size(line, text_size_, text_style_);
-//         if (line_size.width > width)
-//             width = line_size.width;
-//         if (line_size.height > line_height_)
-//             line_height_ = line_size.height;
-//     }
-//     const double padding = surface.convert(padding_).value();
-//     size({width + padding * 2, line_height_ * (lines_.size() - 1) * interline_ + line_height_ + padding * 2});
-
-// } // acmacs::draw::Title::set_size
-
-// ----------------------------------------------------------------------
-
 
 // ----------------------------------------------------------------------
 /// Local Variables:

@@ -12,11 +12,11 @@ namespace acmacs::draw
          public:
             Window() = default;
 
-            Window& origin(const acmacs::Location& origin) { origin_ = origin; return *this; }
-            Window& size(const acmacs::Size& size) { size_ = size; return *this; }
-            Window& background(Color background) { background_ = background; return *this; }
-            Window& border_color(Color border_color) { border_color_ = border_color; return *this; }
-            Window& border_width(Pixels border_width) { border_width_ = border_width; return *this; }
+            auto& origin(const acmacs::Location& origin) { origin_ = origin; return *this; }
+            auto& size(const acmacs::Size& size) { size_ = size; return *this; }
+            auto& background(Color background) { background_ = background; return *this; }
+            auto& border_color(Color border_color) { border_color_ = border_color; return *this; }
+            auto& border_width(Pixels border_width) { border_width_ = border_width; return *this; }
 
             void draw(drawing_stage stage, surface::Surface& surface) const override;
 
@@ -126,9 +126,10 @@ namespace acmacs::draw
         {
          public:
             LegendPointLabel() = default;
-            LegendPointLabel(std::string text, Color point_outline, Color point_fill) : TitleLine(text), point_outline_(point_outline), point_fill_(point_fill) {}
+            LegendPointLabel(std::string text, Pixels point_size, Color point_outline, Color point_fill)
+                : TitleLine(text), point_size_(point_size), point_outline_(point_outline), point_fill_(point_fill) {}
 
-            void point_size(double point_size) { point_size_ = point_size; }
+            void point_size(Pixels point_size) { point_size_ = point_size; }
 
             void draw(surface::Surface& surface, const acmacs::Location& origin, double height) const;
             acmacs::Size size(surface::Surface& surface) const;
@@ -161,7 +162,7 @@ namespace acmacs::draw
      public:
         Legend() : internal::Box<internal::LegendPointLabel>(drawing_stage::legend) {}
 
-        void add(std::string text, Color point_outline, Color point_fill) { lines().emplace_back(text, point_outline, point_fill); }
+        void add(std::string text, Pixels point_size, Color point_outline, Color point_fill) { lines().emplace_back(text, point_size, point_outline, point_fill); }
 
     }; // class Legend
 
