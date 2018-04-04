@@ -65,17 +65,21 @@ namespace acmacs::draw
 
 // ----------------------------------------------------------------------
 
-    class Circle : public Element
+    template <typename ScaledOrPixels> class Circle : public Element
     {
      public:
-        Circle(const acmacs::Location& center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Aspect aspect, Rotation rotation)
+        Circle(const acmacs::Location& center, ScaledOrPixels size, Color fill_color, Color outline_color, Pixels outline_width, Aspect aspect, Rotation rotation)
             : center_(center), size_(size), fill_color_(fill_color), outline_color_(outline_color), outline_width_(outline_width), aspect_(aspect), rotation_(rotation) {}
 
-        void draw(drawing_stage stage, surface::Surface& surface) const override;
+        void draw(drawing_stage stage, surface::Surface& surface) const override
+            {
+                if (stage == drawing_stage::procrustes_arrows)
+                    surface.circle_filled(center_, size_, aspect_, rotation_, outline_color_, outline_width_, fill_color_);
+            }
 
      private:
         const acmacs::Location center_;
-        const Scaled size_;
+        const ScaledOrPixels size_;
         const Color fill_color_, outline_color_;
         const Pixels outline_width_;
         const Aspect aspect_;

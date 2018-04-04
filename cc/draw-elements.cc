@@ -6,7 +6,6 @@
 #include "acmacs-draw/draw-arrow.hh"
 
 // ContinentMap
-// Point (circle of size in Pixels)
 // Tree
 // Tree time series
 // Clade regions
@@ -116,9 +115,17 @@ void acmacs::draw::DrawElements::rectangle(const acmacs::Location& corner1, cons
 
 void acmacs::draw::DrawElements::circle(const acmacs::Location& center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Aspect aspect, Rotation rotation)
 {
-    elements_.push_back(std::make_unique<Circle>(center, size, fill_color, outline_color, outline_width, aspect, rotation));
+    elements_.push_back(std::make_unique<Circle<Scaled>>(center, size, fill_color, outline_color, outline_width, aspect, rotation));
 
 } // acmacs::draw::DrawElements::circle
+
+// ----------------------------------------------------------------------
+
+void acmacs::draw::DrawElements::point(const acmacs::Location& center, Pixels size, Color fill_color, Color outline_color, Pixels outline_width, Aspect aspect, Rotation rotation)
+{
+    elements_.push_back(std::make_unique<Circle<Pixels>>(center, size, fill_color, outline_color, outline_width, aspect, rotation));
+
+} // acmacs::draw::DrawElements::point
 
 // ----------------------------------------------------------------------
 

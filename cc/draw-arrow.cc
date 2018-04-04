@@ -39,15 +39,6 @@ void acmacs::draw::Rectangle::draw(drawing_stage stage, surface::Surface& surfac
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::Circle::draw(drawing_stage stage, surface::Surface& surface) const
-{
-    if (stage == drawing_stage::procrustes_arrows)
-        surface.circle_filled(center_, size_, aspect_, rotation_, outline_color_, outline_width_, fill_color_);
-
-} // acmacs::draw::Circle::draw
-
-// ----------------------------------------------------------------------
-
 void acmacs::draw::Sector::draw(drawing_stage stage, surface::Surface& surface) const
 {
     if (stage == stage_) {
@@ -69,9 +60,6 @@ void acmacs::draw::SerumCircle::draw(drawing_stage stage, surface::Surface& surf
     }
 
 } // acmacs::draw::SerumCircle::draw
-
-// ----------------------------------------------------------------------
-
 
 // ----------------------------------------------------------------------
 /// Local Variables:
