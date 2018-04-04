@@ -9,6 +9,7 @@
 #include "acmacs-base/size-scale.hh"
 #include "acmacs-base/text-style.hh"
 #include "acmacs-draw/viewport.hh"
+#include "acmacs-draw/surface-line.hh"
 
 // ----------------------------------------------------------------------
 
@@ -21,10 +22,6 @@ namespace acmacs::surface
         using Size = acmacs::Size;
         using Viewport = acmacs::Viewport;
         using TextStyle = acmacs::TextStyle;
-
-        enum class LineCap { Butt, Round, Square };
-        enum class LineJoin { Miter, Round, Bevel };
-        enum class Dash { NoDash, Dash1, Dash2 };
 
         [[noreturn]] Surface(const Surface&) { throw std::runtime_error("Surface copying forbidden!"); } // cannto make it private due to using vector<SurfaceCairoChild>
         virtual ~Surface()
@@ -76,7 +73,7 @@ namespace acmacs::surface
         virtual void circle_filled(const Location& aCenter, Pixels aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor) = 0;
         virtual void circle_filled(const Location& aCenter, Scaled aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor) = 0;
         virtual void sector_filled(const Location& aCenter, Scaled aDiameter, Rotation aStart, Rotation aEnd, Color aOutlineColor, Pixels aOutlineWidth, Color aRadiusColor, Pixels aRadiusWidth,
-                                   Dash aRadiusDash, Color aFillColor) = 0;
+                           Dash aRadiusDash, Color aFillColor) = 0;
         virtual void square_filled(const Location& aCenter, Pixels aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor,
                                    LineCap aLineCap = LineCap::Butt) = 0;
         virtual void square_filled(const Location& aCenter, Scaled aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor,
@@ -89,15 +86,13 @@ namespace acmacs::surface
                                      LineCap aLineCap = LineCap::Butt) = 0;
 
         // if x is negative, move_to is used, otherwise line_to
-        virtual void path_outline_negative_move(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last, Color aOutlineColor, Pixels aOutlineWidth, bool aClose = false,
-                                                LineCap aLineCap = LineCap::Butt) = 0;
+        virtual void path_outline_negative_move(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last, Color aOutlineColor, Pixels aOutlineWidth, bool aClose = false, LineCap aLineCap = LineCap::Butt) = 0;
         virtual void path_outline_negative_move(const double* first, const double* last, Color aOutlineColor, Pixels aOutlineWidth, bool aClose = false, LineCap aLineCap = LineCap::Butt) = 0;
         virtual void path_fill_negative_move(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last, Color aFillColor) = 0;
         virtual void path_fill_negative_move(const double* first, const double* last, Color aFillColor) = 0;
 
         // all parts are drawn
-        virtual void path_outline(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last, Color aOutlineColor, Pixels aOutlineWidth, bool aClose = false,
-                                  LineCap aLineCap = LineCap::Butt) = 0;
+        virtual void path_outline(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last, Color aOutlineColor, Pixels aOutlineWidth, bool aClose = false, LineCap aLineCap = LineCap::Butt) = 0;
         virtual void path_outline(const double* first, const double* last, Color aOutlineColor, Pixels aOutlineWidth, bool aClose = false, LineCap aLineCap = LineCap::Butt) = 0;
         virtual void path_fill(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last, Color aFillColor) = 0;
         virtual void path_fill(const double* first, const double* last, Color aFillColor) = 0;

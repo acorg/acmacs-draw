@@ -1,4 +1,5 @@
 #include "acmacs-base/text-style.hh"
+#include "acmacs-draw/surface.hh"
 #include "acmacs-draw/draw-elements.hh"
 
 // ----------------------------------------------------------------------

@@ -22,6 +22,7 @@ namespace acmacs::draw
         Grid(Scaled step, Color line_color, Pixels line_width) : step_(step), line_color_(line_color), line_width_(line_width) {}
 
         void draw(drawing_stage stage, surface::Surface& surface) const override;
+        void draw(drawing_stage stage, surface::JsStatic& surface) const override;
 
      private:
         Scaled step_;

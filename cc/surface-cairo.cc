@@ -55,19 +55,19 @@ class context
     template <typename S> context& set_line_width(S aWidth) { cairo_set_line_width(cairo_context(), convert(aWidth)); return *this; }
     context& set_source_rgba(Color aColor) { cairo_set_source_rgba(cairo_context(), aColor.red(), aColor.green(), aColor.blue(), aColor.alpha()); return *this; }
 
-    context& set_line_cap(acmacs::surface::Surface::LineCap aLineCap) { cairo_set_line_cap(cairo_context(), cairo_line_cap(aLineCap)); return *this; }
-    context& set_line_join(acmacs::surface::Surface::LineJoin aLineJoin) { cairo_set_line_join(cairo_context(), cairo_line_join(aLineJoin)); return *this; }
-    context& set_line_dash(acmacs::surface::Surface::Dash aLineDash)
+    context& set_line_cap(acmacs::surface::LineCap aLineCap) { cairo_set_line_cap(cairo_context(), cairo_line_cap(aLineCap)); return *this; }
+    context& set_line_join(acmacs::surface::LineJoin aLineJoin) { cairo_set_line_join(cairo_context(), cairo_line_join(aLineJoin)); return *this; }
+    context& set_line_dash(acmacs::surface::Dash aLineDash)
         {
             double dash_size;
             switch (aLineDash) {
-              case acmacs::surface::Surface::Dash::NoDash:
+              case acmacs::surface::Dash::NoDash:
                   break;
-              case acmacs::surface::Surface::Dash::Dash1:
+              case acmacs::surface::Dash::Dash1:
                   dash_size = convert(Pixels{1});
                   cairo_set_dash(cairo_context(), &dash_size, 1, 0);
                   break;
-              case acmacs::surface::Surface::Dash::Dash2:
+              case acmacs::surface::Dash::Dash2:
                   dash_size = convert(Pixels{5});
                   cairo_set_dash(cairo_context(), &dash_size, 1, 0);
                   break;
@@ -171,27 +171,27 @@ class context
     double convert(Scaled aValue) { return aValue.value(); }
     double convert(Pixels aValue) { return aValue.value() / mScale; }
 
-    cairo_line_cap_t cairo_line_cap(acmacs::surface::Surface::LineCap aLineCap) const
+    cairo_line_cap_t cairo_line_cap(acmacs::surface::LineCap aLineCap) const
         {
             switch (aLineCap) {
-              case acmacs::surface::Surface::LineCap::Butt:
+              case acmacs::surface::LineCap::Butt:
                   return CAIRO_LINE_CAP_BUTT;
-              case acmacs::surface::Surface::LineCap::Round:
+              case acmacs::surface::LineCap::Round:
                   return CAIRO_LINE_CAP_ROUND;
-              case acmacs::surface::Surface::LineCap::Square:
+              case acmacs::surface::LineCap::Square:
                   return CAIRO_LINE_CAP_SQUARE;
             }
             return CAIRO_LINE_CAP_BUTT; // gcc wants return
         }
 
-    cairo_line_join_t cairo_line_join(acmacs::surface::Surface::LineJoin aLineJoin) const
+    cairo_line_join_t cairo_line_join(acmacs::surface::LineJoin aLineJoin) const
         {
             switch (aLineJoin) {
-              case acmacs::surface::Surface::LineJoin::Miter:
+              case acmacs::surface::LineJoin::Miter:
                   return CAIRO_LINE_JOIN_MITER;
-              case acmacs::surface::Surface::LineJoin::Round:
+              case acmacs::surface::LineJoin::Round:
                   return CAIRO_LINE_JOIN_ROUND;
-              case acmacs::surface::Surface::LineJoin::Bevel:
+              case acmacs::surface::LineJoin::Bevel:
                   return CAIRO_LINE_JOIN_BEVEL;
             }
             return CAIRO_LINE_JOIN_MITER; // gcc wants return
@@ -258,7 +258,7 @@ acmacs::surface::Surface* acmacs::surface::internal_1::Cairo::make_child(const L
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_line(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::Location& a, const acmacs::Location& b, Color aColor, S aWidth, acmacs::surface::PdfCairo::LineCap aLineCap)
+template <typename S> static inline void s_line(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::Location& a, const acmacs::Location& b, Color aColor, S aWidth, acmacs::surface::LineCap aLineCap)
 {
     context(aSurface)
             .set_line_width(aWidth)
@@ -399,7 +399,7 @@ void acmacs::surface::internal_1::Cairo::sector_filled(const Location& aCenter, 
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_square_filled(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::Location& aCenter, S aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, acmacs::surface::PdfCairo::LineCap aLineCap)
+template <typename S> static inline void s_square_filled(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::Location& aCenter, S aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, acmacs::surface::LineCap aLineCap)
 {
     context(aSurface)
             .set_line_width(aOutlineWidth)
@@ -427,7 +427,7 @@ void acmacs::surface::internal_1::Cairo::square_filled(const Location& aCenter, 
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_triangle_filled(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::Location& aCenter, S aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, acmacs::surface::PdfCairo::LineCap aLineCap)
+template <typename S> static inline void s_triangle_filled(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::Location& aCenter, S aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, acmacs::surface::LineCap aLineCap)
 {
     const auto cos_pi_6 = std::cos(M_PI / 6.0);
     const auto radius = aSide * cos_pi_6;

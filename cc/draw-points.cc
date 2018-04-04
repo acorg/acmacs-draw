@@ -1,5 +1,6 @@
 #include "acmacs-base/layout.hh"
 #include "acmacs-base/range.hh"
+#include "acmacs-draw/surface.hh"
 #include "acmacs-draw/draw-points.hh"
 
 // ----------------------------------------------------------------------

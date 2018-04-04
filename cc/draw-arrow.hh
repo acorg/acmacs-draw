@@ -92,7 +92,7 @@ namespace acmacs::draw
     class Sector : public Element
     {
      public:
-        Sector(const acmacs::Location& center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Surface::Dash radius_dash, Rotation start, Rotation end)
+        Sector(const acmacs::Location& center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Dash radius_dash, Rotation start, Rotation end)
             : center_(center), size_(size), fill_color_(fill_color), outline_color_(outline_color), outline_width_(outline_width),
               radius_color_(radius_color), radius_width_(radius_width), radius_dash_(radius_dash), start_(start), end_(end) {}
 
@@ -109,7 +109,7 @@ namespace acmacs::draw
         const Pixels outline_width_;
         const Color radius_color_;
         const Pixels radius_width_;
-        const acmacs::surface::Surface::Dash radius_dash_;
+        const acmacs::surface::Dash radius_dash_;
         const Rotation start_;
         const Rotation end_;
 
@@ -120,7 +120,7 @@ namespace acmacs::draw
     class SerumCircle : public Sector
     {
      public:
-        SerumCircle(const Coordinates& coordinates, const acmacs::Transformation& transformation, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Surface::Dash radius_dash, Rotation start, Rotation end)
+        SerumCircle(const Coordinates& coordinates, const acmacs::Transformation& transformation, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Dash radius_dash, Rotation start, Rotation end)
             : Sector(acmacs::Location{}, size, fill_color, outline_color, outline_width, radius_color, radius_width, radius_dash, start, end), coordinates_(coordinates), transformation_(transformation)
             { stage(drawing_stage::serum_circles); }
 

@@ -21,7 +21,7 @@ void acmacs::draw::DrawElements::draw() const
     }
     else if (std::string_view(filename_.data() + filename_.size() - 5, 5) == ".html") {
         acmacs::surface::JsStatic surface(filename_, {size_, size_}, viewport_);
-          //draw(surface);
+        draw(surface);
     }
     else {
         throw std::runtime_error("Unrecognized filename suffix: " + filename_);
@@ -131,7 +131,7 @@ void acmacs::draw::DrawElements::point(const acmacs::Location& center, Pixels si
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::DrawElements::sector(const acmacs::Location& center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Surface::Dash radius_dash, Rotation start, Rotation end)
+void acmacs::draw::DrawElements::sector(const acmacs::Location& center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Dash radius_dash, Rotation start, Rotation end)
 {
     elements_.push_back(std::make_unique<Sector>(center, size, fill_color, outline_color, outline_width, radius_color, radius_width, radius_dash, start, end));
 
@@ -139,7 +139,7 @@ void acmacs::draw::DrawElements::sector(const acmacs::Location& center, Scaled s
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::DrawElements::serum_circle(const Coordinates& coordinates, const acmacs::Transformation& transformation, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Surface::Dash radius_dash, Rotation start, Rotation end)
+void acmacs::draw::DrawElements::serum_circle(const Coordinates& coordinates, const acmacs::Transformation& transformation, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Dash radius_dash, Rotation start, Rotation end)
 {
     elements_.push_back(std::make_unique<SerumCircle>(coordinates, transformation, size, fill_color, outline_color, outline_width, radius_color, radius_width, radius_dash, start, end));
 

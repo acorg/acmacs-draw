@@ -3,9 +3,12 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include <typeinfo>
 
 #include "acmacs-base/color.hh"
-#include "acmacs-draw/surface.hh"
+#include "acmacs-base/size-scale.hh"
+#include "acmacs-draw/viewport.hh"
+#include "acmacs-draw/surface-line.hh"
 
 // ----------------------------------------------------------------------
 
@@ -14,6 +17,12 @@ namespace acmacs
     class LayoutInterface;
     class Coordinates;
     class Transformation;
+}
+
+namespace acmacs::surface
+{
+    class Surface;
+    class JsStatic;
 }
 
 namespace acmacs::draw
@@ -33,6 +42,7 @@ namespace acmacs::draw
         Element() {}
         virtual ~Element() = default;
         virtual void draw(drawing_stage stage, surface::Surface& surface) const = 0;
+        virtual void draw(drawing_stage stage, surface::JsStatic& /*surface*/) const { if (stage == drawing_stage::__first) std::cerr << "WARNING: draw(JsStatic) not implemented for " << typeid(*this).name() << '\n'; }
 
     }; // class Element
 
@@ -61,8 +71,8 @@ namespace acmacs::draw
         void rectangle(const acmacs::Location& corner1, const acmacs::Location& corner2, Color color, bool filled, Pixels line_width);
         void circle(const acmacs::Location& center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Aspect aspect, Rotation rotation);
         void point(const acmacs::Location& center, Pixels size, Color fill_color, Color outline_color, Pixels outline_width, Aspect aspect, Rotation rotation);
-        void sector(const acmacs::Location& center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Surface::Dash radius_dash, Rotation start, Rotation end);
-        void serum_circle(const Coordinates& coordinates, const acmacs::Transformation& transformation, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Surface::Dash radius_dash, Rotation start, Rotation end);
+        void sector(const acmacs::Location& center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Dash radius_dash, Rotation start, Rotation end);
+        void serum_circle(const Coordinates& coordinates, const acmacs::Transformation& transformation, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Dash radius_dash, Rotation start, Rotation end);
         void continent_map(const acmacs::Location& origin, Pixels size);
 
      private:

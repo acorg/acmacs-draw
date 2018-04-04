@@ -57,8 +57,8 @@ class context
     template <typename S> context& set_line_width(S aWidth) { output_ << indent_ << "__context.lineWidth = " << to_str(convert(aWidth)) << ";\n"; return *this; }
     context& set_stroke(Color aColor) { output_ << indent_ << "__context.strokeStyle = \"" << aColor.to_hex_string() << "\";\n"; return *this; }
     context& set_fill(Color aColor) { output_ << indent_ << "__context.fillStyle = \"" << aColor.to_hex_string() << "\";\n"; return *this; }
-    context& set_line_cap(acmacs::surface::Surface::LineCap aLineCap) { output_ << indent_ << "__context.lineCap = \"" << canvas_line_cap(aLineCap) << "\";\n"; return *this; }
-    context& set_line_join(acmacs::surface::Surface::LineJoin aLineJoin) { output_ << indent_ << "__context.lineJoin = \"" << canvas_line_join(aLineJoin) << "\";\n"; return *this; }
+    context& set_line_cap(acmacs::surface::LineCap aLineCap) { output_ << indent_ << "__context.lineCap = \"" << canvas_line_cap(aLineCap) << "\";\n"; return *this; }
+    context& set_line_join(acmacs::surface::LineJoin aLineJoin) { output_ << indent_ << "__context.lineJoin = \"" << canvas_line_join(aLineJoin) << "\";\n"; return *this; }
 
     context& begin_path() { output_ << indent_ << "__context.beginPath();\n"; return *this; }
     context& close_path() { output_ << indent_ << "__context.closePath();\n"; return *this; }
@@ -97,27 +97,27 @@ class context
     double convert(Scaled aValue) { return aValue.value(); }
     double convert(Pixels aValue) { return aValue.value() / scale_; }
 
-    const char* canvas_line_cap(acmacs::surface::Surface::LineCap aLineCap) const
+    const char* canvas_line_cap(acmacs::surface::LineCap aLineCap) const
         {
             switch (aLineCap) {
-              case acmacs::surface::Surface::LineCap::Butt:
+              case acmacs::surface::LineCap::Butt:
                   return "butt";
-              case acmacs::surface::Surface::LineCap::Round:
+              case acmacs::surface::LineCap::Round:
                   return "round";
-              case acmacs::surface::Surface::LineCap::Square:
+              case acmacs::surface::LineCap::Square:
                   return "square";
             }
             return "butt"; // gcc wants return
         }
 
-    const char* canvas_line_join(acmacs::surface::Surface::LineJoin aLineJoin) const
+    const char* canvas_line_join(acmacs::surface::LineJoin aLineJoin) const
         {
             switch (aLineJoin) {
-              case acmacs::surface::Surface::LineJoin::Miter:
+              case acmacs::surface::LineJoin::Miter:
                   return "miter";
-              case acmacs::surface::Surface::LineJoin::Round:
+              case acmacs::surface::LineJoin::Round:
                   return "round";
-              case acmacs::surface::Surface::LineJoin::Bevel:
+              case acmacs::surface::LineJoin::Bevel:
                   return "bevel";
             }
             return "miter"; // gcc wants return
@@ -127,7 +127,7 @@ class context
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_line(acmacs::surface::internal::Javascript& surface, const acmacs::Location& a, const acmacs::Location& b, Color aColor, S aWidth, acmacs::surface::Surface::LineCap aLineCap)
+template <typename S> static inline void s_line(acmacs::surface::internal::Javascript& surface, const acmacs::Location& a, const acmacs::Location& b, Color aColor, S aWidth, acmacs::surface::LineCap aLineCap)
 {
     context(surface)
             .begin_path()
@@ -246,7 +246,7 @@ void acmacs::surface::internal::Javascript::sector_filled(const Location& aCente
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_square_filled(acmacs::surface::internal::Javascript& aSurface, const acmacs::Location& aCenter, S aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, acmacs::surface::Surface::LineCap aLineCap)
+template <typename S> static inline void s_square_filled(acmacs::surface::internal::Javascript& aSurface, const acmacs::Location& aCenter, S aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, acmacs::surface::LineCap aLineCap)
 {
     context(aSurface)
             .begin_path()
@@ -275,7 +275,7 @@ void acmacs::surface::internal::Javascript::square_filled(const Location& aCente
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_triangle_filled(acmacs::surface::internal::Javascript& aSurface, const acmacs::Location& aCenter, S aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, acmacs::surface::Surface::LineCap aLineCap)
+template <typename S> static inline void s_triangle_filled(acmacs::surface::internal::Javascript& aSurface, const acmacs::Location& aCenter, S aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, acmacs::surface::LineCap aLineCap)
 {
     const auto cos_pi_6 = std::cos(M_PI / 6.0);
     const auto radius = aSide * cos_pi_6;
