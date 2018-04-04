@@ -9,7 +9,7 @@
 
 namespace acmacs::surface
 {
-    namespace internal
+    namespace internal_1
     {
         class CairoChild;
 
@@ -95,11 +95,11 @@ namespace acmacs::surface
 
         }; // class CairoChild
 
-    } // namespace internal
+    } // namespace internal_1
 
     // ----------------------------------------------------------------------
 
-    class PdfCairo : public internal::Cairo
+    class PdfCairo : public internal_1::Cairo
     {
       public:
         PdfCairo(std::string aFilename, double aWidth, double aHeight, double aViewportWidth = default_canvas_width);

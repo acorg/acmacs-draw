@@ -51,10 +51,10 @@ PYBIND11_MODULE(acmacs_draw_backend, m)
             .def("text_right_aligned_s", [](Surface& aSurface, double x, double y, std::string text, std::string color, double size, double rotation) { aSurface.text_right_aligned({x, y}, text, Color(color), Scaled{size}, TextStyle(), Rotation(rotation)); }, py::arg("x"), py::arg("y"), py::arg("text"), py::arg("color"), py::arg("size"), py::arg("rotation") = 0)
             ;
 
-    py::class_<acmacs::surface::internal::Cairo, acmacs::surface::Surface>(m, "SurfaceCairo")
+    py::class_<acmacs::surface::internal_1::Cairo, acmacs::surface::Surface>(m, "SurfaceCairo")
             ;
 
-    py::class_<acmacs::surface::PdfCairo, acmacs::surface::internal::Cairo>(m, "PdfCairo")
+    py::class_<acmacs::surface::PdfCairo, acmacs::surface::internal_1::Cairo>(m, "PdfCairo")
             .def(py::init<std::string, double, double, double>(), py::arg("filename"), py::arg("width"), py::arg("height"), py::arg("viewport_width") = 1000.0)
             ;
 }

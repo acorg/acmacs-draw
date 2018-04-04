@@ -29,7 +29,7 @@ class context
     using Viewport = acmacs::Viewport;
     using TextStyle = acmacs::TextStyle;
 
-    context(acmacs::surface::internal::Cairo& aSurface)
+    context(acmacs::surface::internal_1::Cairo& aSurface)
         : mSurface(aSurface), mScale(aSurface.scale())
         {
               // std::cerr << "origin_offset: " << aSurface.origin_offset() << "  scale: " << mScale << std::endl;
@@ -162,7 +162,7 @@ class context
         }
 
  private:
-    acmacs::surface::internal::Cairo& mSurface;
+    acmacs::surface::internal_1::Cairo& mSurface;
     const double mScale;
 
     cairo_t* cairo_context() { return mSurface.cairo_context(); }
@@ -224,41 +224,41 @@ class context
 
 // ----------------------------------------------------------------------
 
-acmacs::surface::Surface* acmacs::surface::internal::Cairo::make_child(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip)
+acmacs::surface::Surface* acmacs::surface::internal_1::Cairo::make_child(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip)
 {
-    return new acmacs::surface::internal::CairoChild(*this, aOriginInParent, aWidthInParent, aViewport, aClip);
+    return new acmacs::surface::internal_1::CairoChild(*this, aOriginInParent, aWidthInParent, aViewport, aClip);
 
-} // acmacs::surface::internal::Cairo::make_child
+} // acmacs::surface::internal_1::Cairo::make_child
 
 // ----------------------------------------------------------------------
 
-// acmacs::surface::Surface& acmacs::surface::internal::Cairo::subsurface(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip)
+// acmacs::surface::Surface& acmacs::surface::internal_1::Cairo::subsurface(const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip)
 // {
-//     acmacs::surface::internal::CairoChild* child = new acmacs::surface::internal::CairoChild(*this, aOriginInParent, aWidthInParent, aViewport, aClip);
+//     acmacs::surface::internal_1::CairoChild* child = new acmacs::surface::internal_1::CairoChild(*this, aOriginInParent, aWidthInParent, aViewport, aClip);
 //     mChildren.emplace_back(child);
 //     return *child;
 
-// } // acmacs::surface::internal::Cairo::subsurface
+// } // acmacs::surface::internal_1::Cairo::subsurface
 
 // // ----------------------------------------------------------------------
 
-// acmacs::surface::Surface& acmacs::surface::internal::Cairo::subsurface(bool aClip)
+// acmacs::surface::Surface& acmacs::surface::internal_1::Cairo::subsurface(bool aClip)
 // {
 //     return subsurface(Location{}, Scaled{}, Viewport{}, aClip);
 
-// } // acmacs::surface::internal::Cairo::subsurface
+// } // acmacs::surface::internal_1::Cairo::subsurface
 
 // // ----------------------------------------------------------------------
 
-// acmacs::surface::Surface& acmacs::surface::internal::Cairo::subsurface(const Location& aOriginInParent, Pixels aWidthInParent, const Viewport& aViewport, bool aClip)
+// acmacs::surface::Surface& acmacs::surface::internal_1::Cairo::subsurface(const Location& aOriginInParent, Pixels aWidthInParent, const Viewport& aViewport, bool aClip)
 // {
 //     return subsurface(aOriginInParent / scale(), Scaled{aWidthInParent.value() / scale()}, aViewport, aClip);
 
-// } // acmacs::surface::internal::Cairo::subsurface
+// } // acmacs::surface::internal_1::Cairo::subsurface
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_line(acmacs::surface::internal::Cairo& aSurface, const acmacs::Location& a, const acmacs::Location& b, Color aColor, S aWidth, acmacs::surface::PdfCairo::LineCap aLineCap)
+template <typename S> static inline void s_line(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::Location& a, const acmacs::Location& b, Color aColor, S aWidth, acmacs::surface::PdfCairo::LineCap aLineCap)
 {
     context(aSurface)
             .set_line_width(aWidth)
@@ -269,21 +269,21 @@ template <typename S> static inline void s_line(acmacs::surface::internal::Cairo
             .stroke();
 }
 
-void acmacs::surface::internal::Cairo::line(const Location& a, const Location& b, Color aColor, Pixels aWidth, LineCap aLineCap)
+void acmacs::surface::internal_1::Cairo::line(const Location& a, const Location& b, Color aColor, Pixels aWidth, LineCap aLineCap)
 {
     s_line(*this, a, b, aColor, aWidth, aLineCap);
 
-} // acmacs::surface::internal::Cairo::line
+} // acmacs::surface::internal_1::Cairo::line
 
-void acmacs::surface::internal::Cairo::line(const Location& a, const Location& b, Color aColor, Scaled aWidth, LineCap aLineCap)
+void acmacs::surface::internal_1::Cairo::line(const Location& a, const Location& b, Color aColor, Scaled aWidth, LineCap aLineCap)
 {
     s_line(*this, a, b, aColor, aWidth, aLineCap);
 
-} // acmacs::surface::internal::Cairo::line
+} // acmacs::surface::internal_1::Cairo::line
 
 // ----------------------------------------------------------------------
 
-void acmacs::surface::internal::Cairo::rectangle(const Location& a, const Size& s, Color aColor, Pixels aWidth, LineCap aLineCap)
+void acmacs::surface::internal_1::Cairo::rectangle(const Location& a, const Size& s, Color aColor, Pixels aWidth, LineCap aLineCap)
 {
     context(*this)
             .set_line_width(aWidth)
@@ -292,11 +292,11 @@ void acmacs::surface::internal::Cairo::rectangle(const Location& a, const Size& 
             .set_source_rgba(aColor)
             .stroke();
 
-} // acmacs::surface::internal::Cairo::rectangle
+} // acmacs::surface::internal_1::Cairo::rectangle
 
 // ----------------------------------------------------------------------
 
-void acmacs::surface::internal::Cairo::rectangle_filled(const Location& a, const Size& s, Color aOutlineColor, Pixels aWidth, Color aFillColor, LineCap aLineCap)
+void acmacs::surface::internal_1::Cairo::rectangle_filled(const Location& a, const Size& s, Color aOutlineColor, Pixels aWidth, Color aFillColor, LineCap aLineCap)
 {
     context(*this)
             .set_line_width(aWidth)
@@ -307,11 +307,11 @@ void acmacs::surface::internal::Cairo::rectangle_filled(const Location& a, const
             .set_source_rgba(aOutlineColor)
             .stroke();
 
-} // acmacs::surface::internal::Cairo::rectangle_filled
+} // acmacs::surface::internal_1::Cairo::rectangle_filled
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_circle(acmacs::surface::internal::Cairo& aSurface, const acmacs::Location& aCenter, S aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth)
+template <typename S> static inline void s_circle(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::Location& aCenter, S aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth)
 {
     context(aSurface)
             .set_line_width(aOutlineWidth)
@@ -323,21 +323,21 @@ template <typename S> static inline void s_circle(acmacs::surface::internal::Cai
             .stroke();
 }
 
-void acmacs::surface::internal::Cairo::circle(const Location& aCenter, Pixels aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth)
+void acmacs::surface::internal_1::Cairo::circle(const Location& aCenter, Pixels aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth)
 {
     s_circle(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth);
 
-} // acmacs::surface::internal::Cairo::circle
+} // acmacs::surface::internal_1::Cairo::circle
 
-void acmacs::surface::internal::Cairo::circle(const Location& aCenter, Scaled aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth)
+void acmacs::surface::internal_1::Cairo::circle(const Location& aCenter, Scaled aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth)
 {
     s_circle(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth);
 
-} // acmacs::surface::internal::Cairo::circle
+} // acmacs::surface::internal_1::Cairo::circle
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_circle_filled(acmacs::surface::internal::Cairo& aSurface, const acmacs::Location& aCenter, S aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor)
+template <typename S> static inline void s_circle_filled(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::Location& aCenter, S aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor)
 {
     context(aSurface)
             .set_line_width(aOutlineWidth)
@@ -351,21 +351,21 @@ template <typename S> static inline void s_circle_filled(acmacs::surface::intern
             .stroke();
 }
 
-void acmacs::surface::internal::Cairo::circle_filled(const Location& aCenter, Pixels aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor)
+void acmacs::surface::internal_1::Cairo::circle_filled(const Location& aCenter, Pixels aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor)
 {
     s_circle_filled(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth, aFillColor);
 
-} // acmacs::surface::internal::Cairo::circle_filled
+} // acmacs::surface::internal_1::Cairo::circle_filled
 
-void acmacs::surface::internal::Cairo::circle_filled(const Location& aCenter, Scaled aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor)
+void acmacs::surface::internal_1::Cairo::circle_filled(const Location& aCenter, Scaled aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor)
 {
     s_circle_filled(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth, aFillColor);
 
-} // acmacs::surface::internal::Cairo::circle_filled
+} // acmacs::surface::internal_1::Cairo::circle_filled
 
 // ----------------------------------------------------------------------
 
-void acmacs::surface::internal::Cairo::sector_filled(const Location& aCenter, Scaled aDiameter, Rotation aStart, Rotation aEnd, Color aOutlineColor, Pixels aOutlineWidth, Color aRadiusColor, Pixels aRadiusWidth, Dash aRadiusDash, Color aFillColor)
+void acmacs::surface::internal_1::Cairo::sector_filled(const Location& aCenter, Scaled aDiameter, Rotation aStart, Rotation aEnd, Color aOutlineColor, Pixels aOutlineWidth, Color aRadiusColor, Pixels aRadiusWidth, Dash aRadiusDash, Color aFillColor)
 {
     context ctx(*this);
     ctx.translate(aCenter);
@@ -395,11 +395,11 @@ void acmacs::surface::internal::Cairo::sector_filled(const Location& aCenter, Sc
             .set_source_rgba(aFillColor)
             .fill();
 
-} // acmacs::surface::internal::Cairo::sector_filled
+} // acmacs::surface::internal_1::Cairo::sector_filled
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_square_filled(acmacs::surface::internal::Cairo& aSurface, const acmacs::Location& aCenter, S aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, acmacs::surface::PdfCairo::LineCap aLineCap)
+template <typename S> static inline void s_square_filled(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::Location& aCenter, S aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, acmacs::surface::PdfCairo::LineCap aLineCap)
 {
     context(aSurface)
             .set_line_width(aOutlineWidth)
@@ -413,21 +413,21 @@ template <typename S> static inline void s_square_filled(acmacs::surface::intern
             .stroke();
 }
 
-void acmacs::surface::internal::Cairo::square_filled(const Location& aCenter, Pixels aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, LineCap aLineCap)
+void acmacs::surface::internal_1::Cairo::square_filled(const Location& aCenter, Pixels aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, LineCap aLineCap)
 {
     s_square_filled(*this, aCenter, aSide, aAspect, aAngle, aOutlineColor, aOutlineWidth, aFillColor, aLineCap);
 
-} // acmacs::surface::internal::Cairo::square_filled
+} // acmacs::surface::internal_1::Cairo::square_filled
 
-void acmacs::surface::internal::Cairo::square_filled(const Location& aCenter, Scaled aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, LineCap aLineCap)
+void acmacs::surface::internal_1::Cairo::square_filled(const Location& aCenter, Scaled aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, LineCap aLineCap)
 {
     s_square_filled(*this, aCenter, aSide, aAspect, aAngle, aOutlineColor, aOutlineWidth, aFillColor, aLineCap);
 
-} // acmacs::surface::internal::Cairo::square_filled
+} // acmacs::surface::internal_1::Cairo::square_filled
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_triangle_filled(acmacs::surface::internal::Cairo& aSurface, const acmacs::Location& aCenter, S aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, acmacs::surface::PdfCairo::LineCap aLineCap)
+template <typename S> static inline void s_triangle_filled(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::Location& aCenter, S aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, acmacs::surface::PdfCairo::LineCap aLineCap)
 {
     const auto cos_pi_6 = std::cos(M_PI / 6.0);
     const auto radius = aSide * cos_pi_6;
@@ -446,19 +446,19 @@ template <typename S> static inline void s_triangle_filled(acmacs::surface::inte
             .stroke();
 }
 
-void acmacs::surface::internal::Cairo::triangle_filled(const Location& aCenter, Pixels aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, LineCap aLineCap)
+void acmacs::surface::internal_1::Cairo::triangle_filled(const Location& aCenter, Pixels aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, LineCap aLineCap)
 {
     s_triangle_filled(*this, aCenter, aSide, aAspect, aAngle, aOutlineColor, aOutlineWidth, aFillColor, aLineCap);
 
-} // acmacs::surface::internal::Cairo::triangle_filled
+} // acmacs::surface::internal_1::Cairo::triangle_filled
 
-void acmacs::surface::internal::Cairo::triangle_filled(const Location& aCenter, Scaled aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, LineCap aLineCap)
+void acmacs::surface::internal_1::Cairo::triangle_filled(const Location& aCenter, Scaled aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, LineCap aLineCap)
 {
     s_triangle_filled(*this, aCenter, aSide, aAspect, aAngle, aOutlineColor, aOutlineWidth, aFillColor, aLineCap);
 
-} // acmacs::surface::internal::Cairo::triangle_filled
+} // acmacs::surface::internal_1::Cairo::triangle_filled
 
-void acmacs::surface::internal::Cairo::triangle_filled(const Location& aCorner1, const Location& aCorner2, const Location& aCorner3, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, LineCap aLineCap)
+void acmacs::surface::internal_1::Cairo::triangle_filled(const Location& aCorner1, const Location& aCorner2, const Location& aCorner3, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, LineCap aLineCap)
 {
     context(*this)
             .set_line_width(aOutlineWidth)
@@ -472,11 +472,11 @@ void acmacs::surface::internal::Cairo::triangle_filled(const Location& aCorner1,
             .set_source_rgba(aOutlineColor)
             .stroke();
 
-} // acmacs::surface::internal::Cairo::triangle_filled
+} // acmacs::surface::internal_1::Cairo::triangle_filled
 
 // ----------------------------------------------------------------------
 
-void acmacs::surface::internal::Cairo::path_outline(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last, Color aOutlineColor, Pixels aOutlineWidth, bool aClose, LineCap aLineCap)
+void acmacs::surface::internal_1::Cairo::path_outline(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last, Color aOutlineColor, Pixels aOutlineWidth, bool aClose, LineCap aLineCap)
 {
     context(*this)
             .new_path()
@@ -488,11 +488,11 @@ void acmacs::surface::internal::Cairo::path_outline(std::vector<Location>::const
             .close_path_if(aClose)
             .stroke();
 
-} // acmacs::surface::internal::Cairo::path_outline
+} // acmacs::surface::internal_1::Cairo::path_outline
 
 // ----------------------------------------------------------------------
 
-void acmacs::surface::internal::Cairo::path_outline(const double* first, const double* last, Color aOutlineColor, Pixels aOutlineWidth, bool aClose, LineCap aLineCap)
+void acmacs::surface::internal_1::Cairo::path_outline(const double* first, const double* last, Color aOutlineColor, Pixels aOutlineWidth, bool aClose, LineCap aLineCap)
 {
     context(*this)
             .new_path()
@@ -504,11 +504,11 @@ void acmacs::surface::internal::Cairo::path_outline(const double* first, const d
             .close_path_if(aClose)
             .stroke();
 
-} // acmacs::surface::internal::Cairo::path_outline
+} // acmacs::surface::internal_1::Cairo::path_outline
 
 // ----------------------------------------------------------------------
 
-void acmacs::surface::internal::Cairo::path_fill(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last, Color aFillColor)
+void acmacs::surface::internal_1::Cairo::path_fill(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last, Color aFillColor)
 {
     context(*this)
             .new_path()
@@ -517,11 +517,11 @@ void acmacs::surface::internal::Cairo::path_fill(std::vector<Location>::const_it
             .close_path()
             .fill();
 
-} // acmacs::surface::internal::Cairo::path_fill
+} // acmacs::surface::internal_1::Cairo::path_fill
 
 // ----------------------------------------------------------------------
 
-void acmacs::surface::internal::Cairo::path_fill(const double* first, const double* last, Color aFillColor)
+void acmacs::surface::internal_1::Cairo::path_fill(const double* first, const double* last, Color aFillColor)
 {
     context(*this)
             .new_path()
@@ -530,11 +530,11 @@ void acmacs::surface::internal::Cairo::path_fill(const double* first, const doub
             .close_path()
             .fill();
 
-} // acmacs::surface::internal::Cairo::path_fill
+} // acmacs::surface::internal_1::Cairo::path_fill
 
 // ----------------------------------------------------------------------
 
-void acmacs::surface::internal::Cairo::path_outline_negative_move(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last, Color aOutlineColor, Pixels aOutlineWidth, bool aClose, LineCap aLineCap)
+void acmacs::surface::internal_1::Cairo::path_outline_negative_move(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last, Color aOutlineColor, Pixels aOutlineWidth, bool aClose, LineCap aLineCap)
 {
     context(*this)
             .new_path()
@@ -546,11 +546,11 @@ void acmacs::surface::internal::Cairo::path_outline_negative_move(std::vector<Lo
             .close_path_if(aClose)
             .stroke();
 
-} // acmacs::surface::internal::Cairo::path_outline_negative_move
+} // acmacs::surface::internal_1::Cairo::path_outline_negative_move
 
 // ----------------------------------------------------------------------
 
-void acmacs::surface::internal::Cairo::path_outline_negative_move(const double* first, const double* last, Color aOutlineColor, Pixels aOutlineWidth, bool aClose, LineCap aLineCap)
+void acmacs::surface::internal_1::Cairo::path_outline_negative_move(const double* first, const double* last, Color aOutlineColor, Pixels aOutlineWidth, bool aClose, LineCap aLineCap)
 {
     context(*this)
             .new_path()
@@ -562,11 +562,11 @@ void acmacs::surface::internal::Cairo::path_outline_negative_move(const double* 
             .close_path_if(aClose)
             .stroke();
 
-} // acmacs::surface::internal::Cairo::path_outline_negative_move
+} // acmacs::surface::internal_1::Cairo::path_outline_negative_move
 
 // ----------------------------------------------------------------------
 
-void acmacs::surface::internal::Cairo::path_fill_negative_move(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last, Color aFillColor)
+void acmacs::surface::internal_1::Cairo::path_fill_negative_move(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last, Color aFillColor)
 {
     context(*this)
             .new_path()
@@ -575,11 +575,11 @@ void acmacs::surface::internal::Cairo::path_fill_negative_move(std::vector<Locat
             .close_path()
             .fill();
 
-} // acmacs::surface::internal::Cairo::path_fill_negative_move
+} // acmacs::surface::internal_1::Cairo::path_fill_negative_move
 
 // ----------------------------------------------------------------------
 
-void acmacs::surface::internal::Cairo::path_fill_negative_move(const double* first, const double* last, Color aFillColor)
+void acmacs::surface::internal_1::Cairo::path_fill_negative_move(const double* first, const double* last, Color aFillColor)
 {
     context(*this)
             .new_path()
@@ -588,11 +588,11 @@ void acmacs::surface::internal::Cairo::path_fill_negative_move(const double* fir
             .close_path()
             .fill();
 
-} // acmacs::surface::internal::Cairo::path_fill_negative_move
+} // acmacs::surface::internal_1::Cairo::path_fill_negative_move
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_text(acmacs::surface::internal::Cairo& aSurface, const acmacs::Location& a, std::string aText, Color aColor, S aSize, const acmacs::TextStyle& aTextStyle, Rotation aRotation)
+template <typename S> static inline void s_text(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::Location& a, std::string aText, Color aColor, S aSize, const acmacs::TextStyle& aTextStyle, Rotation aRotation)
 {
     context(aSurface)
             .prepare_for_text(aSize, aTextStyle)
@@ -603,7 +603,7 @@ template <typename S> static inline void s_text(acmacs::surface::internal::Cairo
             .new_path();        // clear text path (bug in cairo?)
 }
 
-template <typename S> static inline acmacs::Size s_text_size(acmacs::surface::internal::Cairo& aSurface, std::string aText, S aSize, const acmacs::TextStyle& aTextStyle, double* x_bearing)
+template <typename S> static inline acmacs::Size s_text_size(acmacs::surface::internal_1::Cairo& aSurface, std::string aText, S aSize, const acmacs::TextStyle& aTextStyle, double* x_bearing)
 {
     cairo_text_extents_t text_extents;
     context(aSurface)
@@ -617,43 +617,43 @@ template <typename S> static inline acmacs::Size s_text_size(acmacs::surface::in
 
 // ----------------------------------------------------------------------
 
-void acmacs::surface::internal::Cairo::text(const Location& a, std::string aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle, Rotation aRotation)
+void acmacs::surface::internal_1::Cairo::text(const Location& a, std::string aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle, Rotation aRotation)
 {
     s_text(*this, a, aText, aColor, aSize, aTextStyle, aRotation);
 
-} // acmacs::surface::internal::Cairo::text
+} // acmacs::surface::internal_1::Cairo::text
 
-void acmacs::surface::internal::Cairo::text(const Location& a, std::string aText, Color aColor, Scaled aSize, const TextStyle& aTextStyle, Rotation aRotation)
+void acmacs::surface::internal_1::Cairo::text(const Location& a, std::string aText, Color aColor, Scaled aSize, const TextStyle& aTextStyle, Rotation aRotation)
 {
     s_text(*this, a, aText, aColor, aSize, aTextStyle, aRotation);
 
-} // acmacs::surface::internal::Cairo::text
+} // acmacs::surface::internal_1::Cairo::text
 
-void acmacs::surface::internal::Cairo::text_right_aligned(const Location& aEnd, std::string aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle, Rotation aRotation)
+void acmacs::surface::internal_1::Cairo::text_right_aligned(const Location& aEnd, std::string aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle, Rotation aRotation)
 {
     s_text(*this, {aEnd.x - s_text_size(*this, aText, aSize, aTextStyle, nullptr).width, aEnd.y}, aText, aColor, aSize, aTextStyle, aRotation);
 
-} // acmacs::surface::internal::Cairo::text_right_aligned
+} // acmacs::surface::internal_1::Cairo::text_right_aligned
 
-void acmacs::surface::internal::Cairo::text_right_aligned(const Location& aEnd, std::string aText, Color aColor, Scaled aSize, const TextStyle& aTextStyle, Rotation aRotation)
+void acmacs::surface::internal_1::Cairo::text_right_aligned(const Location& aEnd, std::string aText, Color aColor, Scaled aSize, const TextStyle& aTextStyle, Rotation aRotation)
 {
     s_text(*this, {aEnd.x - s_text_size(*this, aText, aSize, aTextStyle, nullptr).width, aEnd.y}, aText, aColor, aSize, aTextStyle, aRotation);
 
-} // acmacs::surface::internal::Cairo::text_right_aligned
+} // acmacs::surface::internal_1::Cairo::text_right_aligned
 
 // ----------------------------------------------------------------------
 
-acmacs::Size acmacs::surface::internal::Cairo::text_size(std::string aText, Pixels aSize, const TextStyle& aTextStyle, double* x_bearing)
+acmacs::Size acmacs::surface::internal_1::Cairo::text_size(std::string aText, Pixels aSize, const TextStyle& aTextStyle, double* x_bearing)
 {
     return s_text_size(*this, aText, aSize, aTextStyle, x_bearing);
 
-} // acmacs::surface::internal::Cairo::text_size
+} // acmacs::surface::internal_1::Cairo::text_size
 
-acmacs::Size acmacs::surface::internal::Cairo::text_size(std::string aText, Scaled aSize, const TextStyle& aTextStyle, double* x_bearing)
+acmacs::Size acmacs::surface::internal_1::Cairo::text_size(std::string aText, Scaled aSize, const TextStyle& aTextStyle, double* x_bearing)
 {
     return s_text_size(*this, aText, aSize, aTextStyle, x_bearing);
 
-} // acmacs::surface::internal::Cairo::text_size
+} // acmacs::surface::internal_1::Cairo::text_size
 
 // ----------------------------------------------------------------------
 
