@@ -1,4 +1,5 @@
 #include "acmacs-draw/draw-legend.hh"
+#include "acmacs-draw/continent-map.hh"
 
 // ----------------------------------------------------------------------
 
@@ -56,6 +57,22 @@ void acmacs::draw::internal::LegendPointLabel::draw(surface::Surface& surface, c
     TitleLine::draw(surface, {text_x, origin.y + height});
 
 } // acmacs::draw::internal::LegendPointLabel::draw
+
+// ----------------------------------------------------------------------
+
+void acmacs::draw::ContinentMap::draw(drawing_stage stage, surface::Surface& surface) const
+{
+    if (stage == drawing_stage::legend) {
+        acmacs::Location origin = origin_;
+        if (origin.x < 0)
+            origin.x += surface.width_in_pixels() - size_.value();
+        if (origin.y < 0)
+            origin.y += surface.height_in_pixels() - size_.value() / continent_map_aspect();
+        acmacs::surface::Surface& continent_surface = surface.subsurface(origin, size_, continent_map_size(), true);
+        continent_map_draw(continent_surface);
+    }
+
+} // acmacs::draw::ContinentMap::draw
 
 // ----------------------------------------------------------------------
 /// Local Variables:

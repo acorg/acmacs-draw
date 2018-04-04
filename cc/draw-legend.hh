@@ -11,6 +11,7 @@ namespace acmacs::draw
         {
          public:
             Window() = default;
+            Window(const acmacs::Location& origin) : origin_(origin) {}
 
             auto& origin(const acmacs::Location& origin) { origin_ = origin; return *this; }
             auto& size(const acmacs::Size& size) { size_ = size; return *this; }
@@ -26,6 +27,8 @@ namespace acmacs::draw
 
               // double height() const { return size_.height; }
             void size(const acmacs::Size& size) const { size_ = size; }
+            acmacs::Location scaled_origin(surface::Surface& surface) const;
+            acmacs::Location origin() const { return origin_; }
 
          private:
             acmacs::Location origin_{10, 10};
@@ -34,7 +37,6 @@ namespace acmacs::draw
             Color border_color_ = BLACK;
             Pixels border_width_{0.1};
 
-            acmacs::Location scaled_origin(surface::Surface& surface) const;
 
         }; // class Window
 
@@ -165,6 +167,19 @@ namespace acmacs::draw
         void add(std::string text, Pixels point_size, Color point_outline, Color point_fill) { lines().emplace_back(text, point_size, point_outline, point_fill); }
 
     }; // class Legend
+
+    class ContinentMap : public Element
+    {
+     public:
+        ContinentMap(const acmacs::Location& origin, Pixels size) : origin_(origin), size_(size) {}
+
+        void draw(drawing_stage stage, surface::Surface& surface) const override;
+
+     private:
+        acmacs::Location origin_;
+        Pixels size_;
+
+    }; // class ContinentMap
 
 } // namespace acmacs::draw
 

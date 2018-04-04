@@ -5,7 +5,6 @@
 #include "acmacs-draw/draw-points.hh"
 #include "acmacs-draw/draw-arrow.hh"
 
-// ContinentMap
 // Tree
 // Tree time series
 // Clade regions
@@ -145,6 +144,11 @@ void acmacs::draw::DrawElements::serum_circle(const Coordinates& coordinates, co
 
 // ----------------------------------------------------------------------
 
+void acmacs::draw::DrawElements::continent_map(const acmacs::Location& origin, Pixels size)
+{
+    replace_or_add(std::make_unique<ContinentMap>(origin, size), elements_);
+
+} // acmacs::draw::DrawElements::continent_map
 
 // ----------------------------------------------------------------------
 /// Local Variables:
