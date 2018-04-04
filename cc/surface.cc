@@ -51,9 +51,6 @@ Surface::Location Surface::arrow_head(const Location& arrow_end, double angle, d
 } // Surface::arrow_head
 
 // ----------------------------------------------------------------------
-
-
-// ----------------------------------------------------------------------
 /// Local Variables:
 /// eval: (if (fboundp 'eu-rename-buffer) (eu-rename-buffer))
 /// End:

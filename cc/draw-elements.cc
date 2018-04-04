@@ -1,4 +1,5 @@
 #include "acmacs-draw/surface-cairo.hh"
+#include "acmacs-draw/surface-js-static.hh"
 #include "acmacs-draw/draw-elements.hh"
 #include "acmacs-draw/draw-grid.hh"
 #include "acmacs-draw/draw-legend.hh"
@@ -18,8 +19,10 @@ void acmacs::draw::DrawElements::draw() const
         acmacs::surface::Surface& rescaled_surface = main_surface.subsurface({0, 0}, Scaled{main_surface.viewport().size.width}, viewport_, true);
         draw(rescaled_surface);
     }
-    // else if (std::string_view(filename.data() + filename.size() - 5, 5) == ".html") {
-    // }
+    else if (std::string_view(filename_.data() + filename_.size() - 5, 5) == ".html") {
+        acmacs::surface::JsStatic surface(filename_, {size_, size_}, viewport_);
+          //draw(surface);
+    }
     else {
         throw std::runtime_error("Unrecognized filename suffix: " + filename_);
     }
