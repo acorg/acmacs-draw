@@ -21,14 +21,18 @@ namespace acmacs::draw
             auto& border_width(Pixels border_width) { border_width_ = border_width; return *this; }
 
             void draw(drawing_stage stage, surface::Surface& surface) const override;
+            void draw(drawing_stage stage, surface::JsStatic& surface) const override;
 
          protected:
             virtual void draw_window(surface::Surface& surface) const;
             virtual void draw_content(surface::Surface& surface) const = 0;
+            // virtual void draw_window(surface::JsStatic& surface) const;
+              //virtual void draw_content(surface::JsStatic& surface) const = 0;
 
               // double height() const { return size_.height; }
             void size(const acmacs::Size& size) const { size_ = size; }
             acmacs::Location scaled_origin(surface::Surface& surface) const;
+            acmacs::Location scaled_origin(surface::JsStatic& surface) const;
             acmacs::Location origin() const { return origin_; }
 
          private:
@@ -38,6 +42,7 @@ namespace acmacs::draw
             Color border_color_ = BLACK;
             Pixels border_width_{0.1};
 
+            void scaled_origin_adjust(acmacs::Location& origin, const acmacs::Size& surface_size) const;
 
         }; // class Window
 

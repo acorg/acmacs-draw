@@ -26,7 +26,7 @@ namespace acmacs::surface
 
         template <typename F, typename Arg1, typename ... Args> void func(F&& func, Arg1&& arg1, Args&& ... args)
             {
-                output_ << indent_ << func << '(' << arg1;
+                output_ << indent_ << func << '(' << convert(arg1);
                 ((output_ << ',' << convert(args)), ...);
                 output_ << ");\n";
             }
@@ -39,10 +39,24 @@ namespace acmacs::surface
         const acmacs::Viewport& viewport() const { return viewport_; }
         double convert(Pixels a) const { return a.value() / scale_; }
         double convert(Scaled a) const { return a.value(); }
+        double convert(Rotation a) const { return a.value(); }
+        double convert(Aspect a) const { return a.value(); }
         double convert(double a) const { return a; }
         int convert(int a) const { return a; }
         std::string convert(Color a) const { return '"' + a.to_hex_string() + '"'; }
         const char* convert(const char* a) const { return a; }
+
+        struct ContextSave
+        {
+            ContextSave(JsStatic& aParent) : parent(aParent) { parent.context_func("save"); }
+            ~ContextSave() { parent.context_func("restore"); }
+            JsStatic& parent;
+        };
+
+        struct WithSubsurface : public ContextSave
+        {
+            WithSubsurface(JsStatic& parent, const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip);
+        };
 
      private:
         std::ofstream output_;

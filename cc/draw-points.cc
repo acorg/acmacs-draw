@@ -1,6 +1,7 @@
 #include "acmacs-base/layout.hh"
 #include "acmacs-base/range.hh"
 #include "acmacs-draw/surface.hh"
+#include "acmacs-draw/surface-js-static.hh"
 #include "acmacs-draw/draw-points.hh"
 
 // ----------------------------------------------------------------------
@@ -31,23 +32,6 @@ acmacs::draw::Points::Points(std::shared_ptr<acmacs::LayoutInterface> layout, co
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::Points::draw(drawing_stage stage, surface::Surface& surface) const
-{
-    switch (stage) {
-      case drawing_stage::points:
-          draw_points(surface);
-          break;
-      case drawing_stage::labels:
-          draw_labels(surface);
-          break;
-      case drawing_stage::__first: case drawing_stage::background: case drawing_stage::grid: case drawing_stage::serum_circles: case drawing_stage::procrustes_arrows: case drawing_stage::legend: case drawing_stage::title: case drawing_stage::border: case drawing_stage::__last:
-          break;
-    }
-
-} // acmacs::draw::Points::draw
-
-// ----------------------------------------------------------------------
-
 void acmacs::draw::Points::draw_points(surface::Surface& surface) const
 {
     std::unique_ptr<LayoutInterface> layout{layout_->transform(transformation_)};
@@ -64,6 +48,56 @@ void acmacs::draw::Points::draw_points(surface::Surface& surface) const
                         break;
                     case acmacs::PointShape::Triangle:
                         surface.triangle_filled(layout->get(point_no), Pixels{*styl.size}, *styl.aspect, *styl.rotation, *styl.outline, *styl.outline_width, *styl.fill);
+                        break;
+                }
+            }
+        }
+    }
+
+} // acmacs::draw::Points::draw_points
+
+// ----------------------------------------------------------------------
+
+void acmacs::draw::Points::draw_points(surface::JsStatic& surface) const
+{
+    const auto cos_pi_12 = std::cos(M_PI / 12.0);
+    std::unique_ptr<LayoutInterface> layout{layout_->transform(transformation_)};
+
+    surface.context_assign("lineCap", "\"butt\"");
+    for (auto point_no : drawing_order_) {
+        if (layout->point_has_coordinates(point_no)) {
+            if (const auto& styl = style(point_no); *styl.shown) {
+                surface::JsStatic::ContextSave save(surface);
+                const auto coord = layout->get(point_no);
+                const auto size = surface.convert(*styl.size);
+                const auto aspect = styl.aspect->value();
+                surface.context_assign("lineWidth", *styl.outline_width);
+                surface.context_assign("fillStyle", *styl.fill);
+                surface.context_assign("strokeStyle", *styl.outline);
+                surface.context_func("translate", coord[0], coord[1]);
+                if (*styl.rotation != NoRotation)
+                    surface.context_func("rotate", *styl.rotation);
+                switch (*styl.shape) {
+                    case acmacs::PointShape::Circle:
+                        if (*styl.aspect != AspectNormal)
+                            surface.context_func("scale", aspect, 1);
+                        surface.context_func("beginPath");
+                        surface.context_func("arc", 0, 0, size / 2, 0, "2*Math.PI");
+                        surface.context_func("fill");
+                        surface.context_func("stroke");
+                        break;
+                    case acmacs::PointShape::Box:
+                        surface.context_func("fillRect", -size * aspect, -size, size * aspect, size);
+                        surface.context_func("strokeRect", -size * aspect, -size, size * aspect, size);
+                        break;
+                    case acmacs::PointShape::Triangle:
+                        surface.context_func("beginPath");
+                        surface.context_func("move_to", 0, -size / 2);
+                        surface.context_func("line_to", -size * cos_pi_12 * aspect, size / 4);
+                        surface.context_func("line_to", size * cos_pi_12 * aspect, size / 4);
+                        surface.context_func("closePath");
+                        surface.context_func("fill");
+                        surface.context_func("stroke");
                         break;
                 }
             }
@@ -96,7 +130,13 @@ void acmacs::draw::Points::draw_labels(surface::Surface& surface) const
 
 // ----------------------------------------------------------------------
 
+void acmacs::draw::Points::draw_labels(surface::JsStatic& surface) const
+{
+    std::cerr << "WARNING: acmacs::draw::Points::draw_labels() not implemented\n";
 
+} // acmacs::draw::Points::draw_labels
+
+// ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
 /// Local Variables:

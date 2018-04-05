@@ -1,4 +1,5 @@
 #include "acmacs-draw/draw-legend.hh"
+#include "acmacs-draw/surface-js-static.hh"
 #include "acmacs-draw/continent-map.hh"
 
 // ----------------------------------------------------------------------
@@ -23,17 +24,53 @@ void acmacs::draw::internal::Window::draw(drawing_stage, surface::Surface& surfa
 
 // ----------------------------------------------------------------------
 
+// void acmacs::draw::internal::Window::draw_window(surface::JsStatic& surface) const
+// {
+//     surface.context_assign("fillStyle", background_);
+//     surface.context_func("fillRect", "viewport[0]", "viewport[1]", "viewport[2]", "viewport[3]");
+
+// } // acmacs::draw::internal::Window::draw_window
+
+// ----------------------------------------------------------------------
+
+void acmacs::draw::internal::Window::draw(drawing_stage /*stage*/, surface::JsStatic& /*surface*/) const
+{
+    // surface::JsStatic::WithSubsurface subs(surface, scaled_origin(surface), Scaled{size_.width}, size_, false);
+    // draw_window(surface);
+      //draw_content(surface);
+
+} // acmacs::draw::internal::Window::draw
+
+// ----------------------------------------------------------------------
+
 acmacs::Location acmacs::draw::internal::Window::scaled_origin(surface::Surface& surface) const
 {
     acmacs::Location subsurface_origin{surface.convert(Pixels{origin_.x}).value(), surface.convert(Pixels{origin_.y}).value()};
-    const acmacs::Size& surface_size = surface.viewport().size;
-    if (subsurface_origin.x < 0)
-        subsurface_origin.x += surface_size.width - size_.width;
-    if (subsurface_origin.y < 0)
-        subsurface_origin.y += surface_size.height - size_.height;
+    scaled_origin_adjust(subsurface_origin, surface.viewport().size);
     return subsurface_origin;
 
 } // acmacs::draw::internal::Window::scaled_origin
+
+// ----------------------------------------------------------------------
+
+acmacs::Location acmacs::draw::internal::Window::scaled_origin(surface::JsStatic& surface) const
+{
+    acmacs::Location subsurface_origin{surface.convert(Pixels{origin_.x}), surface.convert(Pixels{origin_.y})};
+    scaled_origin_adjust(subsurface_origin, surface.viewport().size);
+    return subsurface_origin;
+
+} // acmacs::draw::internal::Window::scaled_origin
+
+// ----------------------------------------------------------------------
+
+void acmacs::draw::internal::Window::scaled_origin_adjust(acmacs::Location& origin, const acmacs::Size& surface_size) const
+{
+    if (origin.x < 0)
+        origin.x += surface_size.width - size_.width;
+    if (origin.y < 0)
+        origin.y += surface_size.height - size_.height;
+
+} // acmacs::draw::internal::Window::scaled_origin_adjust
 
 // ----------------------------------------------------------------------
 

@@ -27,6 +27,15 @@ acmacs::surface::JsStatic::~JsStatic()
 
 // ----------------------------------------------------------------------
 
+acmacs::surface::JsStatic::WithSubsurface::WithSubsurface(JsStatic& parent, const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip)
+    : ContextSave(parent)
+{
+    parent.context_func("translate", aOriginInParent.x, aOriginInParent.y);
+
+} // acmacs::surface::JsStatic::WithSubsurface::WithSubsurface
+
+// ----------------------------------------------------------------------
+
 void write_html_header(std::ostream& output, const acmacs::Size& canvas_size)
 {
     output << R"(<html>

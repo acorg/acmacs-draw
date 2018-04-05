@@ -66,6 +66,22 @@ namespace acmacs::draw
 
     class Points : public Element
     {
+     private:
+       template <typename S> void draw_forward(drawing_stage stage, S&& surface) const
+       {
+           switch (stage) {
+               case drawing_stage::points:
+                   draw_points(std::forward<S>(surface));
+                   break;
+               case drawing_stage::labels:
+                   draw_labels(std::forward<S>(surface));
+                   break;
+               case drawing_stage::__first: case drawing_stage::background: case drawing_stage::grid: case drawing_stage::serum_circles:
+               case drawing_stage::procrustes_arrows: case drawing_stage::legend: case drawing_stage::title: case drawing_stage::border: case drawing_stage::__last:
+                   break;
+           }
+       }
+
      public:
         using DrawingOrder = std::vector<size_t>;
         using UnpackedStyles = std::vector<PointStyle>;
@@ -76,7 +92,8 @@ namespace acmacs::draw
         Points& styles(std::shared_ptr<PointStyles> styles) { styles_ = styles; return *this; }
         Points& labels(const PointLabels& labels) { labels_ = &labels; return *this; }
 
-        void draw(drawing_stage stage, surface::Surface& surface) const override;
+        void draw(drawing_stage stage, surface::Surface& surface) const override { draw_forward(stage, surface); }
+        void draw(drawing_stage stage, surface::JsStatic& surface) const override { draw_forward(stage, surface); }
 
      private:
         std::shared_ptr<acmacs::LayoutInterface> layout_;
@@ -88,6 +105,8 @@ namespace acmacs::draw
 
         void draw_points(surface::Surface& surface) const;
         void draw_labels(surface::Surface& surface) const;
+        void draw_points(surface::JsStatic& surface) const;
+        void draw_labels(surface::JsStatic& surface) const;
 
         PointStyle style(size_t point_no) const
             {
