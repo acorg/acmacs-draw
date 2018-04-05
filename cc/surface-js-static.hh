@@ -3,6 +3,9 @@
 #include <memory>
 #include <fstream>
 
+#include "acmacs-base/color.hh"
+#include "acmacs-draw/viewport.hh"
+
 // ----------------------------------------------------------------------
 
 namespace acmacs
@@ -19,9 +22,33 @@ namespace acmacs::surface
         JsStatic(std::string filename, const acmacs::Size& canvas_size, const acmacs::Viewport& viewport);
         ~JsStatic();
 
+        template <typename ... Args> void add(Args&& ... args) { ((output_ << indent_) << ... << args) << '\n'; }
+
+        template <typename F, typename Arg1, typename ... Args> void func(F&& func, Arg1&& arg1, Args&& ... args)
+            {
+                output_ << indent_ << func << '(' << arg1;
+                ((output_ << ',' << convert(args)), ...);
+                output_ << ");\n";
+            }
+
+        template <typename F> void func(F&& func) { output_ << indent_ << func << "();\n"; }
+
+        template <typename F, typename... Args> void context_func(F&& f, Args&&... args) { func(std::string("__context.") + f, args...); }
+        template <typename Var, typename Val> void context_assign(Var&& var, Val&& val) { output_ << indent_ << "__context." << var << " = " << convert(val) << ";\n"; }
+
+        const acmacs::Viewport& viewport() const { return viewport_; }
+        double convert(Pixels a) const { return a.value() / scale_; }
+        double convert(Scaled a) const { return a.value(); }
+        double convert(double a) const { return a; }
+        int convert(int a) const { return a; }
+        std::string convert(Color a) const { return '"' + a.to_hex_string() + '"'; }
+        const char* convert(const char* a) const { return a; }
+
      private:
         std::ofstream output_;
         const char* const indent_ = "        ";
+        acmacs::Viewport viewport_;
+        double scale_;
 
     }; // class Html
 

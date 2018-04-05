@@ -1,4 +1,3 @@
-#include "acmacs-draw/viewport.hh"
 #include "acmacs-draw/surface-js-static.hh"
 
 // ----------------------------------------------------------------------
@@ -9,12 +8,12 @@ static void write_html_body(std::ostream& output);
 // ----------------------------------------------------------------------
 
 acmacs::surface::JsStatic::JsStatic(std::string filename, const acmacs::Size& canvas_size, const acmacs::Viewport& viewport)
-    : output_(filename)
+    : output_(filename), viewport_(viewport), scale_(canvas_size.width / viewport.size.width)
 {
     write_html_header(output_, canvas_size);
-    const auto scale = canvas_size.width / viewport.size.width;
-    output_ << indent_ << "__context.scale(" << scale << ',' << scale << ");\n"
-            << indent_ << "__context.translate(" << -viewport.origin.x << ',' << -viewport.origin.y << ");\n";
+    add("var viewport = [", viewport.origin.x, ',', viewport.origin.y, ',', viewport.size.width, ',', viewport.size.height, "];");
+    context_func("scale", scale_, scale_);
+    context_func("translate", -viewport.origin.x, -viewport.origin.y);
 
 } // acmacs::surface::JsStatic::JsStatic
 
@@ -50,6 +49,20 @@ void write_html_header(std::ostream& output, const acmacs::Size& canvas_size)
         draw(ctx);
         var elapsed = new Date() - start;
         console.log("drawing time: " + elapsed + "ms -> " + (1000 / elapsed).toFixed(1) + "fps");
+      }
+      function grid(__context, viewport, step, line_color, line_width) {
+        __context.beginPath();
+        for (var x = viewport[0] + step; x < viewport[0] + viewport[2]; x += step) {
+            __context.moveTo(x, viewport[1]);
+            __context.lineTo(x, viewport[1] + viewport[3]);
+        }
+        for (var y = viewport[1] + step; y < viewport[1] + viewport[3]; y += step) {
+            __context.moveTo(viewport[0], y);
+            __context.lineTo(viewport[0] + viewport[2], y);
+        }
+        __context.strokeStyle = line_color;
+        __context.lineWidth = line_width;
+        __context.stroke();
       }
       function draw(__context) {
 )";
