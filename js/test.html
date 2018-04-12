@@ -5,6 +5,16 @@
    <title>acmacs-draw-sample</title>
    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
    <script src="acmacs-draw-surface.js"></script>
+   <script>
+     var test_map_data =
+{
+ "viewport": [-17.00929585819421774317561357747763, -21.86917068360311233732318214606494, 42.99999999999999289457264239899814, 42.99999999999999289457264239899814]
+}
+     ;
+     $(document).ready(function() {
+       draw($('#canvas'), test_map_data);
+     });
+   </script>
    <style>
      #canvas {
        margin: 1em;

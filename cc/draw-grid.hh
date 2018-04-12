@@ -24,6 +24,7 @@ namespace acmacs::draw
 
         void draw(drawing_stage stage, surface::Surface& surface) const override;
         void draw(drawing_stage stage, surface::JsStatic& surface) const override;
+        void draw(drawing_stage stage, surface::JsDynamic& surface) const override;
 
      private:
         Scaled step_;

@@ -16,7 +16,7 @@ void acmacs::draw::Grid::draw(drawing_stage stage, surface::Surface& surface) co
 
 } // acmacs::draw::Grid::draw
 
-// ----------------------------------------------------------------------
+// ======================================================================
 
 void acmacs::draw::Grid::draw(drawing_stage stage, surface::JsStatic& surface) const
 {
@@ -26,6 +26,15 @@ void acmacs::draw::Grid::draw(drawing_stage stage, surface::JsStatic& surface) c
 } // acmacs::draw::Grid::draw
 
 // ----------------------------------------------------------------------
+
+void acmacs::draw::Grid::draw(drawing_stage stage, surface::JsDynamic& surface) const
+{
+    // if (stage == drawing_stage::grid)
+    //     surface.func("grid", "__context", "viewport", step_, line_color_, line_width_);
+
+} // acmacs::draw::Grid::draw
+
+// ======================================================================
 
 void acmacs::draw::Background::draw(drawing_stage stage, surface::Surface& surface) const
 {
@@ -47,7 +56,7 @@ void acmacs::draw::Background::draw(drawing_stage stage, surface::JsStatic& surf
 
 } // acmacs::draw::Background::draw
 
-// ----------------------------------------------------------------------
+// ======================================================================
 
 void acmacs::draw::Border::draw(drawing_stage stage, surface::Surface& surface) const
 {

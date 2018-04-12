@@ -64,7 +64,7 @@ namespace acmacs::surface
         acmacs::Viewport viewport_;
         double scale_;
 
-    }; // class Html
+    }; // class JsStatic
 
 } // namespace acmacs::surface
 
