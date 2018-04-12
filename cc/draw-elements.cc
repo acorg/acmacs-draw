@@ -1,5 +1,6 @@
 #include "acmacs-draw/surface-cairo.hh"
 #include "acmacs-draw/surface-js-static.hh"
+#include "acmacs-draw/surface-js-dynamic.hh"
 #include "acmacs-draw/draw-elements.hh"
 #include "acmacs-draw/draw-grid.hh"
 #include "acmacs-draw/draw-legend.hh"
@@ -21,6 +22,10 @@ void acmacs::draw::DrawElements::draw() const
     }
     else if (std::string_view(filename_.data() + filename_.size() - 5, 5) == ".html") {
         acmacs::surface::JsStatic surface(filename_, {size_, size_}, viewport_);
+        draw(surface);
+    }
+    else if (std::string_view(filename_.data() + filename_.size() - 5, 5) == ".json") {
+        acmacs::surface::JsDynamic surface(filename_, {size_, size_}, viewport_);
         draw(surface);
     }
     else {
