@@ -1,8 +1,9 @@
 #include "acmacs-draw/surface.hh"
 #include "acmacs-draw/surface-js-static.hh"
+#include "acmacs-draw/surface-js-dynamic.hh"
 #include "acmacs-draw/draw-grid.hh"
 
-// ----------------------------------------------------------------------
+// ======================================================================
 
 void acmacs::draw::Grid::draw(drawing_stage stage, surface::Surface& surface) const
 {
@@ -16,7 +17,7 @@ void acmacs::draw::Grid::draw(drawing_stage stage, surface::Surface& surface) co
 
 } // acmacs::draw::Grid::draw
 
-// ======================================================================
+// ----------------------------------------------------------------------
 
 void acmacs::draw::Grid::draw(drawing_stage stage, surface::JsStatic& surface) const
 {
@@ -29,7 +30,8 @@ void acmacs::draw::Grid::draw(drawing_stage stage, surface::JsStatic& surface) c
 
 void acmacs::draw::Grid::draw(drawing_stage stage, surface::JsDynamic& surface) const
 {
-    // if (stage == drawing_stage::grid)
+    if (stage == drawing_stage::grid)
+        surface.add_field("grid", rjson::object{{{"step", surface.convert(step_)}, {"line_color", surface.convert(line_color_)}, {"line_width", surface.convert(line_width_)}}});
     //     surface.func("grid", "__context", "viewport", step_, line_color_, line_width_);
 
 } // acmacs::draw::Grid::draw
@@ -42,6 +44,15 @@ void acmacs::draw::Background::draw(drawing_stage stage, surface::Surface& surfa
         const Viewport& v = surface.viewport();
         surface.rectangle_filled(v.origin, v.size, color_, Pixels{0}, color_);
     }
+
+} // acmacs::draw::Background::draw
+
+// ----------------------------------------------------------------------
+
+void acmacs::draw::Background::draw(drawing_stage stage, surface::JsDynamic& surface) const
+{
+    if (stage == drawing_stage::background)
+        surface.add_field("background", rjson::object{{{"color", surface.convert(color_)}}});
 
 } // acmacs::draw::Background::draw
 
@@ -64,6 +75,15 @@ void acmacs::draw::Border::draw(drawing_stage stage, surface::Surface& surface) 
         const Viewport& v = surface.viewport();
         surface.rectangle(v.origin, v.size, line_color_, line_width_ * 2);
     }
+
+} // acmacs::draw::Border::draw
+
+// ----------------------------------------------------------------------
+
+void acmacs::draw::Border::draw(drawing_stage stage, surface::JsDynamic& surface) const
+{
+    if (stage == drawing_stage::border)
+        surface.add_field("border", rjson::object{{{"line_color", surface.convert(line_color_)}, {"line_width", surface.convert(line_width_)}}});
 
 } // acmacs::draw::Border::draw
 
