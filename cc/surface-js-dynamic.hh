@@ -12,6 +12,8 @@ namespace acmacs
 {
     class Size;
     class Viewport;
+    class LayoutInterface;
+    class Transformation;
 }
 
 namespace acmacs::surface
@@ -34,6 +36,9 @@ namespace acmacs::surface
         // int convert(int a) const { return a; }
         rjson::string convert(Color a) const { return a.to_hex_string(); }
         // const char* convert(const char* a) const { return a; }
+        rjson::array convert(const std::vector<size_t> list) const { return rjson::array(rjson::array::use_iterator, list.begin(), list.end()); }
+        rjson::array convert(const acmacs::LayoutInterface& layout) const;
+        rjson::array convert(const acmacs::Transformation& transformation) const;
 
      private:
         rjson::object data_;

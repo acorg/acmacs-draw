@@ -1,4 +1,6 @@
 #include "acmacs-base/read-file.hh"
+#include "acmacs-base/range.hh"
+#include "acmacs-base/layout.hh"
 #include "acmacs-draw/surface-js-dynamic.hh"
 
 // ----------------------------------------------------------------------
@@ -22,9 +24,31 @@ acmacs::surface::JsDynamic::~JsDynamic()
 
 // ----------------------------------------------------------------------
 
+rjson::array acmacs::surface::JsDynamic::convert(const acmacs::LayoutInterface& layout) const
+{
+    rjson::array result;
+    for (auto point_no : acmacs::range(layout.number_of_points())) {
+        if (layout.point_has_coordinates(point_no)) {
+            const auto coord = layout[point_no];
+            result.insert(rjson::array(rjson::array::use_iterator, coord.begin(), coord.end()));
+        }
+        else {
+            result.insert(rjson::array{});
+        }
+    }
+    return result;
+
+} // acmacs::surface::JsDynamic::convert
 
 // ----------------------------------------------------------------------
 
+rjson::array acmacs::surface::JsDynamic::convert(const acmacs::Transformation& transformation) const
+{
+    return {transformation.a, transformation.b, transformation.c, transformation.d};
+
+} // acmacs::surface::JsDynamic::convert
+
+// ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
 /// Local Variables:

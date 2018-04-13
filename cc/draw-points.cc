@@ -2,6 +2,7 @@
 #include "acmacs-base/range.hh"
 #include "acmacs-draw/surface.hh"
 #include "acmacs-draw/surface-js-static.hh"
+#include "acmacs-draw/surface-js-dynamic.hh"
 #include "acmacs-draw/draw-points.hh"
 
 // ----------------------------------------------------------------------
@@ -105,6 +106,24 @@ void acmacs::draw::Points::draw_points(surface::JsStatic& surface) const
     }
 
 } // acmacs::draw::Points::draw_points
+
+// ----------------------------------------------------------------------
+
+void acmacs::draw::Points::draw_points(surface::JsDynamic& surface) const
+{
+    surface.add_field("drawing_order", surface.convert(drawing_order_));
+    surface.add_field("layout", surface.convert(*layout_));
+    surface.add_field("transformation", surface.convert(transformation_));
+
+} // acmacs::draw::Points::draw_points
+
+// ======================================================================
+
+void acmacs::draw::Points::draw_labels(surface::JsDynamic& surface) const
+{
+    std::cerr << "WARNING: acmacs::draw::Points::draw_labels() not implemented\n";
+
+} // acmacs::draw::Points::draw_labels
 
 // ----------------------------------------------------------------------
 
