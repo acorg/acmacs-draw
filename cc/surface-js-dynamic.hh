@@ -25,6 +25,7 @@ namespace acmacs::surface
         ~JsDynamic();
 
         void add_field(const char* name, rjson::value&& value) { data_.set_field(name, std::move(value)); }
+        rjson::value& add_array(const char* name) { return data_.set_field(name, rjson::array{}); }
 
         // const acmacs::Viewport& viewport() const { return viewport_; }
         // double convert(Pixels a) const { return a.value() / scale_; }
@@ -39,6 +40,7 @@ namespace acmacs::surface
         rjson::array convert(const std::vector<size_t> list) const { return rjson::array(rjson::array::use_iterator, list.begin(), list.end()); }
         rjson::array convert(const acmacs::LayoutInterface& layout) const;
         rjson::array convert(const acmacs::Transformation& transformation) const;
+        rjson::boolean convert(bool a) { return a; }
 
      private:
         rjson::object data_;

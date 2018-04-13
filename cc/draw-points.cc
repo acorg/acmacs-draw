@@ -114,6 +114,22 @@ void acmacs::draw::Points::draw_points(surface::JsDynamic& surface) const
     surface.add_field("drawing_order", surface.convert(drawing_order_));
     surface.add_field("layout", surface.convert(*layout_));
     surface.add_field("transformation", surface.convert(transformation_));
+    const auto styles = styles_->compacted();
+    surface.add_field("style_index", surface.convert(styles.index));
+    rjson::array& target_styles = surface.add_array("styles");
+    for (const auto& styl : styles.styles) {
+        rjson::object target_style;
+        auto set_if_not_default = [&](const char* name, const auto& field) { if (field.not_default()) target_style.set_field(name, surface.convert(*field)); };
+        set_if_not_default("shown", styl.shown);
+        set_if_not_default("fill", styl.fill);
+        set_if_not_default("outline", styl.outline);
+        set_if_not_default("outline_width", styl.outline_width);
+        set_if_not_default("size", styl.size);
+        set_if_not_default("rotation", styl.rotation);
+        set_if_not_default("aspect", styl.aspect);
+        target_style.set_field("shape", rjson::string{*styl.shape});
+        target_styles.insert(std::move(target_style));
+    }
 
 } // acmacs::draw::Points::draw_points
 
@@ -149,7 +165,7 @@ void acmacs::draw::Points::draw_labels(surface::Surface& surface) const
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::Points::draw_labels(surface::JsStatic& surface) const
+void acmacs::draw::Points::draw_labels(surface::JsStatic& /*surface*/) const
 {
     std::cerr << "WARNING: acmacs::draw::Points::draw_labels() not implemented\n";
 
