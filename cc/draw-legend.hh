@@ -108,6 +108,8 @@ namespace acmacs::draw
          public:
             TitleLine() = default;
             TitleLine(std::string text) : text_(text) {}
+            TitleLine(std::string text, Color text_color, Pixels text_size, const acmacs::TextStyle& text_style)
+                : text_(text), text_color_(text_color), text_size_(text_size), text_style_(text_style) {}
 
             void text_color(Color text_color) { text_color_ = text_color; }
             void text_size(Pixels text_size) { text_size_ = text_size; }
@@ -136,6 +138,8 @@ namespace acmacs::draw
             LegendPointLabel() = default;
             LegendPointLabel(std::string text, Pixels point_size, Color point_outline, Color point_fill)
                 : TitleLine(text), point_size_(point_size), point_outline_(point_outline), point_fill_(point_fill) {}
+            LegendPointLabel(std::string text, Color text_color, Pixels text_size, const acmacs::TextStyle& text_style, Pixels point_size, Color point_outline, Color point_fill)
+                : TitleLine(text, text_color, text_size, text_style), point_size_(point_size), point_outline_(point_outline), point_fill_(point_fill) {}
 
             void point_size(Pixels point_size) { point_size_ = point_size; }
 
@@ -171,6 +175,7 @@ namespace acmacs::draw
         Legend() : internal::Box<internal::LegendPointLabel>(drawing_stage::legend) {}
 
         void add(std::string text, Pixels point_size, Color point_outline, Color point_fill) { lines().emplace_back(text, point_size, point_outline, point_fill); }
+        void add(std::string text, Color text_color, Pixels text_size, const acmacs::TextStyle& text_style, Pixels point_size, Color point_outline, Color point_fill) { lines().emplace_back(text, text_color, text_size, text_style, point_size, point_outline, point_fill); }
 
     }; // class Legend
 
