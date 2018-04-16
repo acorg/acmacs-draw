@@ -3,20 +3,42 @@ const COS_PI_6 = Math.cos(Math.PI / 6);
 
 // ----------------------------------------------------------------------
 
-function draw(canvas, data) {
+export function draw(canvas, data) {
     var start = new Date();
 
-    var surface = new Surface(canvas, {width: 800, height: 800, viewport: data.viewport});
-    if (data.border)
-        surface.border(data.border);
-    if (data.background)
-        surface.background(data.background);
-    if (data.grid)
-        surface.grid(data.grid);
-    surface.points(data.layout, data.transformation, data.style_index, data.styles);
+    if (!Array.isArray(data)) {
+        data = [data];
+    }
+
+    var surface = new Surface(canvas, {canvas: sval("canvas", data, {width: 500, height: 500}), viewport: sval("viewport", data, [0, 0, 10, 10])});
+    sval_call("border", data, v => surface.border(v));
+    sval_call("background", data, v => surface.background(v));
+    sval_call("grid", data, v => surface.grid(v));
+    surface.points(sval("drawing_order", data), sval("layout", data), sval("transformation", data), sval("style_index", data), sval("styles", data), sval("point_scale", data, 1));
 
     var elapsed = new Date() - start;
     console.log("drawing time: " + elapsed + "ms -> " + (1000 / elapsed).toFixed(1) + "fps");
+}
+
+// ----------------------------------------------------------------------
+
+function sval(name, data, dflt = undefined) {
+    for (let entry of data) {
+        let val = entry[name];
+        if (val !== undefined)
+            return val;
+    }
+    return dflt;
+}
+
+function sval_call(name, data, func) {
+    for (let entry of data) {
+        let val = entry[name];
+        if (val !== undefined) {
+            func(val);
+            break;
+        }
+    }
 }
 
 // ----------------------------------------------------------------------
@@ -25,7 +47,8 @@ class Surface {
 
     constructor(canvas, args={}) {
         this.canvas = $(canvas);
-        this.canvas.prop({width: (args.width || 300), height: (args.height || 300)});
+        // this.canvas.prop({width: (args.width || 300), height: (args.height || 300)});
+        this.canvas.prop(args.canvas || {width: 300, height: 300});
         this.context = this.canvas[0].getContext('2d');
         this.set_viewport(args.viewport);
     }
@@ -41,13 +64,16 @@ class Surface {
         this.context.translate(- this.viewport[0], - this.viewport[1]);
     }
 
-    points(layout, transformation, style_index, styles) {
-        var transform = coord => [coord[0] * transformation[0] + coord[1] * transformation[2], coord[0] * transformation[1] + coord[1] * transformation[3]];
-        layout.forEach((coord, point_no) => {
+    points(drawing_order, layout, transformation, style_index, styles, point_scale=1) {
+        if (!Array.isArray(drawing_order))
+            drawing_order = Array.apply(null, {length: layout.length}).map(Number.call, Number);
+        const transform = coord => [coord[0] * transformation[0] + coord[1] * transformation[2], coord[0] * transformation[1] + coord[1] * transformation[3]];
+        drawing_order.forEach(point_no => {
+            const coord = layout[point_no];
             if (coord.length > 1) {
                 const style = styles[style_index[point_no]];
                 const args = [transform(coord),
-                              style.size === undefined ? 5 : style.size,
+                              (style.size === undefined ? 5 : style.size) * point_scale,
                               style.fill || "transparent",
                               style.outline || "black",
                               style.outline_width === undefined ? 1 : style.outline_width,
