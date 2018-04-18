@@ -3,7 +3,7 @@ const COS_PI_6 = Math.cos(Math.PI / 6);
 
 // ----------------------------------------------------------------------
 
-export function draw(canvas, data) {
+export function draw(canvas, data, options={}) {
     const start = new Date();
 
     if (!Array.isArray(data)) {
@@ -16,8 +16,10 @@ export function draw(canvas, data) {
     sval_call("grid", data, v => surface.grid(v));
     surface.points(sval("drawing_order", data), sval("layout", data), sval("transformation", data), sval("style_index", data), sval("styles", data), sval("point_scale", data, 1));
 
-    const elapsed = new Date() - start;
-    console.log("drawing time: " + elapsed + "ms -> " + (1000 / elapsed).toFixed(1) + "fps");
+    if (options.time_it) {
+        const elapsed = new Date() - start;
+        console.log("drawing time: " + elapsed + "ms -> " + (1000 / elapsed).toFixed(1) + "fps");
+    }
 }
 
 // ----------------------------------------------------------------------
