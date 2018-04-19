@@ -1,5 +1,6 @@
 const version_acmacs_draw_surface = "1";
 const COS_PI_6 = Math.cos(Math.PI / 6);
+import {sval, sval_call} from "./utils.js";
 
 // ----------------------------------------------------------------------
 
@@ -24,28 +25,10 @@ export function draw(canvas, data, options={}) {
 
 // ----------------------------------------------------------------------
 
-function sval(name, data, dflt = undefined) {
-    for (let entry of data) {
-        let val = entry[name];
-        if (val !== undefined)
-            return val;
-    }
-    return dflt;
-}
-
-function sval_call(name, data, func) {
-    for (let entry of data) {
-        let val = entry[name];
-        if (val !== undefined) {
-            func(val);
-            break;
-        }
-    }
-}
 
 // ----------------------------------------------------------------------
 
-class Surface {
+export class Surface {
 
     constructor(canvas, args={}) {
         this.canvas = $(canvas);

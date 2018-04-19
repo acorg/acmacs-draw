@@ -51,8 +51,8 @@ all: $(TARGETS)
 install: check-acmacsd-root install-headers $(TARGETS)
 	$(call install_lib,$(ACMACS_DRAW_LIB))
 	$(call install_py_lib,$(ACMACS_DRAW_PY_LIB))
-	mkdir -p $(AD_SHARE)/js/draw; ln -sf $(SRC_DIR)/acmacs-draw/js/*.js $(AD_SHARE)/js/draw
-	@#ln -sf $(SRC_DIR)/acmacs-draw/bin/* $(AD_BIN)
+	mkdir -p $(AD_SHARE)/js/draw; ln -sf $(shell pwd)/js/*.js $(AD_SHARE)/js/draw
+	@#ln -sf $(shell pwd)/bin/* $(AD_BIN)
 
 test: install $(DIST)/test-cairo $(DIST)/test-cairo-fonts $(DIST)/test-distinct-colors
 	bin/test-acmacs-draw
