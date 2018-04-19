@@ -64,6 +64,14 @@ namespace acmacs::draw
                 }
             }
 
+            void draw_field(drawing_stage stage, surface::JsDynamic& surface, const char* field) const
+                {
+                    if (stage == stage_) {
+                        for (const auto& line : lines())
+                            line.draw(surface, field);
+                    }
+                }
+
           protected:
             void draw_content(surface::Surface& surface) const override
                 {
@@ -76,6 +84,7 @@ namespace acmacs::draw
                 }
 
             std::vector<Line>& lines() { return lines_; }
+            const std::vector<Line>& lines() const { return lines_; }
             using iterator = typename std::vector<Line>::iterator;
             iterator begin() { return lines_.begin(); }
             iterator end() { return lines_.end(); }
@@ -119,6 +128,7 @@ namespace acmacs::draw
             const auto& text_style() const { return text_style_; }
 
             void draw(surface::Surface& surface, const acmacs::Location& origin, double height) const { draw(surface, {origin.x, origin.y + height}); }
+            void draw(surface::JsDynamic& surface, const char* field) const;
             acmacs::Size size(surface::Surface& surface) const { return surface.text_size(text_, text_size_, text_style_); }
 
          protected:
@@ -166,6 +176,9 @@ namespace acmacs::draw
         auto& text_color(Color text_color) { std::for_each(begin(), end(), [=](auto& line) { line.text_color(text_color); }); return *this; }
         auto& text_size(Pixels text_size) { std::for_each(begin(), end(), [=](auto& line) { line.text_size(text_size); }); return *this; }
         auto& text_style(const acmacs::TextStyle& text_style) { std::for_each(begin(), end(), [&](auto& line) { line.text_style(text_style); }); return *this; }
+
+        using internal::Box<internal::TitleLine>::draw;
+        void draw(drawing_stage stage, surface::JsDynamic& surface) const override { internal::Box<internal::TitleLine>::draw_field(stage, surface, "title"); }
 
     }; // class Title
 

@@ -1,5 +1,6 @@
 #include "acmacs-draw/draw-legend.hh"
 #include "acmacs-draw/surface-js-static.hh"
+#include "acmacs-draw/surface-js-dynamic.hh"
 #include "acmacs-draw/continent-map.hh"
 
 // ----------------------------------------------------------------------
@@ -94,6 +95,15 @@ void acmacs::draw::internal::LegendPointLabel::draw(surface::Surface& surface, c
     TitleLine::draw(surface, {text_x, origin.y + height});
 
 } // acmacs::draw::internal::LegendPointLabel::draw
+
+// ----------------------------------------------------------------------
+
+void acmacs::draw::internal::TitleLine::draw(surface::JsDynamic& surface, const char* field) const
+{
+    auto& target = surface.add_array(field);
+    target.insert(rjson::object{{{"text", rjson::string{text_}}, {"color", surface.convert(text_color_)}, {"size", surface.convert(text_size_)}}});
+
+} // acmacs::draw::internal::TitleLine::draw
 
 // ----------------------------------------------------------------------
 
