@@ -24,7 +24,7 @@ void acmacs::draw::DrawElements::draw() const
         acmacs::surface::JsStatic surface(filename_, {size_, size_}, viewport_);
         draw(surface);
     }
-    else if (std::string_view(filename_.data() + filename_.size() - 5, 5) == ".json") {
+    else if (is_json()) {
         acmacs::surface::JsDynamic surface(filename_, {size_, size_}, viewport_);
         draw(surface);
     }

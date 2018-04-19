@@ -77,6 +77,8 @@ namespace acmacs::draw
         void serum_circle(const Coordinates& coordinates, const acmacs::Transformation& transformation, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Dash radius_dash, Rotation start, Rotation end);
         void continent_map(const acmacs::Location& origin, Pixels size);
 
+        bool add_all_labels() const { return is_json(); }
+
      private:
         std::string filename_;
         double size_;
@@ -91,6 +93,8 @@ namespace acmacs::draw
                     }
                 }
             }
+
+        bool is_json() const { return std::string_view(filename_.data() + filename_.size() - 5, 5) == ".json"; }
 
     }; // class DrawElements
 

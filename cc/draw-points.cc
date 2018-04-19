@@ -137,7 +137,12 @@ void acmacs::draw::Points::draw_points(surface::JsDynamic& surface) const
 
 void acmacs::draw::Points::draw_labels(surface::JsDynamic& surface) const
 {
-    std::cerr << "WARNING: acmacs::draw::Points::draw_labels() not implemented\n";
+    if (labels_) {
+        auto& target_labels = surface.add_array("labels");
+        target_labels.resize(layout_->number_of_points());
+        for (const auto& label : *labels_)
+            target_labels[label.index()] = rjson::string(label.display_name());
+    }
 
 } // acmacs::draw::Points::draw_labels
 
