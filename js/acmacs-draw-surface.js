@@ -49,16 +49,23 @@ export class Surface {
         this.context.translate(- this.viewport[0], - this.viewport[1]);
     }
 
+    translate_pixel_offset(x, y) {
+        return [x * this.scale_inv + this.viewport[0], y * this.scale_inv + this.viewport[1]];
+    }
+
     points(drawing_order, layout, transformation, style_index, styles, point_scale=1) {
         if (!Array.isArray(drawing_order))
             drawing_order = Array.apply(null, {length: layout.length}).map(Number.call, Number);
-        const transform = coord => [coord[0] * transformation[0] + coord[1] * transformation[2], coord[0] * transformation[1] + coord[1] * transformation[3]];
+        const scale_inv2 = this.scale_inv * this.scale_inv;
+        const transform_coord = coord => coord.length ? [coord[0] * transformation[0] + coord[1] * transformation[2], coord[0] * transformation[1] + coord[1] * transformation[3]] : [];
+        this.layout_size_shape_ = layout.map(transform_coord); // for circles size**2, for boxes size, shape: 0 - circe, 1 - box, 2 - triangle
         drawing_order.forEach(point_no => {
-            const coord = layout[point_no];
+            const coord = this.layout_size_shape_[point_no];
             if (coord.length > 1) {
                 const style = styles[style_index[point_no]];
-                const args = [transform(coord),
-                              (style.size === undefined ? 5 : style.size) * point_scale,
+                const size = (style.size === undefined ? 5 : style.size) * point_scale;
+                const args = [coord,
+                              size,
                               style.fill || "transparent",
                               style.outline || "black",
                               style.outline_width === undefined ? 1 : style.outline_width,
@@ -68,16 +75,41 @@ export class Surface {
                 switch (style.shape) {
                 case "CIRCLE":
                     this.circle_pixels.apply(this, args);
+                    coord.push(size * size * 0.25 * scale_inv2, 0);
                     break;
                 case "BOX":
                     this.box_pixels.apply(this, args);
+                    coord.push(size * 0.5 * this.scale_inv, 1);
                     break;
                 case "TRIANGLE":
                     this.triangle_pixels.apply(this, args);
+                    coord.push(size * 0.5 * this.scale_inv, 2);
                     break;
                 }
             }
         });
+    }
+
+    find_points_at_pixel_offset(x, y) {
+        const coord = this.translate_pixel_offset(x, y);
+        let result = [];
+        this.layout_size_shape_.forEach((point_coord_size, point_no) => {
+            switch (point_coord_size[3]) {
+            case 0:             // circle
+                if (((coord[0] - point_coord_size[0])**2 + (coord[1] - point_coord_size[1])**2) <= point_coord_size[2])
+                    result.push(point_no);
+                break;
+            case 1:             // box
+                if (Math.abs(coord[0] - point_coord_size[0]) <= point_coord_size[2] && Math.abs(coord[1] - point_coord_size[1]) <= point_coord_size[2])
+                    result.push(point_no);
+                break;
+            case 2:             // triangle
+                if (Math.abs(coord[0] - point_coord_size[0]) <= point_coord_size[2] && Math.abs(coord[1] - point_coord_size[1]) <= point_coord_size[2])
+                    result.push(point_no);
+                break;
+            }
+        });
+        return result;
     }
 
     circle_scaled(center, size, fill, outline, outline_width, rotation, aspect) {
@@ -115,8 +147,8 @@ export class Surface {
             this.context.translate(center[0], center[1]);
             if (rotation)
                 this.context.rotate(rotation);
-            this.context.fillRect(-size * aspect, -size, size * aspect, size);
-            this.context.strokeRect(-size * aspect, -size, size * aspect, size);
+            this.context.fillRect(-size * aspect / 2, -size / 2, size * aspect, size);
+            this.context.strokeRect(-size * aspect / 2, -size / 2, size * aspect, size);
         }
         catch(err) {
             console.error('Surface::box_scaled', err);
