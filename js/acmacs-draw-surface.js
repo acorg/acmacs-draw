@@ -49,8 +49,8 @@ export class Surface {
         this.context.translate(- this.viewport[0], - this.viewport[1]);
     }
 
-    translate_pixel_offset(x, y) {
-        return [x * this.scale_inv + this.viewport[0], y * this.scale_inv + this.viewport[1]];
+    translate_pixel_offset(offset) {
+        return [offset[0] * this.scale_inv + this.viewport[0], offset[1] * this.scale_inv + this.viewport[1]];
     }
 
     points(drawing_order, layout, transformation, style_index, styles, point_scale=1) {
@@ -90,8 +90,8 @@ export class Surface {
         });
     }
 
-    find_points_at_pixel_offset(x, y) {
-        const coord = this.translate_pixel_offset(x, y);
+    find_points_at_pixel_offset(offset) {
+        const coord = this.translate_pixel_offset(offset);
         let result = [];
         this.layout_size_shape_.forEach((point_coord_size, point_no) => {
             switch (point_coord_size[3]) {
