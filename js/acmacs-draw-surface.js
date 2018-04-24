@@ -39,6 +39,10 @@ export class Surface {
     }
 
     set_viewport(viewport) {
+        if (this.viewport) {
+            this.context.translate(this.viewport[0], this.viewport[1]);
+            this.context.scale(this.scale_inv, this.scale_inv);
+        }
         if (viewport)
             this.viewport = viewport;
         else
@@ -50,7 +54,7 @@ export class Surface {
     }
 
     translate_pixel_offset(offset) {
-        return [offset.left * this.scale_inv + this.viewport[0], offset.top * this.scale_inv + this.viewport[1]];
+        return {left: offset.left * this.scale_inv + this.viewport[0], top: offset.top * this.scale_inv + this.viewport[1]};
     }
 
     points(drawing_order, layout, transformation, style_index, styles, point_scale=1) {
@@ -91,20 +95,20 @@ export class Surface {
     }
 
     find_points_at_pixel_offset(offset) {
-        const coord = this.translate_pixel_offset(offset);
+        const scaled_offset = this.translate_pixel_offset(offset);
         let result = [];
         this.layout_size_shape_.forEach((point_coord_size, point_no) => {
             switch (point_coord_size[3]) {
             case 0:             // circle
-                if (((coord[0] - point_coord_size[0])**2 + (coord[1] - point_coord_size[1])**2) <= point_coord_size[2])
+                if (((scaled_offset.left - point_coord_size[0])**2 + (scaled_offset.top - point_coord_size[1])**2) <= point_coord_size[2])
                     result.push(point_no);
                 break;
             case 1:             // box
-                if (Math.abs(coord[0] - point_coord_size[0]) <= point_coord_size[2] && Math.abs(coord[1] - point_coord_size[1]) <= point_coord_size[2])
+                if (Math.abs(scaled_offset.left - point_coord_size[0]) <= point_coord_size[2] && Math.abs(scaled_offset.top - point_coord_size[1]) <= point_coord_size[2])
                     result.push(point_no);
                 break;
             case 2:             // triangle
-                if (Math.abs(coord[0] - point_coord_size[0]) <= point_coord_size[2] && Math.abs(coord[1] - point_coord_size[1]) <= point_coord_size[2])
+                if (Math.abs(scaled_offset.left - point_coord_size[0]) <= point_coord_size[2] && Math.abs(scaled_offset.top - point_coord_size[1]) <= point_coord_size[2])
                     result.push(point_no);
                 break;
             }
