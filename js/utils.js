@@ -20,6 +20,18 @@ export function sval_call(name, data, func) {
 }
 
 // ----------------------------------------------------------------------
+
+export function sum_offsets(offsets) {
+    if (Array.isArray(offsets)) {
+        const reducer = (accumulator, currentValue) => { return {left: accumulator.left + currentValue.left, top: accumulator.top + currentValue.top}; };
+        return offsets.reduce(reducer);
+    }
+    else {
+        return offsets;
+    }
+}
+
+// ----------------------------------------------------------------------
 /// Local Variables:
 /// eval: (if (fboundp 'eu-rename-buffer) (eu-rename-buffer))
 /// End:

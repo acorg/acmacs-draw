@@ -50,7 +50,7 @@ export class Surface {
     }
 
     translate_pixel_offset(offset) {
-        return [offset[0] * this.scale_inv + this.viewport[0], offset[1] * this.scale_inv + this.viewport[1]];
+        return [offset.left * this.scale_inv + this.viewport[0], offset.top * this.scale_inv + this.viewport[1]];
     }
 
     points(drawing_order, layout, transformation, style_index, styles, point_scale=1) {
