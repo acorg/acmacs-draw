@@ -53,3 +53,36 @@
     max-height: 40em;
     max-width: 30em;
 }
+
+/* ---------------------------------------------------------------------- */
+
+pre.json-highlight {
+    padding: 0.5em;
+    margin: 0;
+}
+
+pre.json-highlight .json-syntax-key {
+    color: blue;
+}
+
+pre.json-highlight .json-syntax-string {
+    color: darkcyan;
+}
+
+pre.json-highlight .json-syntax-number {
+    color: darkorange;
+}
+
+pre.json-highlight .json-syntax-boolean {
+    color: brown;
+}
+
+pre.json-highlight .json-syntax-null {
+    color: magenta;
+}
+
+pre.json-highlight .json-syntax-object-id {
+    color: green;
+}
+
+/* ---------------------------------------------------------------------- */
