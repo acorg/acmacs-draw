@@ -32,6 +32,14 @@ export function sum_offsets(offsets) {
 }
 
 // ----------------------------------------------------------------------
+
+export function offset_sub(offset1, offset2) {
+    return {left: offset1.left - offset2.left, top: offset1.top - offset2.top};
+}
+
+// ----------------------------------------------------------------------
+
+// ----------------------------------------------------------------------
 /// Local Variables:
 /// eval: (if (fboundp 'eu-rename-buffer) (eu-rename-buffer))
 /// End:

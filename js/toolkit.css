@@ -7,16 +7,13 @@
     left: 0;
     top: 0;
     background: white;
-    max-height: 40em;
-    max-width: 30em;
-    white-space: nowrap;
-    overflow: auto;
     z-index: 10;
 }
 
 .ADT_Popup1 .adt-x-window-title {
     display: grid;
     grid-template-columns: 1em auto 1em;
+    background-color: #EEE;
 }
 
 .ADT_Popup1 .adt-x-title {
@@ -27,8 +24,17 @@
     cursor: move;
 }
 
+.ADT_Popup1 .adt-x-window-title:hover {
+    background-color: #EEF;
+}
+
 .ADT_Popup1 .adt-x-close {
     cursor: pointer;
+    text-align: center;
+}
+
+.ADT_Popup1 .adt-x-close:hover {
+    color: red;
 }
 
 .ADT_Popup1 .adt-x-close.adt-x-left {
@@ -39,4 +45,11 @@
 .ADT_Popup1 .adt-x-close.adt-x-right {
     grid-column-start: 3;
     grid-column-end: 4;
+}
+
+.ADT_Popup1 .adt-x-content {
+    white-space: nowrap;
+    overflow: auto;
+    max-height: 40em;
+    max-width: 30em;
 }
