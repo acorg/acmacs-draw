@@ -63,12 +63,22 @@ export function json_syntax_highlight(data) {
         }
         if (cls === 'json-syntax-object-id') {
             const id_itself = match.replace(/"/g, '');
-            const href = "/doc/" + id_itself;
+            const href = url_prefix() + "doc/" + id_itself;
             return `"<a class="json-syntax-object-id" href="${href}" target="_blank">${id_itself}</a>"`;
         }
         else
             return '<span class="' + cls + '">' + match + '</span>';
     });
+}
+
+// ----------------------------------------------------------------------
+
+export function url_prefix() {
+    const url = new URL(document.location);
+    if (/^\/ads\//.test(url.pathname))
+        return "/ads/";
+    else
+        return "/";
 }
 
 // ----------------------------------------------------------------------
