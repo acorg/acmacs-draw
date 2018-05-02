@@ -1,0 +1,11 @@
+.ADT_Popup1 {
+    position: absolute;
+    left: 0;
+    top: 0;
+    border: 1px solid red;
+    background: white;
+    max-height: 20em;
+    max-width: 20em;
+    white-space: nowrap;
+    overflow: auto;
+}
