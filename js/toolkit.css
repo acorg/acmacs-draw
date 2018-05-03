@@ -8,6 +8,7 @@
     top: 0;
     background: white;
     z-index: 10;
+    max-width: 40em;
 }
 
 .ADT_Popup1 .adt-x-window-title {
@@ -55,8 +56,8 @@
 .ADT_Popup1 .adt-x-content {
     white-space: nowrap;
     overflow: auto;
-    max-height: 40em;
-    max-width: 30em;
+    width: 100%;
+    max-height: 40em;;
 }
 
 /* ---------------------------------------------------------------------- */
