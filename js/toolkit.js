@@ -2,9 +2,15 @@ import {sum_offsets, offset_sub} from "./utils.js";
 
 export class ADT_Popup1 {
 
-    constructor(title, content, parent) {
-        this.div = $(`<div class='ADT_Popup1 adt-shadow'><div class='adt-x-window-title'><div class='adt-x-close adt-x-left' title='Close'>&times;</div><div class='adt-x-title'>${title}</div><div class='adt-x-close adt-x-right' title='Close'>&times;</div></div><div class='adt-x-content'>${content}</div></div>`).appendTo($("body"));
-        this.div.css(sum_offsets($(parent).offset()));
+    constructor(title, content, parent, classes="") {
+        this.div = $(`<div class='ADT_Popup1 adt-shadow ${classes}'><div class='adt-x-window-title'><div class='adt-x-close adt-x-left' title='Close'>&times;</div><div class='adt-x-title'>${title}</div><div class='adt-x-close adt-x-right' title='Close'>&times;</div></div><div class='adt-x-content'>${content}</div></div>`).appendTo($("body"));
+        if (parent === "center") {
+            const wind = $(window);
+            this.div.css({left: (wind.scrollLeft() + wind.width() - this.div.width()) / 2, top: (wind.scrollTop() + wind.height() - this.div.height()) / 2});
+        }
+        else {
+            this.div.css($(parent).offset());
+        }
         this.div.find(".adt-x-close").on("click", () => this.destroy());
         this.div.find(".adt-x-title").on("mousedown", evt => this.title_mouse_down(evt));
     }

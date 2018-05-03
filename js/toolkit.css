@@ -16,6 +16,11 @@
     background-color: #EEE;
 }
 
+.ADT_Popup1.adt-error-popup .adt-x-window-title {
+    background-color: #FEE;
+    color: magenta;
+}
+
 .ADT_Popup1 .adt-x-title {
     grid-column-start: 2;
     grid-column-end: 3;
