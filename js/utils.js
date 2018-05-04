@@ -1,5 +1,5 @@
 export function sval(name, data, dflt = undefined) {
-    for (let entry of data) {
+    for (let entry of (Array.isArray(data) ? data : [data])) {
         let val = entry[name];
         if (val !== undefined)
             return val;
@@ -10,7 +10,7 @@ export function sval(name, data, dflt = undefined) {
 // ----------------------------------------------------------------------
 
 export function sval_call(name, data, func) {
-    for (let entry of data) {
+    for (let entry of (Array.isArray(data) ? data : [data])) {
         let val = entry[name];
         if (val !== undefined) {
             func(val);
