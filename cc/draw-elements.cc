@@ -24,6 +24,11 @@ void acmacs::draw::DrawElements::draw() const
         acmacs::surface::JsStatic surface(filename_, {size_, size_}, viewport_);
         draw(surface);
     }
+    else if (is_json_buffer()) {
+        acmacs::surface::JsDynamic surface({}, {0, 0}, viewport_);
+        draw(surface);
+        output_ = surface.write_to_string();
+    }
     else if (is_json()) {
         acmacs::surface::JsDynamic surface(filename_, {size_, size_}, viewport_);
         draw(surface);

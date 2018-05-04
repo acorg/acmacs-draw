@@ -60,6 +60,7 @@ namespace acmacs::draw
         DrawElements(std::string filename, double size) : filename_(filename), size_(size) {}
 
         void draw() const;
+        const std::string& output() const { return output_; } // if filename_ is "//.json"
 
         void viewport(const acmacs::Viewport& viewport) { viewport_ = viewport; }
         void background(Color color);
@@ -84,6 +85,7 @@ namespace acmacs::draw
         double size_;
         std::vector<std::unique_ptr<Element>> elements_;
         acmacs::Viewport viewport_;
+        mutable std::string output_;    // if filename_ is "//.json"
 
         template <typename Surface> void draw(Surface&& surface) const
             {
@@ -94,6 +96,7 @@ namespace acmacs::draw
                 }
             }
 
+        bool is_json_buffer() const { return filename_ == "//.json"; }
         bool is_json() const { return std::string_view(filename_.data() + filename_.size() - 5, 5) == ".json"; }
 
     }; // class DrawElements

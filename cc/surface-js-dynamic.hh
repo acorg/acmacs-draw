@@ -24,6 +24,8 @@ namespace acmacs::surface
         JsDynamic(std::string filename, const acmacs::Size& canvas_size, const acmacs::Viewport& viewport);
         ~JsDynamic();
 
+        std::string write_to_string(size_t indent = 1) const { return data_.to_json_pp(indent); }
+
         void add_field(const char* name, rjson::value&& value) { data_.set_field(name, std::move(value)); }
         rjson::object& add_object(const char* name) { return data_.get_or_add(name, rjson::object{}); }
         rjson::array& add_array(const char* name) { return data_.get_or_add(name, rjson::array{}); }
