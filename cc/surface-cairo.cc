@@ -678,6 +678,46 @@ acmacs::surface::PdfCairo::~PdfCairo()
 } // PdfCairo::~PdfCairo
 
 // ----------------------------------------------------------------------
+
+acmacs::surface::PdfBufferCairo::PdfBufferCairo(double aWidth, double aHeight, double aViewportWidth)
+{
+    auto surface = cairo_pdf_surface_create_for_stream(&writer, this, aWidth, aHeight);
+    mCairoContext = cairo_create(surface);
+    cairo_surface_destroy(surface);
+    change_width_in_parent(aWidth);
+    viewport({Location{0, 0}, Size{aViewportWidth, aHeight * aViewportWidth / aWidth}});
+
+} // acmacs::surface::PdfBufferCairo::PdfBufferCairo
+
+// ----------------------------------------------------------------------
+
+void acmacs::surface::PdfBufferCairo::flush()
+{
+    cairo_destroy(mCairoContext);
+    mCairoContext = nullptr;
+
+} // acmacs::surface::PdfBufferCairo::flush
+
+// ----------------------------------------------------------------------
+
+cairo_status_t acmacs::surface::PdfBufferCairo::writer(void *closure, const unsigned char* data, unsigned int length)
+{
+    auto* self = reinterpret_cast<PdfBufferCairo*>(closure);
+    self->data_.append(reinterpret_cast<const char*>(data), length);
+    return CAIRO_STATUS_SUCCESS;
+
+} // acmacs::surface::PdfBufferCairo::writer
+
+// ----------------------------------------------------------------------
+
+acmacs::surface::PdfBufferCairo::~PdfBufferCairo()
+{
+    if (mCairoContext)
+        cairo_destroy(mCairoContext);
+
+} // acmacs::surface::PdfBufferCairo::~PdfBufferCairo
+
+// ----------------------------------------------------------------------
 /// Local Variables:
 /// eval: (if (fboundp 'eu-rename-buffer) (eu-rename-buffer))
 /// End:

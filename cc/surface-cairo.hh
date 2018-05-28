@@ -115,6 +115,29 @@ namespace acmacs::surface
 
     }; // class PdfCairo
 
+    // ----------------------------------------------------------------------
+
+    class PdfBufferCairo : public internal_1::Cairo
+    {
+      public:
+        PdfBufferCairo(double aWidth, double aHeight, double aViewportWidth = default_canvas_width);
+        ~PdfBufferCairo() override;
+
+        cairo_t* cairo_context() override { return mCairoContext; }
+        // virtual Cairo* parent() { return nullptr; }
+        // virtual const Cairo* parent() const { return nullptr; }
+        void new_page() override { cairo_show_page(cairo_context()); }
+        void flush();
+        const std::string& data() const { return data_; }
+
+      private:
+        cairo_t* mCairoContext;
+        std::string data_;
+
+        static cairo_status_t writer(void *closure, const unsigned char *data, unsigned int length);
+
+    }; // class PdfCairo
+
 } // namespace acmacs::surface
 
 // ----------------------------------------------------------------------
