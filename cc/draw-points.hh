@@ -96,6 +96,8 @@ namespace acmacs::draw
         void draw(drawing_stage stage, surface::JsDynamic& surface) const override { draw_forward(stage, surface); }
         void draw(drawing_stage stage, surface::JsStatic& surface) const override { draw_forward(stage, surface); }
 
+        const auto& transformation() const { return transformation_; }
+
      private:
         std::shared_ptr<acmacs::LayoutInterface> layout_;
         acmacs::Transformation transformation_;

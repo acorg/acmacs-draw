@@ -41,6 +41,17 @@ void acmacs::draw::DrawElements::draw() const
 
 // ----------------------------------------------------------------------
 
+class ElementNotFound : public std::runtime_error { public: ElementNotFound() : std::runtime_error("ElementNotFound") {} };
+
+template <typename E> inline const E& find(const std::vector<std::unique_ptr<acmacs::draw::Element>>& elements)
+{
+    if (auto found = std::find_if(elements.begin(), elements.end(), [](const auto& elt) { return dynamic_cast<E*>(elt.get()) != nullptr; }); found != elements.end())
+        return *dynamic_cast<const E*>(found->get());
+    throw ElementNotFound{};
+}
+
+// ----------------------------------------------------------------------
+
 template <typename E> inline E& replace_or_add(std::unique_ptr<E> element, std::vector<std::unique_ptr<acmacs::draw::Element>>& elements)
 {
     auto& result = *element;
@@ -101,9 +112,15 @@ acmacs::draw::Points& acmacs::draw::DrawElements::points(std::shared_ptr<acmacs:
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::DrawElements::line(const acmacs::Location& from, const acmacs::Location& to, Color line_color, Pixels line_width)
+void acmacs::draw::DrawElements::line(const acmacs::Location& from, const acmacs::Location& to, Color line_color, Pixels line_width, bool apply_transformation)
 {
-    elements_.push_back(std::make_unique<Line>(from ,to, line_color, line_width));
+    if (apply_transformation) {
+        const auto& transformation = find<Points>(elements_).transformation();
+        elements_.push_back(std::make_unique<Line>(transformation.transform(from.x, from.y), transformation.transform(to.x, to.y), line_color, line_width));
+    }
+    else {
+        elements_.push_back(std::make_unique<Line>(from, to, line_color, line_width));
+    }
 
 } // acmacs::draw::DrawElements::line
 
@@ -111,7 +128,7 @@ void acmacs::draw::DrawElements::line(const acmacs::Location& from, const acmacs
 
 void acmacs::draw::DrawElements::arrow(const acmacs::Location& from, const acmacs::Location& to, Color line_color, Pixels line_width, Color arrow_head_color, bool arrow_head_filled, Pixels arrow_width)
 {
-    elements_.push_back(std::make_unique<Arrow>(from ,to, line_color, line_width, arrow_head_color, arrow_head_filled, arrow_width));
+    elements_.push_back(std::make_unique<Arrow>(from, to, line_color, line_width, arrow_head_color, arrow_head_filled, arrow_width));
 
 } // acmacs::draw::DrawElements::arrow
 

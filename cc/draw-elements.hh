@@ -69,7 +69,7 @@ namespace acmacs::draw
         Title& title(const std::vector<std::string>& lines);
         Legend& legend();
         Points& points(std::shared_ptr<acmacs::LayoutInterface> layout, const acmacs::Transformation& transformation);
-        void line(const acmacs::Location& from, const acmacs::Location& to, Color line_color, Pixels line_width);
+        void line(const acmacs::Location& from, const acmacs::Location& to, Color line_color, Pixels line_width, bool apply_transformation = false);
         void arrow(const acmacs::Location& from, const acmacs::Location& to, Color line_color, Pixels line_width, Color arrow_head_color, bool arrow_head_filled, Pixels arrow_width);
         void rectangle(const acmacs::Location& corner1, const acmacs::Location& corner2, Color color, bool filled, Pixels line_width);
         void circle(const acmacs::Location& center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Aspect aspect, Rotation rotation);
