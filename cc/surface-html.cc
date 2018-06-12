@@ -1,3 +1,5 @@
+#error Obsolete
+
 #include "acmacs-draw/surface-html.hh"
 
 static void write_header(std::ostream& output, double aWidth, double aHeight);
@@ -33,9 +35,9 @@ class context
             const auto& viewport = surface.viewport();
             const auto origin = surface.origin_offset();
             output_ << indent_ << "__context.save()\n";
-            translate(-origin.x, -origin.y);
+            translate(-origin.x(), -origin.y());
             scale(scale_);
-            translate(-viewport.origin.x, -viewport.origin.y);
+            translate(-viewport.origin.x(), -viewport.origin.y());
             // if (surface.clip()) {
             //     new_path();
             //     move_to(viewport.origin);
@@ -64,17 +66,17 @@ class context
     context& close_path() { output_ << indent_ << "__context.closePath();\n"; return *this; }
     context& move_to(double x, double y) { output_ << indent_ << "__context.moveTo(" << to_str(x) << ',' << to_str(y) << ");\n"; return *this; }
     context& move_to() { return move_to(0, 0); }
-    context& move_to(const acmacs::Location& a) { return move_to(a.x, a.y); }
+    context& move_to(acmacs::Location2D a) { return move_to(a.x(), a.y()); }
     template <typename S> context& move_to(S x, S y) { return move_to(convert(x), convert(y)); }
     context& line_to(double x, double y) { output_ << indent_ << "__context.lineTo(" << to_str(x) << ',' << to_str(y) << ");\n"; return *this; }
-    context& line_to(const acmacs::Location& a) { return line_to(a.x, a.y); }
+    context& line_to(acmacs::Location2D a) { return line_to(a.x(), a.y()); }
     template <typename S> context& line_to(S x, S y) { return line_to(convert(x), convert(y)); }
     context& rectangle_wh(double x, double y, double w, double h) { output_ << indent_ << "__context.rect(" << to_str(x) << ',' << to_str(y) << ',' << to_str(w) << ',' << to_str(h) << ");\n"; return *this; }
     template <typename S> context& rectangle(S x1, S y1, S x2, S y2) { return rectangle_wh(convert(x1), convert(y1), convert(x2) - convert(x1), convert(y2) - convert(y1)); }
-    context& rectangle(const acmacs::Location& a, const acmacs::Size& s) { return rectangle_wh(a.x, a.y, s.width, s.height); }
+    context& rectangle(acmacs::Location2D a, const acmacs::Size& s) { return rectangle_wh(a.x(), a.y(), s.width, s.height); }
     template <typename S> context& circle(S radius) { output_ << indent_ << "__context.arc(0,0," << to_str(convert(radius)) << ",0,2*Math.PI);\n"; return *this; }
     template <typename S> context& arc(S radius, Rotation start, Rotation end) { output_ << indent_ << "__context.arc(0,0," << to_str(convert(radius)) << ',' << to_str(start.value()) << ',' << to_str(end.value()) << ");\n"; return *this; }
-    context& circle(const acmacs::Location& a, double radius) { output_ << indent_ << "__context.arc(" << to_str(a.x) << ',' << to_str(a.y) << ',' << to_str(convert(radius)) << ",0,2*Math.PI);\n"; return *this; }
+    context& circle(acmacs::Location2D a, double radius) { output_ << indent_ << "__context.arc(" << to_str(a.x()) << ',' << to_str(a.y()) << ',' << to_str(convert(radius)) << ",0,2*Math.PI);\n"; return *this; }
 
     context& stroke() { output_ << indent_ << "__context.stroke();\n"; return *this; }
     context& fill() { output_ << indent_ << "__context.fill();\n"; return *this; }
@@ -82,7 +84,7 @@ class context
 
     context& translate(double x, double y) { output_ << indent_ << "__context.translate(" << to_str(x) << ',' << to_str(y) << ");\n"; return *this; }
     context& translate(const acmacs::Size& a) { return translate(a.width, a.height); }
-    context& translate(const acmacs::Location& a) { return translate(a.x, a.y); }
+    context& translate(acmacs::Location2D a) { return translate(a.x(), a.y()); }
     context& rotate(Rotation aAngle) { output_ << indent_ << "__context.rotate(" << to_str(aAngle.value()) << ");\n"; return *this; }
     context& scale(double x, double y) { output_ << indent_ << "__context.scale(" << to_str(x) << ',' << to_str(y) << ");\n"; return *this; }
     context& scale(double x) { return scale(x, x); }
@@ -127,7 +129,7 @@ class context
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_line(acmacs::surface::internal::Javascript& surface, const acmacs::Location& a, const acmacs::Location& b, Color aColor, S aWidth, acmacs::surface::LineCap aLineCap)
+template <typename S> static inline void s_line(acmacs::surface::internal::Javascript& surface, acmacs::Location2D a, acmacs::Location2D b, Color aColor, S aWidth, acmacs::surface::LineCap aLineCap)
 {
     context(surface)
             .begin_path()
@@ -183,7 +185,7 @@ void acmacs::surface::internal::Javascript::rectangle_filled(const Location& a, 
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_circle(acmacs::surface::internal::Javascript& aSurface, const acmacs::Location& aCenter, S aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth)
+template <typename S> static inline void s_circle(acmacs::surface::internal::Javascript& aSurface, acmacs::Location2D aCenter, S aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth)
 {
     context(aSurface)
             .begin_path()
@@ -210,7 +212,7 @@ void acmacs::surface::internal::Javascript::circle(const Location& aCenter, Scal
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_circle_filled(acmacs::surface::internal::Javascript& aSurface, const acmacs::Location& aCenter, S aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor)
+template <typename S> static inline void s_circle_filled(acmacs::surface::internal::Javascript& aSurface, acmacs::Location2D aCenter, S aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor)
 {
     context(aSurface)
             .begin_path()
@@ -246,7 +248,7 @@ void acmacs::surface::internal::Javascript::sector_filled(const Location& aCente
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_square_filled(acmacs::surface::internal::Javascript& aSurface, const acmacs::Location& aCenter, S aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, acmacs::surface::LineCap aLineCap)
+template <typename S> static inline void s_square_filled(acmacs::surface::internal::Javascript& aSurface, acmacs::Location2D aCenter, S aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, acmacs::surface::LineCap aLineCap)
 {
     context(aSurface)
             .begin_path()
@@ -275,7 +277,7 @@ void acmacs::surface::internal::Javascript::square_filled(const Location& aCente
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_triangle_filled(acmacs::surface::internal::Javascript& aSurface, const acmacs::Location& aCenter, S aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, acmacs::surface::LineCap aLineCap)
+template <typename S> static inline void s_triangle_filled(acmacs::surface::internal::Javascript& aSurface, acmacs::Location2D aCenter, S aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, acmacs::surface::LineCap aLineCap)
 {
     const auto cos_pi_6 = std::cos(M_PI / 6.0);
     const auto radius = aSide * cos_pi_6;
@@ -393,7 +395,7 @@ void acmacs::surface::internal::Javascript::path_fill(const double* first, const
 
 // ----------------------------------------------------------------------
 
-// template <typename S> static inline void s_text(acmacs::surface::internal::Javascript& aSurface, const acmacs::Location& a, std::string aText, Color aColor, S aSize, const acmacs::TextStyle& aTextStyle, Rotation aRotation)
+// template <typename S> static inline void s_text(acmacs::surface::internal::Javascript& aSurface, acmacs::Location2D a, std::string aText, Color aColor, S aSize, const acmacs::TextStyle& aTextStyle, Rotation aRotation)
 // {
 //     context(aSurface)
 //             .begin_path()
