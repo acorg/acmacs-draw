@@ -11,9 +11,9 @@ acmacs::surface::JsStatic::JsStatic(std::string filename, const acmacs::Size& ca
     : output_(filename), viewport_(viewport), scale_(canvas_size.width / viewport.size.width)
 {
     write_html_header(output_, canvas_size);
-    add("var viewport = [", viewport.origin.x, ',', viewport.origin.y, ',', viewport.size.width, ',', viewport.size.height, "];");
+    add("var viewport = [", viewport.origin.x(), ',', viewport.origin.y(), ',', viewport.size.width, ',', viewport.size.height, "];");
     context_func("scale", scale_, scale_);
-    context_func("translate", -viewport.origin.x, -viewport.origin.y);
+    context_func("translate", -viewport.origin.x(), -viewport.origin.y());
 
 } // acmacs::surface::JsStatic::JsStatic
 
@@ -27,10 +27,10 @@ acmacs::surface::JsStatic::~JsStatic()
 
 // ----------------------------------------------------------------------
 
-acmacs::surface::JsStatic::WithSubsurface::WithSubsurface(JsStatic& parent, const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip)
+acmacs::surface::JsStatic::WithSubsurface::WithSubsurface(JsStatic& parent, Location2D aOriginInParent, Scaled /*aWidthInParent*/, const Viewport& /*aViewport*/, bool /*aClip*/)
     : ContextSave(parent)
 {
-    parent.context_func("translate", aOriginInParent.x, aOriginInParent.y);
+    parent.context_func("translate", aOriginInParent.x(), aOriginInParent.y());
 
 } // acmacs::surface::JsStatic::WithSubsurface::WithSubsurface
 

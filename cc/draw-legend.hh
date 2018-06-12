@@ -12,9 +12,9 @@ namespace acmacs::draw
         {
          public:
             Window() = default;
-            Window(const acmacs::Location& origin) : origin_(origin) {}
+            Window(acmacs::Location2D origin) : origin_(origin) {}
 
-            auto& origin(const acmacs::Location& origin) { origin_ = origin; return *this; }
+            auto& origin(acmacs::Location2D origin) { origin_ = origin; return *this; }
             auto& size(const acmacs::Size& size) { size_ = size; return *this; }
             auto& background(Color background) { background_ = background; return *this; }
             auto& border_color(Color border_color) { border_color_ = border_color; return *this; }
@@ -31,18 +31,18 @@ namespace acmacs::draw
 
               // double height() const { return size_.height; }
             void size(const acmacs::Size& size) const { size_ = size; }
-            acmacs::Location scaled_origin(surface::Surface& surface) const;
-            acmacs::Location scaled_origin(surface::JsStatic& surface) const;
-            acmacs::Location origin() const { return origin_; }
+            acmacs::Location2D scaled_origin(surface::Surface& surface) const;
+            acmacs::Location2D scaled_origin(surface::JsStatic& surface) const;
+            acmacs::Location2D origin() const { return origin_; }
 
          private:
-            acmacs::Location origin_{10, 10};
+            acmacs::Location2D origin_{10, 10};
             mutable acmacs::Size size_{100, 100};
             Color background_ = GREY97;
             Color border_color_ = BLACK;
             Pixels border_width_{0.1};
 
-            void scaled_origin_adjust(acmacs::Location& origin, const acmacs::Size& surface_size) const;
+            void scaled_origin_adjust(acmacs::Location2D origin, const acmacs::Size& surface_size) const;
 
         }; // class Window
 
@@ -127,12 +127,12 @@ namespace acmacs::draw
             Pixels text_size() const { return text_size_; }
             const auto& text_style() const { return text_style_; }
 
-            void draw(surface::Surface& surface, const acmacs::Location& origin, double height) const { draw(surface, {origin.x, origin.y + height}); }
+            void draw(surface::Surface& surface, acmacs::Location2D origin, double height) const { draw(surface, {origin.x(), origin.y() + height}); }
             void draw(surface::JsDynamic& surface, const char* field) const;
             acmacs::Size size(surface::Surface& surface) const { return surface.text_size(text_, text_size_, text_style_); }
 
          protected:
-            void draw(surface::Surface& surface, const acmacs::Location& origin) const { surface.text(origin, text_, text_color_, text_size_, text_style_); }
+            void draw(surface::Surface& surface, acmacs::Location2D origin) const { surface.text(origin, text_, text_color_, text_size_, text_style_); }
 
          private:
             std::string text_;
@@ -153,7 +153,7 @@ namespace acmacs::draw
 
             void point_size(Pixels point_size) { point_size_ = point_size; }
 
-            void draw(surface::Surface& surface, const acmacs::Location& origin, double height) const;
+            void draw(surface::Surface& surface, acmacs::Location2D origin, double height) const;
             acmacs::Size size(surface::Surface& surface) const;
 
          private:
@@ -195,12 +195,12 @@ namespace acmacs::draw
     class ContinentMap : public Element
     {
      public:
-        ContinentMap(const acmacs::Location& origin, Pixels size) : origin_(origin), size_(size) {}
+        ContinentMap(acmacs::Location2D origin, Pixels size) : origin_(origin), size_(size) {}
 
         void draw(drawing_stage stage, surface::Surface& surface) const override;
 
      private:
-        acmacs::Location origin_;
+        acmacs::Location2D origin_;
         Pixels size_;
 
     }; // class ContinentMap

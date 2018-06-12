@@ -7,7 +7,7 @@
 // ----------------------------------------------------------------------
 
 void draw(acmacs::surface::Surface& aSurface, const std::vector<std::string>& fonts);
-double show(acmacs::surface::Surface& aSurface, const acmacs::Location& origin, double size, std::string font_name);
+double show(acmacs::surface::Surface& aSurface, acmacs::Location2D origin, double size, std::string font_name);
 void get_fonts(std::vector<std::string>& fonts);
 
 // ----------------------------------------------------------------------
@@ -41,25 +41,25 @@ void draw(acmacs::surface::Surface& aSurface, const std::vector<std::string>& fo
     std::cout << "fonts:" << fonts.size() << " size:" << size << std::endl;
 
     // aSurface.background("white");
-    acmacs::Location loc;
+    acmacs::Location2D loc;
     for (size_t column = 0, font_no = 0; column < columns; ++column) {
         for (; font_no < fonts.size() && font_no < (column + 1) * column_size; ++font_no) {
-            loc.y += show(aSurface, loc, size, fonts[font_no]);
+            loc.y(loc.y() + show(aSurface, loc, size, fonts[font_no]));
         }
-        loc.y = 0;
-        loc.x += aSurface.viewport().size.width / columns;
+        loc.y(0);
+        loc.x(loc.x() + aSurface.viewport().size.width / columns);
     }
 }
 
 // ----------------------------------------------------------------------
 
-double show(acmacs::surface::Surface& aSurface, const acmacs::Location& origin, double size, std::string font_name)
+double show(acmacs::surface::Surface& aSurface, acmacs::Location2D origin, double size, std::string font_name)
 {
     // std::cout << font_name << std::endl;
     const double interline = 1.1;
     acmacs::TextStyle style(font_name);
     auto text_size = aSurface.text_size("W", Scaled{size}, style);
-    aSurface.text({origin.x, origin.y + text_size.height * interline}, font_name, "black", Scaled{size}, style);
+    aSurface.text({origin.x(), origin.y() + text_size.height * interline}, font_name, "black", Scaled{size}, style);
     return text_size.height * interline;
 
 } // show

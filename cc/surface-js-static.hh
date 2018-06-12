@@ -55,7 +55,7 @@ namespace acmacs::surface
 
         struct WithSubsurface : public ContextSave
         {
-            WithSubsurface(JsStatic& parent, const Location& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip);
+            WithSubsurface(JsStatic& parent, Location2D aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip);
         };
 
      private:

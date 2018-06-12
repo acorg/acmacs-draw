@@ -10,9 +10,9 @@ void acmacs::draw::Grid::draw(drawing_stage stage, surface::Surface& surface) co
     if (stage == drawing_stage::grid) {
         const Viewport& v = surface.viewport();
         for (auto x = v.left_scaled() + step_; x < v.right_scaled(); x += step_)
-            surface.line({x, v.top_scaled()}, {x, v.bottom_scaled()}, line_color_, line_width_);
+            surface.line({x.value(), v.top_scaled().value()}, {x.value(), v.bottom_scaled().value()}, line_color_, line_width_);
         for (auto y = v.top_scaled() + step_; y < v.bottom_scaled(); y += step_)
-            surface.line({v.left_scaled(), y}, {v.right_scaled(), y}, line_color_, line_width_);
+            surface.line({v.left_scaled().value(), y.value()}, {v.right_scaled().value(), y.value()}, line_color_, line_width_);
     }
 
 } // acmacs::draw::Grid::draw

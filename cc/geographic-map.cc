@@ -32,7 +32,7 @@ double geographic_map_aspect()
 acmacs::Viewport geographic_map_viewport()
 {
     using namespace geographic_path;
-    return {acmacs::Location{geographic_map_bounds[0], -geographic_map_bounds[1]}, acmacs::Location{geographic_map_bounds[2], -geographic_map_bounds[3]}};
+    return {acmacs::Location2D{geographic_map_bounds[0], -geographic_map_bounds[1]}, acmacs::Location2D{geographic_map_bounds[2], -geographic_map_bounds[3]}};
 
 } // geographic_map_viewport
 

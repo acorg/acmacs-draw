@@ -44,9 +44,9 @@ void acmacs::draw::internal::Window::draw(drawing_stage /*stage*/, surface::JsSt
 
 // ----------------------------------------------------------------------
 
-acmacs::Location acmacs::draw::internal::Window::scaled_origin(surface::Surface& surface) const
+acmacs::Location2D acmacs::draw::internal::Window::scaled_origin(surface::Surface& surface) const
 {
-    acmacs::Location subsurface_origin{surface.convert(Pixels{origin_.x}).value(), surface.convert(Pixels{origin_.y}).value()};
+    acmacs::Location2D subsurface_origin{surface.convert(Pixels{origin_.x()}).value(), surface.convert(Pixels{origin_.y()}).value()};
     scaled_origin_adjust(subsurface_origin, surface.viewport().size);
     return subsurface_origin;
 
@@ -54,9 +54,9 @@ acmacs::Location acmacs::draw::internal::Window::scaled_origin(surface::Surface&
 
 // ----------------------------------------------------------------------
 
-acmacs::Location acmacs::draw::internal::Window::scaled_origin(surface::JsStatic& surface) const
+acmacs::Location2D acmacs::draw::internal::Window::scaled_origin(surface::JsStatic& surface) const
 {
-    acmacs::Location subsurface_origin{surface.convert(Pixels{origin_.x}), surface.convert(Pixels{origin_.y})};
+    acmacs::Location2D subsurface_origin{surface.convert(Pixels{origin_.x()}), surface.convert(Pixels{origin_.y()})};
     scaled_origin_adjust(subsurface_origin, surface.viewport().size);
     return subsurface_origin;
 
@@ -64,12 +64,12 @@ acmacs::Location acmacs::draw::internal::Window::scaled_origin(surface::JsStatic
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::internal::Window::scaled_origin_adjust(acmacs::Location& origin, const acmacs::Size& surface_size) const
+void acmacs::draw::internal::Window::scaled_origin_adjust(acmacs::Location2D origin, const acmacs::Size& surface_size) const
 {
-    if (origin.x < 0)
-        origin.x += surface_size.width - size_.width;
-    if (origin.y < 0)
-        origin.y += surface_size.height - size_.height;
+    if (origin.x() < 0)
+        origin.x(origin.x() + surface_size.width - size_.width);
+    if (origin.y() < 0)
+        origin.y(origin.y() + surface_size.height - size_.height);
 
 } // acmacs::draw::internal::Window::scaled_origin_adjust
 
@@ -86,13 +86,13 @@ acmacs::Size acmacs::draw::internal::LegendPointLabel::size(surface::Surface& su
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::internal::LegendPointLabel::draw(surface::Surface& surface, const acmacs::Location& origin, double height) const
+void acmacs::draw::internal::LegendPointLabel::draw(surface::Surface& surface, acmacs::Location2D origin, double height) const
 {
     const auto scaled_point_size = surface.convert(point_size_).value();
-    const auto point_x = origin.x + scaled_point_size / 2;
-    const auto text_x = origin.x * 2 + scaled_point_size;
-    surface.circle_filled({point_x, origin.y + height / 2}, point_size_, AspectNormal, NoRotation, point_outline_, Pixels{1}, point_fill_);
-    TitleLine::draw(surface, {text_x, origin.y + height});
+    const auto point_x = origin.x() + scaled_point_size / 2;
+    const auto text_x = origin.x() * 2 + scaled_point_size;
+    surface.circle_filled({point_x, origin.y() + height / 2}, point_size_, AspectNormal, NoRotation, point_outline_, Pixels{1}, point_fill_);
+    TitleLine::draw(surface, {text_x, origin.y() + height});
 
 } // acmacs::draw::internal::LegendPointLabel::draw
 
@@ -110,11 +110,11 @@ void acmacs::draw::internal::TitleLine::draw(surface::JsDynamic& surface, const 
 void acmacs::draw::ContinentMap::draw(drawing_stage stage, surface::Surface& surface) const
 {
     if (stage == drawing_stage::legend) {
-        acmacs::Location origin = origin_;
-        if (origin.x < 0)
-            origin.x += surface.width_in_pixels() - size_.value();
-        if (origin.y < 0)
-            origin.y += surface.height_in_pixels() - size_.value() / continent_map_aspect();
+        acmacs::Location2D origin = origin_;
+        if (origin.x() < 0)
+            origin.x(origin.x() + surface.width_in_pixels() - size_.value());
+        if (origin.y() < 0)
+            origin.y(origin.y() + surface.height_in_pixels() - size_.value() / continent_map_aspect());
         acmacs::surface::Surface& continent_surface = surface.subsurface(origin, size_, continent_map_size(), true);
         continent_map_draw(continent_surface);
     }

@@ -5,8 +5,8 @@
 void acmacs::draw::Line::transform(const Transformation& transformation) const
 {
     if (apply_transformation_) {
-        from_ = transformation.transform(from_.x, from_.y);
-        to_ = transformation.transform(to_.x, to_.y);
+        from_ = transformation.transform(from_);
+        to_ = transformation.transform(to_);
     }
 
 } // acmacs::draw::Line::transform
@@ -25,9 +25,9 @@ void acmacs::draw::Line::draw(drawing_stage stage, surface::Surface& surface) co
 void acmacs::draw::Arrow::draw(drawing_stage stage, surface::Surface& surface) const
 {
     if (stage == drawing_stage::procrustes_arrows) {
-        const bool x_eq = float_equal(to().x, from().x);
-        const double sign2 = x_eq ? (from().y < to().y ? 1.0 : -1.0) : (to().x < from().x ? 1.0 : -1.0);
-        const double angle = x_eq ? -M_PI_2 : std::atan((to().y - from().y) / (to().x - from().x));
+        const bool x_eq = float_equal(to().x(), from().x());
+        const double sign2 = x_eq ? (from().y() < to().y() ? 1.0 : -1.0) : (to().x() < from().x() ? 1.0 : -1.0);
+        const double angle = x_eq ? -M_PI_2 : std::atan((to().y() - from().y()) / (to().x() - from().x()));
         const auto end = surface.arrow_head(to(), angle, sign2, arrow_head_color_, arrow_width_, arrow_head_filled_);
         surface.line(from(), end, line_color(), line_width());
     }
@@ -39,7 +39,7 @@ void acmacs::draw::Arrow::draw(drawing_stage stage, surface::Surface& surface) c
 void acmacs::draw::Rectangle::draw(drawing_stage stage, surface::Surface& surface) const
 {
     if (stage == drawing_stage::procrustes_arrows) {
-        const std::vector<acmacs::Location> path{corner1_, {corner1_.x, corner2_.y}, corner2_, {corner2_.x, corner1_.y}};
+        const std::vector<acmacs::Location2D> path{corner1_, {corner1_.x(), corner2_.y()}, corner2_, {corner2_.x(), corner1_.y()}};
         if (filled_)
             surface.path_fill(path.begin(), path.end(), color_);
         else

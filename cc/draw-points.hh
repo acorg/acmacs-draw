@@ -25,7 +25,7 @@ namespace acmacs::draw
      public:
         PointLabel(size_t index) : index_(index), offset_{0, 1}, text_color_{BLACK}, text_size_{12} {}
 
-        PointLabel& offset(double x, double y) { offset_.set(x, y); return *this; }
+        PointLabel& offset(Location2D offs) { offset_ = offs; return *this; }
         PointLabel& display_name(std::string_view display_name) { display_name_ = display_name; return *this; }
         PointLabel& color(Color color) { text_color_ = color; return *this; }
         PointLabel& size(double size) { text_size_ = size; return *this; }
@@ -35,20 +35,20 @@ namespace acmacs::draw
 
         constexpr size_t index() const { return index_; }
         const std::string& display_name() const { return display_name_; }
-        const acmacs::Location& offset() const { return offset_; }
+        Location2D offset() const { return offset_; }
         Color text_color() const { return text_color_; }
         Pixels text_size() const { return text_size_; }
-        const acmacs::TextStyle text_style() const { return text_style_; }
+        const TextStyle text_style() const { return text_style_; }
 
         static double text_offset(double offset_hint, double point_size, double text_size, bool text_origin_at_opposite);
 
      private:
         size_t index_;
-        acmacs::Location offset_;
+        Location2D offset_;
         std::string display_name_;
         Color text_color_;
         Pixels text_size_;
-        acmacs::TextStyle text_style_;
+        TextStyle text_style_;
 
     }; // class PointLabel
 

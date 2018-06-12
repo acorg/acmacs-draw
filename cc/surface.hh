@@ -18,7 +18,7 @@ namespace acmacs::surface
     class Surface
     {
       public:
-        using Location = acmacs::Location;
+        using Location = acmacs::Location2D;
         using Size = acmacs::Size;
         using Viewport = acmacs::Viewport;
         using TextStyle = acmacs::TextStyle;

@@ -24,7 +24,7 @@ class CairoPath
 class context
 {
  public:
-    using Location = acmacs::Location;
+    using Location = acmacs::Location2D;
     using Size = acmacs::Size;
     using Viewport = acmacs::Viewport;
     using TextStyle = acmacs::TextStyle;
@@ -76,23 +76,23 @@ class context
         }
 
     context& move_to() { cairo_move_to(cairo_context(), 0.0, 0.0); return *this; }
-    context& move_to(const Location& a) { cairo_move_to(cairo_context(), a.x, a.y); return *this; }
+    context& move_to(const Location& a) { cairo_move_to(cairo_context(), a.x(), a.y()); return *this; }
     template <typename S> context& move_to(S x, S y) { cairo_move_to(cairo_context(), convert(x), convert(y)); return *this; }
-    context& line_to(const Location& a) { cairo_line_to(cairo_context(), a.x, a.y); return *this; }
+    context& line_to(const Location& a) { cairo_line_to(cairo_context(), a.x(), a.y()); return *this; }
     template <typename S> context& line_to(S x, S y) { cairo_line_to(cairo_context(), convert(x), convert(y)); return *this; }
     context& lines_to(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last) { for ( ; first != last; ++first) { line_to(*first); } return *this; }
-    context& rectangle(const Location& a, const Size& s) { cairo_rectangle(cairo_context(), a.x, a.y, s.width, s.height); return *this; }
+    context& rectangle(const Location& a, const Size& s) { cairo_rectangle(cairo_context(), a.x(), a.y(), s.width, s.height); return *this; }
     template <typename S> context& rectangle(S x1, S y1, S x2, S y2) { cairo_rectangle(cairo_context(), convert(x1), convert(y1), convert(x2) - convert(x1), convert(y2) - convert(y1)); return *this; }
-      // context& arc(const Location& a, double radius, double angle1, double angle2) { cairo_arc(cairo_context(), a.x, a.y, radius, angle1, angle2); return *this; }
+      // context& arc(const Location& a, double radius, double angle1, double angle2) { cairo_arc(cairo_context(), a.x(), a.y(), radius, angle1, angle2); return *this; }
     template <typename S> context& circle(S radius) { cairo_arc(cairo_context(), 0.0, 0.0, convert(radius), 0.0, 2.0 * M_PI); return *this; }
     template <typename S> context& arc(S radius, Rotation start, Rotation end) { cairo_arc(cairo_context(), 0.0, 0.0, convert(radius), start.value(), end.value()); return *this; }
-    context& circle(const Location& a, double radius) { cairo_arc(cairo_context(), a.x, a.y, radius, 0.0, 2.0 * M_PI); return *this; }
+    context& circle(const Location& a, double radius) { cairo_arc(cairo_context(), a.x(), a.y(), radius, 0.0, 2.0 * M_PI); return *this; }
     context& stroke() { cairo_stroke(cairo_context()); return *this; }
     context& stroke_preserve() { cairo_stroke_preserve(cairo_context()); return *this; }
     context& fill() { cairo_fill(cairo_context()); return *this; }
     context& fill_preserve() { cairo_fill_preserve(cairo_context()); return *this; }
     context& translate(const Size& a) { cairo_translate(cairo_context(), a.width, a.height); return *this; }
-    context& translate(const Location& a) { cairo_translate(cairo_context(), a.x, a.y); return *this; }
+    context& translate(const Location& a) { cairo_translate(cairo_context(), a.x(), a.y()); return *this; }
     context& rotate(Rotation aAngle) { cairo_rotate(cairo_context(), aAngle.value()); return *this; }
     context& scale(double x, double y) { cairo_scale(cairo_context(), x, y); return *this; }
     context& scale(double x) { cairo_scale(cairo_context(), x, x); return *this; }
@@ -112,8 +112,8 @@ class context
     context& move_to_negative_line_to_positive(std::vector<Location>::const_iterator first, std::vector<Location>::const_iterator last)
         {
             for ( ; first != last; ++first) {
-                if (first->x < 0)
-                    move_to({std::abs(first->x), std::abs(first->y)});
+                if (first->x() < 0)
+                    move_to({std::abs(first->x()), std::abs(first->y())});
                 else
                     line_to(*first);
             }
@@ -258,7 +258,7 @@ acmacs::surface::Surface* acmacs::surface::internal_1::Cairo::make_child(const L
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_line(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::Location& a, const acmacs::Location& b, Color aColor, S aWidth, acmacs::surface::LineCap aLineCap)
+template <typename S> static inline void s_line(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::Location2D& a, const acmacs::Location2D& b, Color aColor, S aWidth, acmacs::surface::LineCap aLineCap)
 {
     context(aSurface)
             .set_line_width(aWidth)
@@ -311,7 +311,7 @@ void acmacs::surface::internal_1::Cairo::rectangle_filled(const Location& a, con
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_circle(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::Location& aCenter, S aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth)
+template <typename S> static inline void s_circle(acmacs::surface::internal_1::Cairo& aSurface, acmacs::Location2D aCenter, S aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth)
 {
     context(aSurface)
             .set_line_width(aOutlineWidth)
@@ -337,7 +337,7 @@ void acmacs::surface::internal_1::Cairo::circle(const Location& aCenter, Scaled 
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_circle_filled(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::Location& aCenter, S aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor)
+template <typename S> static inline void s_circle_filled(acmacs::surface::internal_1::Cairo& aSurface, acmacs::Location2D aCenter, S aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor)
 {
     context(aSurface)
             .set_line_width(aOutlineWidth)
@@ -399,7 +399,7 @@ void acmacs::surface::internal_1::Cairo::sector_filled(const Location& aCenter, 
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_square_filled(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::Location& aCenter, S aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, acmacs::surface::LineCap aLineCap)
+template <typename S> static inline void s_square_filled(acmacs::surface::internal_1::Cairo& aSurface, acmacs::Location2D aCenter, S aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, acmacs::surface::LineCap aLineCap)
 {
     context(aSurface)
             .set_line_width(aOutlineWidth)
@@ -427,7 +427,7 @@ void acmacs::surface::internal_1::Cairo::square_filled(const Location& aCenter, 
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_triangle_filled(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::Location& aCenter, S aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, acmacs::surface::LineCap aLineCap)
+template <typename S> static inline void s_triangle_filled(acmacs::surface::internal_1::Cairo& aSurface, acmacs::Location2D aCenter, S aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor, acmacs::surface::LineCap aLineCap)
 {
     const auto cos_pi_6 = std::cos(M_PI / 6.0);
     const auto radius = aSide * cos_pi_6;
@@ -592,7 +592,7 @@ void acmacs::surface::internal_1::Cairo::path_fill_negative_move(const double* f
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_text(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::Location& a, std::string aText, Color aColor, S aSize, const acmacs::TextStyle& aTextStyle, Rotation aRotation)
+template <typename S> static inline void s_text(acmacs::surface::internal_1::Cairo& aSurface, acmacs::Location2D a, std::string aText, Color aColor, S aSize, const acmacs::TextStyle& aTextStyle, Rotation aRotation)
 {
     context(aSurface)
             .prepare_for_text(aSize, aTextStyle)
@@ -631,13 +631,13 @@ void acmacs::surface::internal_1::Cairo::text(const Location& a, std::string aTe
 
 void acmacs::surface::internal_1::Cairo::text_right_aligned(const Location& aEnd, std::string aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle, Rotation aRotation)
 {
-    s_text(*this, {aEnd.x - s_text_size(*this, aText, aSize, aTextStyle, nullptr).width, aEnd.y}, aText, aColor, aSize, aTextStyle, aRotation);
+    s_text(*this, {aEnd.x() - s_text_size(*this, aText, aSize, aTextStyle, nullptr).width, aEnd.y()}, aText, aColor, aSize, aTextStyle, aRotation);
 
 } // acmacs::surface::internal_1::Cairo::text_right_aligned
 
 void acmacs::surface::internal_1::Cairo::text_right_aligned(const Location& aEnd, std::string aText, Color aColor, Scaled aSize, const TextStyle& aTextStyle, Rotation aRotation)
 {
-    s_text(*this, {aEnd.x - s_text_size(*this, aText, aSize, aTextStyle, nullptr).width, aEnd.y}, aText, aColor, aSize, aTextStyle, aRotation);
+    s_text(*this, {aEnd.x() - s_text_size(*this, aText, aSize, aTextStyle, nullptr).width, aEnd.y()}, aText, aColor, aSize, aTextStyle, aRotation);
 
 } // acmacs::surface::internal_1::Cairo::text_right_aligned
 
