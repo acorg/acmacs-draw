@@ -2,6 +2,17 @@
 
 // ----------------------------------------------------------------------
 
+void acmacs::draw::Line::transform(const Transformation& transformation) const
+{
+    if (apply_transformation_) {
+        from_ = transformation.transform(from_.x, from_.y);
+        to_ = transformation.transform(to_.x, to_.y);
+    }
+
+} // acmacs::draw::Line::transform
+
+// ----------------------------------------------------------------------
+
 void acmacs::draw::Line::draw(drawing_stage stage, surface::Surface& surface) const
 {
     if (stage == drawing_stage::procrustes_arrows)

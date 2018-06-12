@@ -41,7 +41,7 @@ namespace acmacs
         }
         inline void set_from_center_size(const std::vector<double>& aCenter, double aSize)
         {
-            origin.from_vector(aCenter);
+            origin = aCenter;
             origin -= aSize / 2;
             size.set(aSize, aSize);
         }
