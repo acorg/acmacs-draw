@@ -22,6 +22,29 @@ void acmacs::draw::Line::draw(drawing_stage stage, surface::Surface& surface) co
 
 // ----------------------------------------------------------------------
 
+void acmacs::draw::LineDefinedByEquation::transform(const Transformation& transformation) const
+{
+    if (apply_transformation_)
+        line_ = transformation.transform(line_);
+
+} // acmacs::draw::LineDefinedByEquation::transform
+
+// ----------------------------------------------------------------------
+
+void acmacs::draw::LineDefinedByEquation::draw(drawing_stage stage, surface::Surface& surface) const
+{
+    if (stage == drawing_stage::procrustes_arrows) {
+        const Viewport& viewport = surface.viewport();
+        const acmacs::Location2D
+                from{viewport.left(), viewport.left() * line_.slope() + line_.intercept()},
+                to{viewport.right(), viewport.right() * line_.slope() + line_.intercept()};
+        surface.line(from, to, line_color_, line_width_);
+    }
+
+} // acmacs::draw::LineDefinedByEquation::draw
+
+// ----------------------------------------------------------------------
+
 void acmacs::draw::Arrow::draw(drawing_stage stage, surface::Surface& surface) const
 {
     if (stage == drawing_stage::procrustes_arrows) {

@@ -6,6 +6,7 @@
 #include <typeinfo>
 
 #include "acmacs-base/color.hh"
+#include "acmacs-base/line.hh"
 #include "acmacs-base/size-scale.hh"
 #include "acmacs-draw/viewport.hh"
 #include "acmacs-draw/surface-line.hh"
@@ -72,6 +73,7 @@ namespace acmacs::draw
         Legend& legend();
         Points& points(std::shared_ptr<acmacs::LayoutInterface> layout, const Transformation& transformation);
         void line(acmacs::Location2D from, acmacs::Location2D to, Color line_color, Pixels line_width, bool apply_transformation = false);
+        void line(LineDefinedByEquation line, Color line_color, Pixels line_width, bool apply_transformation = true);
         void arrow(acmacs::Location2D from, acmacs::Location2D to, Color line_color, Pixels line_width, Color arrow_head_color, bool arrow_head_filled, Pixels arrow_width, bool apply_transformation = false);
         void rectangle(acmacs::Location2D corner1, acmacs::Location2D corner2, Color color, bool filled, Pixels line_width);
         void circle(acmacs::Location2D center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Aspect aspect, Rotation rotation);

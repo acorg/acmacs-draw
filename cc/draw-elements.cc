@@ -123,17 +123,14 @@ acmacs::draw::Points& acmacs::draw::DrawElements::points(std::shared_ptr<acmacs:
 void acmacs::draw::DrawElements::line(acmacs::Location2D from, acmacs::Location2D to, Color line_color, Pixels line_width, bool apply_transformation)
 {
     elements_.push_back(std::make_unique<Line>(from, to, line_color, line_width, apply_transformation));
-    // Location p1{from}, p2{to};
-    // if (apply_transformation) {
-    //     try {
-    //         const auto& transformation = find<Points>(elements_).transformation();
-    //         p1 = transformation.transform(from.x, from.y);
-    //         p2 = transformation.transform(to.x, to.y);
-    //     }
-    //     catch (ElementNotFound&) {
-    //     }
-    // }
-    // elements_.push_back(std::make_unique<Line>(p1, p2, line_color, line_width));
+
+} // acmacs::draw::DrawElements::line
+
+// ----------------------------------------------------------------------
+
+void acmacs::draw::DrawElements::line(acmacs::LineDefinedByEquation line, Color line_color, Pixels line_width, bool apply_transformation)
+{
+    elements_.push_back(std::make_unique<acmacs::draw::LineDefinedByEquation>(line, line_color, line_width, apply_transformation));
 
 } // acmacs::draw::DrawElements::line
 

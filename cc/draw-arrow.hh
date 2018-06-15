@@ -1,6 +1,7 @@
 #pragma once
 
 #include "acmacs-base/layout.hh"
+#include "acmacs-base/line.hh"
 #include "acmacs-draw/surface.hh"
 #include "acmacs-draw/draw-elements.hh"
 
@@ -30,6 +31,27 @@ namespace acmacs::draw
         bool apply_transformation_;
 
     }; // class Line
+
+    class LineDefinedByEquation : public Element
+    {
+     public:
+        LineDefinedByEquation(acmacs::LineDefinedByEquation line, Color line_color, Pixels line_width, bool apply_transformation)
+            : line_(line), line_color_(line_color), line_width_(line_width), apply_transformation_{apply_transformation} {}
+
+        void transform(const Transformation& transformation) const override;
+        void draw(drawing_stage stage, surface::Surface& surface) const override;
+
+        Color line_color() const { return line_color_; }
+        Pixels line_width() const { return line_width_; }
+        constexpr bool apply_transformation() const { return apply_transformation_; }
+
+     private:
+        mutable acmacs::LineDefinedByEquation line_;
+        const Color line_color_;
+        const Pixels line_width_;
+        bool apply_transformation_;
+
+    }; // class LineDefinedByEquation
 
 // ----------------------------------------------------------------------
 
