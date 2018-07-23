@@ -156,7 +156,7 @@ namespace acmacs::surface
         void move(const Location& aOriginInParent) override { this->change_origin(aOriginInParent); }
         void move_resize(const Location& aOriginInParent, double aWidthInParent) override
         {
-            assert(aWidthInParent > 0);
+            assert(aWidthInParent >= 0);
             this->change_origin(aOriginInParent);
             this->change_width_in_parent(aWidthInParent);
         }
