@@ -6,7 +6,7 @@ namespace acmacs::surface
 {
     enum class LineCap { Butt, Round, Square };
     enum class LineJoin { Miter, Round, Bevel };
-    enum class Dash { NoDash, Dash1, Dash2 };
+    enum class Dash { NoDash, Dash1, Dash2, Dash3 };
 
 } // namespace acmacs::surface
 

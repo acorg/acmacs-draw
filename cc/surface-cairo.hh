@@ -19,6 +19,7 @@ namespace acmacs::surface
             virtual cairo_t* cairo_context() = 0;
 
             void line(const Location& a, const Location& b, Color aColor, Pixels aWidth, LineCap aLineCap = LineCap::Butt) override;
+            void line(const Location& a, const Location& b, Color aColor, Pixels aWidth, Dash aDash, LineCap aLineCap = LineCap::Butt) override;
             void line(const Location& a, const Location& b, Color aColor, Scaled aWidth, LineCap aLineCap = LineCap::Butt) override;
             void rectangle(const Location& a, const Size& s, Color aColor, Pixels aWidth, LineCap aLineCap = LineCap::Butt) override;
             void rectangle_filled(const Location& a, const Size& s, Color aOutlineColor, Pixels aWidth, Color aFillColor, LineCap aLineCap = LineCap::Butt) override;

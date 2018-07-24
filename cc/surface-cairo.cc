@@ -71,6 +71,12 @@ class context
                   dash_size = convert(Pixels{5});
                   cairo_set_dash(cairo_context(), &dash_size, 1, 0);
                   break;
+              case acmacs::surface::Dash::Dash3:
+              {
+                  const double dashes[] = {convert(Pixels{1}), convert(Pixels{4})};
+                  cairo_set_dash(cairo_context(), dashes, 2, 0);
+              }
+              break;
             }
             return *this;
         }
@@ -280,6 +286,21 @@ void acmacs::surface::internal_1::Cairo::line(const Location& a, const Location&
     s_line(*this, a, b, aColor, aWidth, aLineCap);
 
 } // acmacs::surface::internal_1::Cairo::line
+
+
+void acmacs::surface::internal_1::Cairo::line(const Location& a, const Location& b, Color aColor, Pixels aWidth, Dash aDash, LineCap aLineCap)
+{
+    context(*this)
+            .set_line_width(aWidth)
+            .set_source_rgba(aColor)
+            .set_line_cap(aLineCap)
+            .set_line_dash(aDash)
+            .move_to(a)
+            .line_to(b)
+            .stroke();
+
+} // acmacs::surface::internal_1::Cairo::line
+
 
 // ----------------------------------------------------------------------
 
