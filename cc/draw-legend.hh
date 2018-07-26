@@ -12,7 +12,8 @@ namespace acmacs::draw
         {
          public:
             Window() = default;
-            Window(acmacs::Location2D origin) : origin_(origin) {}
+            Window(acmacs::Location2D origin)
+                : origin_(origin) {}
 
             auto& origin(acmacs::Location2D origin) { origin_ = origin; return *this; }
             auto& size(const acmacs::Size& size) { size_ = size; return *this; }
@@ -42,7 +43,7 @@ namespace acmacs::draw
             Color border_color_ = BLACK;
             Pixels border_width_{0.1};
 
-            void scaled_origin_adjust(acmacs::Location2D origin, const acmacs::Size& surface_size) const;
+            void scaled_origin_adjust(acmacs::Location2D& origin, const acmacs::Size& surface_size) const;
 
         }; // class Window
 

@@ -64,7 +64,7 @@ acmacs::Location2D acmacs::draw::internal::Window::scaled_origin(surface::JsStat
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::internal::Window::scaled_origin_adjust(acmacs::Location2D origin, const acmacs::Size& surface_size) const
+void acmacs::draw::internal::Window::scaled_origin_adjust(acmacs::Location2D& origin, const acmacs::Size& surface_size) const
 {
     if (origin.x() < 0)
         origin.x(origin.x() + surface_size.width - size_.width);
