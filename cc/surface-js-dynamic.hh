@@ -26,27 +26,27 @@ namespace acmacs::surface
 
         std::string write_to_string(size_t indent = 1) const { return data_.to_json_pp(indent); }
 
-        void add_field(const char* name, rjson::value&& value) { data_.set_field(name, std::move(value)); }
-        rjson::object& add_object(const char* name) { return data_.get_or_add(name, rjson::object{}); }
-        rjson::array& add_array(const char* name) { return data_.get_or_add(name, rjson::array{}); }
+        void add_field(const char* name, rjson::v1::value&& value) { data_.set_field(name, std::move(value)); }
+        rjson::v1::object& add_object(const char* name) { return data_.get_or_add(name, rjson::v1::object{}); }
+        rjson::v1::array& add_array(const char* name) { return data_.get_or_add(name, rjson::v1::array{}); }
 
         // const acmacs::Viewport& viewport() const { return viewport_; }
         // double convert(Pixels a) const { return a.value() / scale_; }
-        rjson::number convert(Pixels a) const { return a.value(); }
-        rjson::number convert(Scaled a) const { return a.value(); }
-        rjson::number convert(Rotation a) const { return a.value(); }
-        rjson::number convert(Aspect a) const { return a.value(); }
-        rjson::number convert(double a) const { return a; }
+        rjson::v1::number convert(Pixels a) const { return a.value(); }
+        rjson::v1::number convert(Scaled a) const { return a.value(); }
+        rjson::v1::number convert(Rotation a) const { return a.value(); }
+        rjson::v1::number convert(Aspect a) const { return a.value(); }
+        rjson::v1::number convert(double a) const { return a; }
         // int convert(int a) const { return a; }
-        rjson::string convert(Color a) const { return a.to_hex_string(); }
+        rjson::v1::string convert(Color a) const { return a.to_hex_string(); }
         // const char* convert(const char* a) const { return a; }
-        rjson::array convert(const std::vector<size_t> list) const { return rjson::array(rjson::array::use_iterator, list.begin(), list.end()); }
-        rjson::array convert(const acmacs::LayoutInterface& layout) const;
-        rjson::array convert(const acmacs::Transformation& transformation) const;
-        rjson::boolean convert(bool a) { return a; }
+        rjson::v1::array convert(const std::vector<size_t> list) const { return rjson::v1::array(rjson::v1::array::use_iterator, list.begin(), list.end()); }
+        rjson::v1::array convert(const acmacs::LayoutInterface& layout) const;
+        rjson::v1::array convert(const acmacs::Transformation& transformation) const;
+        rjson::v1::boolean convert(bool a) { return a; }
 
      private:
-        rjson::object data_;
+        rjson::v1::object data_;
         std::string filename_;
         // acmacs::Viewport viewport_;
         // double scale_;

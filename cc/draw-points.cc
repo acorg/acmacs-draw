@@ -116,9 +116,9 @@ void acmacs::draw::Points::draw_points(surface::JsDynamic& surface) const
     surface.add_field("transformation", surface.convert(transformation_));
     const auto styles = styles_->compacted();
     surface.add_field("style_index", surface.convert(styles.index));
-    rjson::array& target_styles = surface.add_array("styles");
+    rjson::v1::array& target_styles = surface.add_array("styles");
     for (const auto& styl : styles.styles) {
-        rjson::object target_style;
+        rjson::v1::object target_style;
         auto set_if_not_default = [&](const char* name, const auto& field) { if (field.not_default()) target_style.set_field(name, surface.convert(*field)); };
         set_if_not_default("shown", styl.shown);
         set_if_not_default("fill", styl.fill);
@@ -127,7 +127,7 @@ void acmacs::draw::Points::draw_points(surface::JsDynamic& surface) const
         set_if_not_default("size", styl.size);
         set_if_not_default("rotation", styl.rotation);
         set_if_not_default("aspect", styl.aspect);
-        target_style.set_field("shape", rjson::string{*styl.shape});
+        target_style.set_field("shape", rjson::v1::string{*styl.shape});
         target_styles.insert(std::move(target_style));
     }
 
@@ -141,7 +141,7 @@ void acmacs::draw::Points::draw_labels(surface::JsDynamic& surface) const
         auto& target_labels = surface.add_array("labels");
         target_labels.resize(layout_->number_of_points());
         for (const auto& label : *labels_)
-            target_labels[label.index()] = rjson::string(label.display_name());
+            target_labels[label.index()] = rjson::v1::string(label.display_name());
     }
 
 } // acmacs::draw::Points::draw_labels

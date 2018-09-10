@@ -101,7 +101,7 @@ void acmacs::draw::internal::LegendPointLabel::draw(surface::Surface& surface, a
 void acmacs::draw::internal::TitleLine::draw(surface::JsDynamic& surface, const char* field) const
 {
     auto& target = surface.add_array(field);
-    target.insert(rjson::object{{{"text", rjson::string{text_}}, {"color", surface.convert(text_color_)}, {"size", surface.convert(text_size_)}}});
+    target.insert(rjson::v1::object{{{"text", rjson::v1::string{text_}}, {"color", surface.convert(text_color_)}, {"size", surface.convert(text_size_)}}});
 
 } // acmacs::draw::internal::TitleLine::draw
 

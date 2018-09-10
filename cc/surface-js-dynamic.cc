@@ -8,7 +8,7 @@
 acmacs::surface::JsDynamic::JsDynamic(std::string filename, const acmacs::Size& /*canvas_size*/, const acmacs::Viewport& viewport)
     : filename_(filename) // , viewport_(viewport), scale_(canvas_size.width / viewport.size.width)
 {
-    data_.set_field("viewport", rjson::array{viewport.origin.x(), viewport.origin.y(), viewport.size.width, viewport.size.height});
+    data_.set_field("viewport", rjson::v1::array{viewport.origin.x(), viewport.origin.y(), viewport.size.width, viewport.size.height});
 
 } // acmacs::surface::JsDynamic::JsDynamic
 
@@ -25,16 +25,16 @@ acmacs::surface::JsDynamic::~JsDynamic()
 
 // ----------------------------------------------------------------------
 
-rjson::array acmacs::surface::JsDynamic::convert(const acmacs::LayoutInterface& layout) const
+rjson::v1::array acmacs::surface::JsDynamic::convert(const acmacs::LayoutInterface& layout) const
 {
-    rjson::array result;
+    rjson::v1::array result;
     for (auto point_no : acmacs::range(layout.number_of_points())) {
         if (layout.point_has_coordinates(point_no)) {
             const auto coord = layout[point_no];
-            result.insert(rjson::array(rjson::array::use_iterator, coord.begin(), coord.end()));
+            result.insert(rjson::v1::array(rjson::v1::array::use_iterator, coord.begin(), coord.end()));
         }
         else {
-            result.insert(rjson::array{});
+            result.insert(rjson::v1::array{});
         }
     }
     return result;
@@ -43,7 +43,7 @@ rjson::array acmacs::surface::JsDynamic::convert(const acmacs::LayoutInterface& 
 
 // ----------------------------------------------------------------------
 
-rjson::array acmacs::surface::JsDynamic::convert(const acmacs::Transformation& transformation) const
+rjson::v1::array acmacs::surface::JsDynamic::convert(const acmacs::Transformation& transformation) const
 {
     return {transformation.a, transformation.b, transformation.c, transformation.d};
 
