@@ -93,8 +93,8 @@ namespace acmacs::draw
         Points& labels(const PointLabels& labels) { labels_ = &labels; return *this; }
 
         void draw(drawing_stage stage, surface::Surface& surface) const override { draw_forward(stage, surface); }
-        void draw(drawing_stage stage, surface::JsDynamic& surface) const override { draw_forward(stage, surface); }
-        void draw(drawing_stage stage, surface::JsStatic& surface) const override { draw_forward(stage, surface); }
+        // void draw(drawing_stage stage, surface::JsDynamic& surface) const override { draw_forward(stage, surface); }
+        // void draw(drawing_stage stage, surface::JsStatic& surface) const override { draw_forward(stage, surface); }
 
         const auto& transformation() const { return transformation_; }
 
@@ -108,10 +108,10 @@ namespace acmacs::draw
 
         void draw_points(surface::Surface& surface) const;
         void draw_labels(surface::Surface& surface) const;
-        void draw_points(surface::JsDynamic& surface) const;
-        void draw_labels(surface::JsDynamic& surface) const;
-        void draw_points(surface::JsStatic& surface) const;
-        void draw_labels(surface::JsStatic& surface) const;
+        // void draw_points(surface::JsDynamic& surface) const;
+        // void draw_labels(surface::JsDynamic& surface) const;
+        // void draw_points(surface::JsStatic& surface) const;
+        // void draw_labels(surface::JsStatic& surface) const;
 
         PointStyle style(size_t point_no) const
             {

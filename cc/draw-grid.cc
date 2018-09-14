@@ -1,6 +1,6 @@
 #include "acmacs-draw/surface.hh"
-#include "acmacs-draw/surface-js-static.hh"
-#include "acmacs-draw/surface-js-dynamic.hh"
+// #include "acmacs-draw/surface-js-static.hh"
+// #include "acmacs-draw/surface-js-dynamic.hh"
 #include "acmacs-draw/draw-grid.hh"
 
 // ======================================================================
@@ -19,22 +19,22 @@ void acmacs::draw::Grid::draw(drawing_stage stage, surface::Surface& surface) co
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::Grid::draw(drawing_stage stage, surface::JsStatic& surface) const
-{
-    if (stage == drawing_stage::grid)
-        surface.func("grid", "__context", "viewport", step_, line_color_, line_width_);
+// void acmacs::draw::Grid::draw(drawing_stage stage, surface::JsStatic& surface) const
+// {
+//     if (stage == drawing_stage::grid)
+//         surface.func("grid", "__context", "viewport", step_, line_color_, line_width_);
 
-} // acmacs::draw::Grid::draw
+// } // acmacs::draw::Grid::draw
 
-// ----------------------------------------------------------------------
+// // ----------------------------------------------------------------------
 
-void acmacs::draw::Grid::draw(drawing_stage stage, surface::JsDynamic& surface) const
-{
-    if (stage == drawing_stage::grid)
-        surface.add_field("grid", rjson::v1::object{{{"step", surface.convert(step_)}, {"line_color", surface.convert(line_color_)}, {"line_width", surface.convert(line_width_)}}});
-    //     surface.func("grid", "__context", "viewport", step_, line_color_, line_width_);
+// void acmacs::draw::Grid::draw(drawing_stage stage, surface::JsDynamic& surface) const
+// {
+//     if (stage == drawing_stage::grid)
+//         surface.add_field("grid", rjson::v1::object{{{"step", surface.convert(step_)}, {"line_color", surface.convert(line_color_)}, {"line_width", surface.convert(line_width_)}}});
+//     //     surface.func("grid", "__context", "viewport", step_, line_color_, line_width_);
 
-} // acmacs::draw::Grid::draw
+// } // acmacs::draw::Grid::draw
 
 // ======================================================================
 
@@ -49,23 +49,23 @@ void acmacs::draw::Background::draw(drawing_stage stage, surface::Surface& surfa
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::Background::draw(drawing_stage stage, surface::JsDynamic& surface) const
-{
-    if (stage == drawing_stage::background)
-        surface.add_field("background", rjson::v1::object{{{"color", surface.convert(color_)}}});
+// void acmacs::draw::Background::draw(drawing_stage stage, surface::JsDynamic& surface) const
+// {
+//     if (stage == drawing_stage::background)
+//         surface.add_field("background", rjson::v1::object{{{"color", surface.convert(color_)}}});
 
-} // acmacs::draw::Background::draw
+// } // acmacs::draw::Background::draw
 
-// ----------------------------------------------------------------------
+// // ----------------------------------------------------------------------
 
-void acmacs::draw::Background::draw(drawing_stage stage, surface::JsStatic& surface) const
-{
-    if (stage == drawing_stage::background) {
-        surface.context_assign("fillStyle", color_);
-        surface.context_func("fillRect", "viewport[0]", "viewport[1]", "viewport[2]", "viewport[3]");
-    }
+// void acmacs::draw::Background::draw(drawing_stage stage, surface::JsStatic& surface) const
+// {
+//     if (stage == drawing_stage::background) {
+//         surface.context_assign("fillStyle", color_);
+//         surface.context_func("fillRect", "viewport[0]", "viewport[1]", "viewport[2]", "viewport[3]");
+//     }
 
-} // acmacs::draw::Background::draw
+// } // acmacs::draw::Background::draw
 
 // ======================================================================
 
@@ -80,19 +80,19 @@ void acmacs::draw::Border::draw(drawing_stage stage, surface::Surface& surface) 
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::Border::draw(drawing_stage stage, surface::JsDynamic& surface) const
-{
-    if (stage == drawing_stage::border)
-        surface.add_field("border", rjson::v1::object{{{"line_color", surface.convert(line_color_)}, {"line_width", surface.convert(line_width_)}}});
+// void acmacs::draw::Border::draw(drawing_stage stage, surface::JsDynamic& surface) const
+// {
+//     if (stage == drawing_stage::border)
+//         surface.add_field("border", rjson::v1::object{{{"line_color", surface.convert(line_color_)}, {"line_width", surface.convert(line_width_)}}});
 
-} // acmacs::draw::Border::draw
+// } // acmacs::draw::Border::draw
 
-// ----------------------------------------------------------------------
+// // ----------------------------------------------------------------------
 
-void acmacs::draw::Border::draw(drawing_stage /*stage*/, surface::JsStatic& /*surface*/) const
-{
+// void acmacs::draw::Border::draw(drawing_stage /*stage*/, surface::JsStatic& /*surface*/) const
+// {
 
-} // acmacs::draw::Border::draw
+// } // acmacs::draw::Border::draw
 
 // ----------------------------------------------------------------------
 

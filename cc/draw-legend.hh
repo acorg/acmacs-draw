@@ -22,7 +22,7 @@ namespace acmacs::draw
             auto& border_width(Pixels border_width) { border_width_ = border_width; return *this; }
 
             void draw(drawing_stage stage, surface::Surface& surface) const override;
-            void draw(drawing_stage stage, surface::JsStatic& surface) const override;
+            // void draw(drawing_stage stage, surface::JsStatic& surface) const override;
 
          protected:
             virtual void draw_window(surface::Surface& surface) const;
@@ -33,7 +33,7 @@ namespace acmacs::draw
               // double height() const { return size_.height; }
             void size(const acmacs::Size& size) const { size_ = size; }
             acmacs::Location2D scaled_origin(surface::Surface& surface) const;
-            acmacs::Location2D scaled_origin(surface::JsStatic& surface) const;
+            // acmacs::Location2D scaled_origin(surface::JsStatic& surface) const;
             acmacs::Location2D origin() const { return origin_; }
 
          private:
@@ -65,13 +65,13 @@ namespace acmacs::draw
                 }
             }
 
-            void draw_field(drawing_stage stage, surface::JsDynamic& surface, const char* field) const
-                {
-                    if (stage == stage_) {
-                        for (const auto& line : lines())
-                            line.draw(surface, field);
-                    }
-                }
+            // void draw_field(drawing_stage stage, surface::JsDynamic& surface, const char* field) const
+            //     {
+            //         if (stage == stage_) {
+            //             for (const auto& line : lines())
+            //                 line.draw(surface, field);
+            //         }
+            //     }
 
           protected:
             void draw_content(surface::Surface& surface) const override
@@ -129,7 +129,7 @@ namespace acmacs::draw
             const auto& text_style() const { return text_style_; }
 
             void draw(surface::Surface& surface, acmacs::Location2D origin, double height) const { draw(surface, {origin.x(), origin.y() + height}); }
-            void draw(surface::JsDynamic& surface, const char* field) const;
+            // void draw(surface::JsDynamic& surface, const char* field) const;
             acmacs::Size size(surface::Surface& surface) const { return surface.text_size(text_, text_size_, text_style_); }
 
          protected:
@@ -179,7 +179,7 @@ namespace acmacs::draw
         auto& text_style(const acmacs::TextStyle& text_style) { std::for_each(begin(), end(), [&](auto& line) { line.text_style(text_style); }); return *this; }
 
         using internal::Box<internal::TitleLine>::draw;
-        void draw(drawing_stage stage, surface::JsDynamic& surface) const override { internal::Box<internal::TitleLine>::draw_field(stage, surface, "title"); }
+        // void draw(drawing_stage stage, surface::JsDynamic& surface) const override { internal::Box<internal::TitleLine>::draw_field(stage, surface, "title"); }
 
     }; // class Title
 

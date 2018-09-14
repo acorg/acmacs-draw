@@ -10,8 +10,8 @@ namespace acmacs::draw
         Background(Color color) : color_(color) {}
 
         void draw(drawing_stage stage, surface::Surface& surface) const override;
-        void draw(drawing_stage stage, surface::JsStatic& surface) const override;
-        void draw(drawing_stage stage, surface::JsDynamic& surface) const override;
+        // void draw(drawing_stage stage, surface::JsStatic& surface) const override;
+        // void draw(drawing_stage stage, surface::JsDynamic& surface) const override;
 
      private:
         Color color_;
@@ -24,8 +24,8 @@ namespace acmacs::draw
         Grid(Scaled step, Color line_color, Pixels line_width) : step_(step), line_color_(line_color), line_width_(line_width) {}
 
         void draw(drawing_stage stage, surface::Surface& surface) const override;
-        void draw(drawing_stage stage, surface::JsStatic& surface) const override;
-        void draw(drawing_stage stage, surface::JsDynamic& surface) const override;
+        // void draw(drawing_stage stage, surface::JsStatic& surface) const override;
+        // void draw(drawing_stage stage, surface::JsDynamic& surface) const override;
 
      private:
         Scaled step_;
@@ -40,8 +40,8 @@ namespace acmacs::draw
         Border(Color line_color, Pixels line_width) : line_color_(line_color), line_width_(line_width) {}
 
         void draw(drawing_stage stage, surface::Surface& surface) const override;
-        void draw(drawing_stage stage, surface::JsStatic& surface) const override;
-        void draw(drawing_stage stage, surface::JsDynamic& surface) const override;
+        // void draw(drawing_stage stage, surface::JsStatic& surface) const override;
+        // void draw(drawing_stage stage, surface::JsDynamic& surface) const override;
 
      private:
         Color line_color_;

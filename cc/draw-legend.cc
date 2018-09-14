@@ -1,6 +1,6 @@
 #include "acmacs-draw/draw-legend.hh"
-#include "acmacs-draw/surface-js-static.hh"
-#include "acmacs-draw/surface-js-dynamic.hh"
+// #include "acmacs-draw/surface-js-static.hh"
+// #include "acmacs-draw/surface-js-dynamic.hh"
 #include "acmacs-draw/continent-map.hh"
 
 // ----------------------------------------------------------------------
@@ -34,13 +34,13 @@ void acmacs::draw::internal::Window::draw(drawing_stage, surface::Surface& surfa
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::internal::Window::draw(drawing_stage /*stage*/, surface::JsStatic& /*surface*/) const
-{
-    // surface::JsStatic::WithSubsurface subs(surface, scaled_origin(surface), Scaled{size_.width}, size_, false);
-    // draw_window(surface);
-      //draw_content(surface);
+// void acmacs::draw::internal::Window::draw(drawing_stage /*stage*/, surface::JsStatic& /*surface*/) const
+// {
+//     // surface::JsStatic::WithSubsurface subs(surface, scaled_origin(surface), Scaled{size_.width}, size_, false);
+//     // draw_window(surface);
+//       //draw_content(surface);
 
-} // acmacs::draw::internal::Window::draw
+// } // acmacs::draw::internal::Window::draw
 
 // ----------------------------------------------------------------------
 
@@ -54,13 +54,13 @@ acmacs::Location2D acmacs::draw::internal::Window::scaled_origin(surface::Surfac
 
 // ----------------------------------------------------------------------
 
-acmacs::Location2D acmacs::draw::internal::Window::scaled_origin(surface::JsStatic& surface) const
-{
-    acmacs::Location2D subsurface_origin{surface.convert(Pixels{origin_.x()}), surface.convert(Pixels{origin_.y()})};
-    scaled_origin_adjust(subsurface_origin, surface.viewport().size);
-    return subsurface_origin;
+// acmacs::Location2D acmacs::draw::internal::Window::scaled_origin(surface::JsStatic& surface) const
+// {
+//     acmacs::Location2D subsurface_origin{surface.convert(Pixels{origin_.x()}), surface.convert(Pixels{origin_.y()})};
+//     scaled_origin_adjust(subsurface_origin, surface.viewport().size);
+//     return subsurface_origin;
 
-} // acmacs::draw::internal::Window::scaled_origin
+// } // acmacs::draw::internal::Window::scaled_origin
 
 // ----------------------------------------------------------------------
 
@@ -98,12 +98,12 @@ void acmacs::draw::internal::LegendPointLabel::draw(surface::Surface& surface, a
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::internal::TitleLine::draw(surface::JsDynamic& surface, const char* field) const
-{
-    auto& target = surface.add_array(field);
-    target.insert(rjson::v1::object{{{"text", rjson::v1::string{text_}}, {"color", surface.convert(text_color_)}, {"size", surface.convert(text_size_)}}});
+// void acmacs::draw::internal::TitleLine::draw(surface::JsDynamic& surface, const char* field) const
+// {
+//     auto& target = surface.add_array(field);
+//     target.insert(rjson::v1::object{{{"text", rjson::v1::string{text_}}, {"color", surface.convert(text_color_)}, {"size", surface.convert(text_size_)}}});
 
-} // acmacs::draw::internal::TitleLine::draw
+// } // acmacs::draw::internal::TitleLine::draw
 
 // ----------------------------------------------------------------------
 

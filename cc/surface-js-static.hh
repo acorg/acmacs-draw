@@ -1,3 +1,4 @@
+#error No supported
 #pragma once
 
 #include <memory>

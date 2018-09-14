@@ -23,8 +23,8 @@ namespace acmacs
 namespace acmacs::surface
 {
     class Surface;
-    class JsStatic;
-    class JsDynamic;
+    // class JsStatic;
+    // class JsDynamic;
 }
 
 namespace acmacs::draw
@@ -45,8 +45,8 @@ namespace acmacs::draw
         virtual ~Element() = default;
         virtual void transform(const Transformation&) const {}
         virtual void draw(drawing_stage stage, surface::Surface& surface) const = 0;
-        virtual void draw(drawing_stage stage, surface::JsStatic& /*surface*/) const { if (stage == drawing_stage::__first) std::cerr << "WARNING: draw(JsStatic) not implemented for " << typeid(*this).name() << '\n'; }
-        virtual void draw(drawing_stage stage, surface::JsDynamic& /*surface*/) const { if (stage == drawing_stage::__first) std::cerr << "WARNING: draw(JsDynamic) not implemented for " << typeid(*this).name() << '\n'; }
+        // virtual void draw(drawing_stage stage, surface::JsStatic& /*surface*/) const { if (stage == drawing_stage::__first) std::cerr << "WARNING: draw(JsStatic) not implemented for " << typeid(*this).name() << '\n'; }
+        // virtual void draw(drawing_stage stage, surface::JsDynamic& /*surface*/) const { if (stage == drawing_stage::__first) std::cerr << "WARNING: draw(JsDynamic) not implemented for " << typeid(*this).name() << '\n'; }
 
 
     }; // class Element

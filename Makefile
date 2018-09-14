@@ -17,9 +17,9 @@ TARGETS = \
 SRC_DIR = $(abspath $(ACMACSD_ROOT)/sources)
 
 ACMACS_DRAW_SOURCES = continent-path.cc continent-map.cc geographic-path.cc geographic-map.cc \
-  surface.cc surface-cairo.cc surface-js-dynamic.cc surface-js-static.cc \
+  surface.cc surface-cairo.cc \
   draw-elements.cc draw-grid.cc draw-legend.cc draw-points.cc draw-arrow.cc
-# surface-html.cc
+# surface-html.cc surface-js-dynamic.cc surface-js-static.cc
 
 ACMACS_DRAW_PY_SOURCES = py.cc $(ACMACS_DRAW_SOURCES)
 

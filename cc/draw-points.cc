@@ -1,8 +1,8 @@
 #include "acmacs-base/layout.hh"
 #include "acmacs-base/range.hh"
 #include "acmacs-draw/surface.hh"
-#include "acmacs-draw/surface-js-static.hh"
-#include "acmacs-draw/surface-js-dynamic.hh"
+// #include "acmacs-draw/surface-js-static.hh"
+// #include "acmacs-draw/surface-js-dynamic.hh"
 #include "acmacs-draw/draw-points.hh"
 
 // ----------------------------------------------------------------------
@@ -59,92 +59,92 @@ void acmacs::draw::Points::draw_points(surface::Surface& surface) const
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::Points::draw_points(surface::JsStatic& surface) const
-{
-    const auto cos_pi_12 = std::cos(M_PI / 12.0);
-    std::unique_ptr<LayoutInterface> layout{layout_->transform(transformation_)};
+// void acmacs::draw::Points::draw_points(surface::JsStatic& surface) const
+// {
+//     const auto cos_pi_12 = std::cos(M_PI / 12.0);
+//     std::unique_ptr<LayoutInterface> layout{layout_->transform(transformation_)};
 
-    surface.context_assign("lineCap", "\"butt\"");
-    for (auto point_no : drawing_order_) {
-        if (layout->point_has_coordinates(point_no)) {
-            if (const auto& styl = style(point_no); *styl.shown) {
-                surface::JsStatic::ContextSave save(surface);
-                const auto coord = layout->get(point_no);
-                const auto size = surface.convert(*styl.size);
-                const auto aspect = styl.aspect->value();
-                surface.context_assign("lineWidth", *styl.outline_width);
-                surface.context_assign("fillStyle", *styl.fill);
-                surface.context_assign("strokeStyle", *styl.outline);
-                surface.context_func("translate", coord[0], coord[1]);
-                if (*styl.rotation != NoRotation)
-                    surface.context_func("rotate", *styl.rotation);
-                switch (*styl.shape) {
-                    case acmacs::PointShape::Circle:
-                        if (*styl.aspect != AspectNormal)
-                            surface.context_func("scale", aspect, 1);
-                        surface.context_func("beginPath");
-                        surface.context_func("arc", 0, 0, size / 2, 0, "2*Math.PI");
-                        surface.context_func("fill");
-                        surface.context_func("stroke");
-                        break;
-                    case acmacs::PointShape::Box:
-                        surface.context_func("fillRect", -size * aspect, -size, size * aspect, size);
-                        surface.context_func("strokeRect", -size * aspect, -size, size * aspect, size);
-                        break;
-                    case acmacs::PointShape::Triangle:
-                        surface.context_func("beginPath");
-                        surface.context_func("move_to", 0, -size / 2);
-                        surface.context_func("line_to", -size * cos_pi_12 * aspect, size / 4);
-                        surface.context_func("line_to", size * cos_pi_12 * aspect, size / 4);
-                        surface.context_func("closePath");
-                        surface.context_func("fill");
-                        surface.context_func("stroke");
-                        break;
-                }
-            }
-        }
-    }
+//     surface.context_assign("lineCap", "\"butt\"");
+//     for (auto point_no : drawing_order_) {
+//         if (layout->point_has_coordinates(point_no)) {
+//             if (const auto& styl = style(point_no); *styl.shown) {
+//                 surface::JsStatic::ContextSave save(surface);
+//                 const auto coord = layout->get(point_no);
+//                 const auto size = surface.convert(*styl.size);
+//                 const auto aspect = styl.aspect->value();
+//                 surface.context_assign("lineWidth", *styl.outline_width);
+//                 surface.context_assign("fillStyle", *styl.fill);
+//                 surface.context_assign("strokeStyle", *styl.outline);
+//                 surface.context_func("translate", coord[0], coord[1]);
+//                 if (*styl.rotation != NoRotation)
+//                     surface.context_func("rotate", *styl.rotation);
+//                 switch (*styl.shape) {
+//                     case acmacs::PointShape::Circle:
+//                         if (*styl.aspect != AspectNormal)
+//                             surface.context_func("scale", aspect, 1);
+//                         surface.context_func("beginPath");
+//                         surface.context_func("arc", 0, 0, size / 2, 0, "2*Math.PI");
+//                         surface.context_func("fill");
+//                         surface.context_func("stroke");
+//                         break;
+//                     case acmacs::PointShape::Box:
+//                         surface.context_func("fillRect", -size * aspect, -size, size * aspect, size);
+//                         surface.context_func("strokeRect", -size * aspect, -size, size * aspect, size);
+//                         break;
+//                     case acmacs::PointShape::Triangle:
+//                         surface.context_func("beginPath");
+//                         surface.context_func("move_to", 0, -size / 2);
+//                         surface.context_func("line_to", -size * cos_pi_12 * aspect, size / 4);
+//                         surface.context_func("line_to", size * cos_pi_12 * aspect, size / 4);
+//                         surface.context_func("closePath");
+//                         surface.context_func("fill");
+//                         surface.context_func("stroke");
+//                         break;
+//                 }
+//             }
+//         }
+//     }
 
-} // acmacs::draw::Points::draw_points
+// } // acmacs::draw::Points::draw_points
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::Points::draw_points(surface::JsDynamic& surface) const
-{
-    surface.add_field("drawing_order", surface.convert(drawing_order_));
-    surface.add_field("layout", surface.convert(*layout_));
-    surface.add_field("transformation", surface.convert(transformation_));
-    const auto styles = styles_->compacted();
-    surface.add_field("style_index", surface.convert(styles.index));
-    rjson::v1::array& target_styles = surface.add_array("styles");
-    for (const auto& styl : styles.styles) {
-        rjson::v1::object target_style;
-        auto set_if_not_default = [&](const char* name, const auto& field) { if (field.not_default()) target_style.set_field(name, surface.convert(*field)); };
-        set_if_not_default("shown", styl.shown);
-        set_if_not_default("fill", styl.fill);
-        set_if_not_default("outline", styl.outline);
-        set_if_not_default("outline_width", styl.outline_width);
-        set_if_not_default("size", styl.size);
-        set_if_not_default("rotation", styl.rotation);
-        set_if_not_default("aspect", styl.aspect);
-        target_style.set_field("shape", rjson::v1::string{*styl.shape});
-        target_styles.insert(std::move(target_style));
-    }
+// void acmacs::draw::Points::draw_points(surface::JsDynamic& surface) const
+// {
+//     surface.add_field("drawing_order", surface.convert(drawing_order_));
+//     surface.add_field("layout", surface.convert(*layout_));
+//     surface.add_field("transformation", surface.convert(transformation_));
+//     const auto styles = styles_->compacted();
+//     surface.add_field("style_index", surface.convert(styles.index));
+//     rjson::v1::array& target_styles = surface.add_array("styles");
+//     for (const auto& styl : styles.styles) {
+//         rjson::v1::object target_style;
+//         auto set_if_not_default = [&](const char* name, const auto& field) { if (field.not_default()) target_style.set_field(name, surface.convert(*field)); };
+//         set_if_not_default("shown", styl.shown);
+//         set_if_not_default("fill", styl.fill);
+//         set_if_not_default("outline", styl.outline);
+//         set_if_not_default("outline_width", styl.outline_width);
+//         set_if_not_default("size", styl.size);
+//         set_if_not_default("rotation", styl.rotation);
+//         set_if_not_default("aspect", styl.aspect);
+//         target_style.set_field("shape", rjson::v1::string{*styl.shape});
+//         target_styles.insert(std::move(target_style));
+//     }
 
-} // acmacs::draw::Points::draw_points
+// } // acmacs::draw::Points::draw_points
 
-// ======================================================================
+// // ======================================================================
 
-void acmacs::draw::Points::draw_labels(surface::JsDynamic& surface) const
-{
-    if (labels_) {
-        auto& target_labels = surface.add_array("labels");
-        target_labels.resize(layout_->number_of_points());
-        for (const auto& label : *labels_)
-            target_labels[label.index()] = rjson::v1::string(label.display_name());
-    }
+// void acmacs::draw::Points::draw_labels(surface::JsDynamic& surface) const
+// {
+//     if (labels_) {
+//         auto& target_labels = surface.add_array("labels");
+//         target_labels.resize(layout_->number_of_points());
+//         for (const auto& label : *labels_)
+//             target_labels[label.index()] = rjson::v1::string(label.display_name());
+//     }
 
-} // acmacs::draw::Points::draw_labels
+// } // acmacs::draw::Points::draw_labels
 
 // ----------------------------------------------------------------------
 
@@ -170,13 +170,11 @@ void acmacs::draw::Points::draw_labels(surface::Surface& surface) const
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::Points::draw_labels(surface::JsStatic& /*surface*/) const
-{
-    std::cerr << "WARNING: acmacs::draw::Points::draw_labels() not implemented\n";
+// void acmacs::draw::Points::draw_labels(surface::JsStatic& /*surface*/) const
+// {
+//     std::cerr << "WARNING: acmacs::draw::Points::draw_labels() not implemented\n";
 
-} // acmacs::draw::Points::draw_labels
-
-// ----------------------------------------------------------------------
+// } // acmacs::draw::Points::draw_labels
 
 // ----------------------------------------------------------------------
 /// Local Variables:
