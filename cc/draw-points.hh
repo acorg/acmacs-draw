@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 
+#include "acmacs-base/sfinae.hh"
 #include "acmacs-base/transformation.hh"
 #include "acmacs-base/point-style.hh"
 #include "acmacs-base/text-style.hh"
@@ -29,9 +30,12 @@ namespace acmacs::draw
         PointLabel& display_name(std::string_view display_name) { display_name_ = display_name; return *this; }
         PointLabel& color(Color color) { text_color_ = color; return *this; }
         PointLabel& size(double size) { text_size_ = size; return *this; }
-        PointLabel& weight(std::string weight) { text_style_.weight = weight; return *this; }
-        PointLabel& slant(std::string slant) { text_style_.slant = slant; return *this; }
-        PointLabel& font_family(std::string family) { text_style_.font_family = family; return *this; }
+        // template <typename S, typename = std::enable_if_t<acmacs::sfinae::is_string_v<S>>> PointLabel& weight(S weight) { text_style_.weight = weight; return *this; }
+        // template <typename S, typename = std::enable_if_t<acmacs::sfinae::is_string_v<S>>> PointLabel& slant(S slant) { text_style_.slant = slant; return *this; }
+        // template <typename S, typename = std::enable_if_t<acmacs::sfinae::is_string_v<S>>> PointLabel& font_family(S family) { text_style_.font_family = family; return *this; }
+        PointLabel& weight(std::string_view weight) { text_style_.weight = std::string(weight); return *this; }
+        PointLabel& slant(std::string_view slant) { text_style_.slant = std::string(slant); return *this; }
+        PointLabel& font_family(std::string_view family) { text_style_.font_family = std::string(family); return *this; }
 
         constexpr size_t index() const { return index_; }
         const std::string& display_name() const { return display_name_; }
