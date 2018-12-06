@@ -1,10 +1,5 @@
 # -*- Makefile -*-
-# Eugene Skepner 2017
 # ======================================================================
-
-MAKEFLAGS = -w
-
-# ----------------------------------------------------------------------
 
 TARGETS = \
   $(ACMACS_DRAW_LIB) \
@@ -12,7 +7,6 @@ TARGETS = \
   $(DIST)/test-cairo \
   $(DIST)/test-cairo-fonts \
   $(DIST)/test-distinct-colors
-
 
 SRC_DIR = $(abspath $(ACMACSD_ROOT)/sources)
 
@@ -35,21 +29,17 @@ ACMACS_DRAW_PY_LIB = $(DIST)/$(ACMACS_DRAW_PY_LIB_NAME)$(PYTHON_MODULE_SUFFIX)
 
 # ----------------------------------------------------------------------
 
-include $(ACMACSD_ROOT)/share/makefiles/Makefile.g++
-include $(ACMACSD_ROOT)/share/makefiles/Makefile.python
-include $(ACMACSD_ROOT)/share/makefiles/Makefile.dist-build.vars
+all: install
 
-CXXFLAGS = -MMD -g $(OPTIMIZATION) $(PROFILE) -fPIC -std=$(STD) $(WARNINGS) -Icc -I$(AD_INCLUDE) $(PKG_INCLUDES)
-LDFLAGS = $(OPTIMIZATION) $(PROFILE)
-PKG_INCLUDES = $(shell pkg-config --cflags cairo) $(PYTHON_INCLUDES)
+CONFIGURE_PYTHON = 1
+CONFIGURE_CAIRO = 1
+include $(ACMACSD_ROOT)/share/Makefile.config
 
-LDLIBS = $(AD_LIB)/$(call shared_lib_name,libacmacsbase,1,0) $(shell pkg-config --libs cairo) $(CXX_LIB)
+LDLIBS = $(AD_LIB)/$(call shared_lib_name,libacmacsbase,1,0) $(CAIRO_LDLIBS) $(CXX_LIBS)
 
 # ----------------------------------------------------------------------
 
-all: $(TARGETS)
-
-install: check-acmacsd-root install-headers $(TARGETS)
+install: install-headers $(TARGETS)
 	$(call install_lib,$(ACMACS_DRAW_LIB))
 	$(call install_py_lib,$(ACMACS_DRAW_PY_LIB))
 
@@ -62,23 +52,17 @@ test: install $(DIST)/test-cairo $(DIST)/test-cairo-fonts $(DIST)/test-distinct-
 
 # ----------------------------------------------------------------------
 
--include $(BUILD)/*.d
-include $(ACMACSD_ROOT)/share/makefiles/Makefile.dist-build.rules
-include $(ACMACSD_ROOT)/share/makefiles/Makefile.rtags
-
-# ----------------------------------------------------------------------
-
 $(ACMACS_DRAW_LIB): $(patsubst %.cc,$(BUILD)/%.o,$(ACMACS_DRAW_SOURCES)) | $(DIST)
-	@printf "%-16s %s\n" "SHARED" $@
-	@$(call make_shared,$(ACMACS_DRAW_LIB_NAME),$(ACMACS_DRAW_LIB_MAJOR),$(ACMACS_DRAW_LIB_MINOR)) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+	$(call echo_shared_lib,$@)
+	$(call make_shared_lib,$(ACMACS_DRAW_LIB_NAME),$(ACMACS_DRAW_LIB_MAJOR),$(ACMACS_DRAW_LIB_MINOR)) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 $(ACMACS_DRAW_PY_LIB): $(patsubst %.cc,$(BUILD)/%.o,$(ACMACS_DRAW_PY_SOURCES)) | $(DIST)
-	@printf "%-16s %s\n" "SHARED" $@
-	@$(call make_shared,$(ACMACS_DRAW_PY_LIB_NAME),$(ACMACS_DRAW_PY_LIB_MAJOR),$(ACMACS_DRAW_PY_LIB_MINOR)) $(LDFLAGS) -o $@ $^ $(LDLIBS) $(PYTHON_LDLIBS)
+	$(call echo_shared_lib,$@)
+	$(call make_shared_lib,$(ACMACS_DRAW_PY_LIB_NAME),$(ACMACS_DRAW_PY_LIB_MAJOR),$(ACMACS_DRAW_PY_LIB_MINOR)) $(LDFLAGS) -o $@ $^ $(LDLIBS) $(PYTHON_LDLIBS)
 
 $(DIST)/%: $(BUILD)/%.o | $(ACMACS_DRAW_LIB)
-	@printf "%-16s %s\n" "LINK" $@
-	@$(CXX) $(LDFLAGS) -o $@ $^ $(ACMACS_DRAW_LIB) $(LDLIBS) $(AD_RPATH)
+	$(call echo_link_exe,$@)
+	$(CXX) $(LDFLAGS) -o $@ $^ $(ACMACS_DRAW_LIB) $(LDLIBS) $(AD_RPATH)
 
 # ======================================================================
 ### Local Variables:
