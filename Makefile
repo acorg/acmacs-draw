@@ -35,7 +35,7 @@ CONFIGURE_PYTHON = 1
 CONFIGURE_CAIRO = 1
 include $(ACMACSD_ROOT)/share/Makefile.config
 
-LDLIBS = $(AD_LIB)/$(call shared_lib_name,libacmacsbase,1,0) $(CAIRO_LDLIBS) $(CXX_LIBS)
+LDLIBS = $(AD_LIB)/$(call shared_lib_name,libacmacsbase,1,0) $(CAIRO_LIBS) $(CXX_LIBS)
 
 # ----------------------------------------------------------------------
 
@@ -58,7 +58,7 @@ $(ACMACS_DRAW_LIB): $(patsubst %.cc,$(BUILD)/%.o,$(ACMACS_DRAW_SOURCES)) | $(DIS
 
 $(ACMACS_DRAW_PY_LIB): $(patsubst %.cc,$(BUILD)/%.o,$(ACMACS_DRAW_PY_SOURCES)) | $(DIST)
 	$(call echo_shared_lib,$@)
-	$(call make_shared_lib,$(ACMACS_DRAW_PY_LIB_NAME),$(ACMACS_DRAW_PY_LIB_MAJOR),$(ACMACS_DRAW_PY_LIB_MINOR)) $(LDFLAGS) -o $@ $^ $(LDLIBS) $(PYTHON_LDLIBS)
+	$(call make_shared_lib,$(ACMACS_DRAW_PY_LIB_NAME),$(ACMACS_DRAW_PY_LIB_MAJOR),$(ACMACS_DRAW_PY_LIB_MINOR)) $(LDFLAGS) -o $@ $^ $(LDLIBS) $(PYTHON_LIBS)
 
 $(DIST)/%: $(BUILD)/%.o | $(ACMACS_DRAW_LIB)
 	$(call echo_link_exe,$@)
