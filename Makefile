@@ -49,6 +49,7 @@ install-disabled:
 
 test: install $(DIST)/test-cairo $(DIST)/test-cairo-fonts $(DIST)/test-distinct-colors
 	bin/test-acmacs-draw
+.PHONY: test
 
 # ----------------------------------------------------------------------
 
