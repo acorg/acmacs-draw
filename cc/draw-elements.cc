@@ -136,6 +136,14 @@ void acmacs::draw::DrawElements::line(acmacs::LineDefinedByEquation line, Color 
 
 // ----------------------------------------------------------------------
 
+void acmacs::draw::DrawElements::path(const std::vector<acmacs::Location2D>& path, Color line_color, Pixels line_width, std::optional<Color> close_and_fill)
+{
+    elements_.push_back(std::make_unique<acmacs::draw::Path>(path, line_color, line_width, close_and_fill));
+
+} // acmacs::draw::DrawElements::path
+
+// ----------------------------------------------------------------------
+
 void acmacs::draw::DrawElements::arrow(acmacs::Location2D from, acmacs::Location2D to, Color line_color, Pixels line_width, Color arrow_head_color, bool arrow_head_filled, Pixels arrow_width, bool apply_transformation)
 {
     elements_.push_back(std::make_unique<Arrow>(from, to, line_color, line_width, arrow_head_color, arrow_head_filled, arrow_width, apply_transformation));

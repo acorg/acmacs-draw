@@ -55,6 +55,24 @@ namespace acmacs::draw
 
 // ----------------------------------------------------------------------
 
+    class Path : public Element
+    {
+     public:
+        Path(const std::vector<acmacs::Location2D>& path, Color line_color, Pixels line_width, std::optional<Color> close_and_fill)
+            : path_(path), line_color_{line_color}, line_width_{line_width}, close_and_fill_{close_and_fill} {}
+
+        void draw(drawing_stage stage, surface::Surface& surface) const override;
+
+     private:
+        const std::vector<acmacs::Location2D> path_;
+        const Color line_color_;
+        const Pixels line_width_;
+        std::optional<Color> close_and_fill_;
+
+    }; // class Path
+
+// ----------------------------------------------------------------------
+
     class Arrow : public Line
     {
      public:

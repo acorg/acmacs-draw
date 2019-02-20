@@ -22,6 +22,18 @@ void acmacs::draw::Line::draw(drawing_stage stage, surface::Surface& surface) co
 
 // ----------------------------------------------------------------------
 
+void acmacs::draw::Path::draw(drawing_stage stage, surface::Surface& surface) const
+{
+    if (stage == drawing_stage::procrustes_arrows) {
+        surface.path_outline(std::begin(path_), std::end(path_), line_color_, line_width_, close_and_fill_.has_value());
+        if (close_and_fill_)
+            surface.path_fill(std::begin(path_), std::end(path_), *close_and_fill_);
+    }
+
+} // acmacs::draw::Path::draw
+
+// ----------------------------------------------------------------------
+
 void acmacs::draw::LineDefinedByEquation::transform(const Transformation& transformation) const
 {
     if (apply_transformation_)
