@@ -110,6 +110,7 @@ namespace acmacs::surface
         virtual Size text_size(std::string aText, Scaled aSize, const TextStyle& aTextStyle = TextStyle(), double* x_bearing = nullptr) = 0;
 
         Scaled convert(Pixels a) const { return Scaled{a.value() / scale()}; }
+        Scaled convert(Scaled a) const { return a; }
 
         virtual double scale() const { return width_in_parent() / viewport().size.width; }
         virtual Location origin_offset() const { return origin_in_parent(); }

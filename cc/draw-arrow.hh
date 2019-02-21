@@ -111,13 +111,19 @@ namespace acmacs::draw
     template <typename ScaledOrPixels> class Circle : public Element
     {
      public:
-        Circle(acmacs::Location2D center, ScaledOrPixels size, Color fill_color, Color outline_color, Pixels outline_width, Aspect aspect, Rotation rotation)
-            : center_(center), size_(size), fill_color_(fill_color), outline_color_(outline_color), outline_width_(outline_width), aspect_(aspect), rotation_(rotation) {}
+        Circle(acmacs::Location2D center, ScaledOrPixels size, Color fill_color, Color outline_color, Pixels outline_width, Aspect aspect, Rotation rotation, std::string label={})
+            : center_(center), size_(size), fill_color_(fill_color), outline_color_(outline_color), outline_width_(outline_width), aspect_(aspect), rotation_(rotation), label_{label} {}
 
         void draw(drawing_stage stage, surface::Surface& surface) const override
             {
-                if (stage == drawing_stage::procrustes_arrows)
+                if (stage == drawing_stage::procrustes_arrows) {
                     surface.circle_filled(center_, size_, aspect_, rotation_, outline_color_, outline_width_, fill_color_);
+                    if (!label_.empty()) {
+                        const Pixels size{10};
+                        const auto tsize = surface.text_size(label_, size);
+                        surface.text({center_[0] - tsize.width / 2, center_[1] + surface.convert(size_).value() / 2 + tsize.height}, label_, BLACK, size);
+                    }
+                }
             }
 
      private:
@@ -127,7 +133,8 @@ namespace acmacs::draw
         const Pixels outline_width_;
         const Aspect aspect_;
         const Rotation rotation_;
-
+        const std::string label_;
+        
     }; // class Circle
 
 // ----------------------------------------------------------------------

@@ -168,9 +168,9 @@ void acmacs::draw::DrawElements::circle(acmacs::Location2D center, Scaled size, 
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::DrawElements::point(acmacs::Location2D center, Pixels size, Color fill_color, Color outline_color, Pixels outline_width, Aspect aspect, Rotation rotation)
+void acmacs::draw::DrawElements::point(acmacs::Location2D center, Pixels size, Color fill_color, Color outline_color, Pixels outline_width, Aspect aspect, Rotation rotation, std::string label)
 {
-    elements_.push_back(std::make_unique<Circle<Pixels>>(center, size, fill_color, outline_color, outline_width, aspect, rotation));
+    elements_.push_back(std::make_unique<Circle<Pixels>>(center, size, fill_color, outline_color, outline_width, aspect, rotation, label));
 
 } // acmacs::draw::DrawElements::point
 
