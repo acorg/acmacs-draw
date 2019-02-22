@@ -21,7 +21,7 @@ namespace acmacs
         Viewport(double aX, double aY, double aSize) : origin(aX, aY), size{aSize, aSize} {}
         Viewport(double aX, double aY, double aWidth, double aHeight) : origin(aX, aY), size{aWidth, aHeight} {}
         Viewport& operator=(const Viewport& src) = default;
-        
+
         void set(const PointCoordinates& a, const Size& s)
         {
             origin = a;
@@ -49,14 +49,10 @@ namespace acmacs
         void set_from_center_size(const PointCoordinates& aCenter, double aSize)
         {
             assert(aSize > 0);
-            origin = aCenter - aSize;
+            origin = aCenter - aSize / 2;
             size.set(aSize, aSize);
         }
-        // void set_from_center_size(const std::vector<double>& aCenter, double aSize)
-        // {
-        //     origin = Location2D(aCenter) - aSize / 2;
-        //     size.set(aSize, aSize);
-        // }
+
         double aspect() const { return size.aspect(); }
         void zoom(double scale)
         {

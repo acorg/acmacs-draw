@@ -231,6 +231,7 @@ class context
 
 acmacs::surface::Surface* acmacs::surface::internal_1::Cairo::make_child(const acmacs::PointCoordinates& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip)
 {
+    // std::cerr << "DEBUG: Cairo::make_child " << aOriginInParent << ' ' << aWidthInParent << ' ' << aViewport << '\n';
     return new acmacs::surface::internal_1::CairoChild(*this, aOriginInParent, aWidthInParent, aViewport, aClip);
 
 } // acmacs::surface::internal_1::Cairo::make_child
