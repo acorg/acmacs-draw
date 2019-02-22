@@ -122,8 +122,9 @@ namespace acmacs::surface
         virtual bool clip() const { return false; }
 
       protected:
-        Surface() : mOriginInParent{0, 0}, mWidthInParent{viewport().size.width} {}
-        Surface(const PointCoordinates& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport) : mViewport{aViewport}, mOriginInParent{aOriginInParent}, mWidthInParent{aWidthInParent.value()} {}
+        Surface() : mOriginInParent(0, 0), mWidthInParent{viewport().size.width} {}
+        Surface(const PointCoordinates& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport)
+            : mViewport{aViewport}, mOriginInParent(PointCoordinates::create_copy, aOriginInParent), mWidthInParent{aWidthInParent.value()} {}
 
         virtual Surface* make_child(const PointCoordinates& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip) = 0;
 

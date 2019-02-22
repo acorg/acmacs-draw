@@ -64,7 +64,7 @@ namespace acmacs::surface
 
           protected:
             Cairo() : Surface{} {}
-            Cairo(const PointCoordinates& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport) : Surface{aOriginInParent, aWidthInParent, aViewport} {}
+            Cairo(const PointCoordinates& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport) : Surface(aOriginInParent, aWidthInParent, aViewport) {}
 
             Surface* make_child(const PointCoordinates& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip) override;
 
