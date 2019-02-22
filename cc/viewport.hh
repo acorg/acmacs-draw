@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <cassert>
 
 #include "acmacs-base/size.hh"
 
@@ -23,14 +24,17 @@ namespace acmacs
         {
             origin = a;
             size = s;
+            assert(size.width > 0 && size.height > 0);
         }
         void set(const PointCoordinates& a, const PointCoordinates& b)
         {
             origin = a;
             size = b - a;
+            assert(size.width > 0 && size.height > 0);
         }
         void set(const PointCoordinates& aOrigin, double aSize)
         {
+            assert(aSize > 0);
             origin = aOrigin;
             size.set(aSize, aSize);
         }
@@ -42,6 +46,7 @@ namespace acmacs
         // }
         void set_from_center_size(const PointCoordinates& aCenter, double aSize)
         {
+            assert(aSize > 0);
             origin = aCenter - aSize;
             size.set(aSize, aSize);
         }
@@ -56,6 +61,7 @@ namespace acmacs
             const auto new_size = size * scale;
             origin = center() - new_size * 0.5;
             size = new_size;
+            assert(size.width > 0 && size.height > 0);
         }
         void center(const PointCoordinates& aCenter) { origin = aCenter - size * 0.5; }
         Size offset() const { return - origin; }
