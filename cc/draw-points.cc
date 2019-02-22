@@ -25,7 +25,7 @@ double acmacs::draw::PointLabel::text_offset(double offset_hint, double point_si
 
 // ----------------------------------------------------------------------
 
-acmacs::draw::Points::Points(std::shared_ptr<acmacs::LayoutInterface> layout, const acmacs::Transformation& transformation)
+acmacs::draw::Points::Points(std::shared_ptr<acmacs::Layout> layout, const acmacs::Transformation& transformation)
     : layout_(layout), transformation_(transformation), drawing_order_(acmacs::filled_with_indexes(layout->number_of_points()))
 {
 
@@ -35,7 +35,7 @@ acmacs::draw::Points::Points(std::shared_ptr<acmacs::LayoutInterface> layout, co
 
 void acmacs::draw::Points::draw_points(surface::Surface& surface) const
 {
-    std::unique_ptr<LayoutInterface> layout{layout_->transform(transformation_)};
+    std::shared_ptr<Layout> layout{layout_->transform(transformation_)};
 
     for (auto point_no : drawing_order_) {
         if (layout->point_has_coordinates(point_no)) {
@@ -62,7 +62,7 @@ void acmacs::draw::Points::draw_points(surface::Surface& surface) const
 // void acmacs::draw::Points::draw_points(surface::JsStatic& surface) const
 // {
 //     const auto cos_pi_12 = std::cos(M_PI / 12.0);
-//     std::unique_ptr<LayoutInterface> layout{layout_->transform(transformation_)};
+//     std::unique_ptr<Layout> layout{layout_->transform(transformation_)};
 
 //     surface.context_assign("lineCap", "\"butt\"");
 //     for (auto point_no : drawing_order_) {
@@ -151,11 +151,11 @@ void acmacs::draw::Points::draw_points(surface::Surface& surface) const
 void acmacs::draw::Points::draw_labels(surface::Surface& surface) const
 {
     if (labels_) {
-        std::unique_ptr<LayoutInterface> layout{layout_->transform(transformation_)};
+        std::shared_ptr<Layout> layout{layout_->transform(transformation_)};
         for (const auto& label : *labels_) {
             const auto index = label.index();
             if (const auto styl = style(index); *styl.shown) {
-                if (auto text_origin = layout->get(index); !text_origin.empty()) { // point is not disconnected
+                if (auto text_origin = layout->get(index); text_origin.not_nan()) { // point is not disconnected
                     const double scaled_point_size = surface.convert(Pixels{*styl.size}).value();
                     const acmacs::Size ts = surface.text_size(label.display_name(), label.text_size(), label.text_style());
                     text_origin[0] += label.text_offset(label.offset().x(), scaled_point_size, ts.width, false);

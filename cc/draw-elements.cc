@@ -112,7 +112,7 @@ acmacs::draw::Legend& acmacs::draw::DrawElements::legend()
 
 // ----------------------------------------------------------------------
 
-acmacs::draw::Points& acmacs::draw::DrawElements::points(std::shared_ptr<acmacs::LayoutInterface> layout, const acmacs::Transformation& transformation)
+acmacs::draw::Points& acmacs::draw::DrawElements::points(std::shared_ptr<acmacs::Layout> layout, const acmacs::Transformation& transformation)
 {
     return replace_or_add(std::make_unique<Points>(layout, transformation), elements_);
 
@@ -120,7 +120,7 @@ acmacs::draw::Points& acmacs::draw::DrawElements::points(std::shared_ptr<acmacs:
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::DrawElements::line(acmacs::Location2D from, acmacs::Location2D to, Color line_color, Pixels line_width, bool apply_transformation)
+void acmacs::draw::DrawElements::line(const acmacs::PointCoordinates& from, const acmacs::PointCoordinates& to, Color line_color, Pixels line_width, bool apply_transformation)
 {
     elements_.push_back(std::make_unique<Line>(from, to, line_color, line_width, apply_transformation));
 
@@ -136,7 +136,7 @@ void acmacs::draw::DrawElements::line(acmacs::LineDefinedByEquation line, Color 
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::DrawElements::path(const std::vector<acmacs::Location2D>& path, Color line_color, Pixels line_width, std::optional<Color> close_and_fill)
+void acmacs::draw::DrawElements::path(const std::vector<acmacs::PointCoordinates>& path, Color line_color, Pixels line_width, std::optional<Color> close_and_fill)
 {
     elements_.push_back(std::make_unique<acmacs::draw::Path>(path, line_color, line_width, close_and_fill));
 
@@ -144,7 +144,7 @@ void acmacs::draw::DrawElements::path(const std::vector<acmacs::Location2D>& pat
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::DrawElements::arrow(acmacs::Location2D from, acmacs::Location2D to, Color line_color, Pixels line_width, Color arrow_head_color, bool arrow_head_filled, Pixels arrow_width, bool apply_transformation)
+void acmacs::draw::DrawElements::arrow(const acmacs::PointCoordinates& from, const acmacs::PointCoordinates& to, Color line_color, Pixels line_width, Color arrow_head_color, bool arrow_head_filled, Pixels arrow_width, bool apply_transformation)
 {
     elements_.push_back(std::make_unique<Arrow>(from, to, line_color, line_width, arrow_head_color, arrow_head_filled, arrow_width, apply_transformation));
 
@@ -152,7 +152,7 @@ void acmacs::draw::DrawElements::arrow(acmacs::Location2D from, acmacs::Location
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::DrawElements::rectangle(acmacs::Location2D corner1, acmacs::Location2D corner2, Color color, bool filled, Pixels line_width)
+void acmacs::draw::DrawElements::rectangle(const acmacs::PointCoordinates& corner1, const acmacs::PointCoordinates& corner2, Color color, bool filled, Pixels line_width)
 {
     elements_.push_back(std::make_unique<Rectangle>(corner1, corner2, color, filled, line_width));
 
@@ -160,7 +160,7 @@ void acmacs::draw::DrawElements::rectangle(acmacs::Location2D corner1, acmacs::L
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::DrawElements::circle(acmacs::Location2D center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Aspect aspect, Rotation rotation)
+void acmacs::draw::DrawElements::circle(const acmacs::PointCoordinates& center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Aspect aspect, Rotation rotation)
 {
     elements_.push_back(std::make_unique<Circle<Scaled>>(center, size, fill_color, outline_color, outline_width, aspect, rotation));
 
@@ -168,7 +168,7 @@ void acmacs::draw::DrawElements::circle(acmacs::Location2D center, Scaled size, 
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::DrawElements::point(acmacs::Location2D center, Pixels size, Color fill_color, Color outline_color, Pixels outline_width, Aspect aspect, Rotation rotation, std::string label)
+void acmacs::draw::DrawElements::point(const acmacs::PointCoordinates& center, Pixels size, Color fill_color, Color outline_color, Pixels outline_width, Aspect aspect, Rotation rotation, std::string label)
 {
     elements_.push_back(std::make_unique<Circle<Pixels>>(center, size, fill_color, outline_color, outline_width, aspect, rotation, label));
 
@@ -176,7 +176,7 @@ void acmacs::draw::DrawElements::point(acmacs::Location2D center, Pixels size, C
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::DrawElements::sector(acmacs::Location2D center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Dash radius_dash, Rotation start, Rotation end)
+void acmacs::draw::DrawElements::sector(const acmacs::PointCoordinates& center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Dash radius_dash, Rotation start, Rotation end)
 {
     elements_.push_back(std::make_unique<Sector>(center, size, fill_color, outline_color, outline_width, radius_color, radius_width, radius_dash, start, end));
 
@@ -184,7 +184,7 @@ void acmacs::draw::DrawElements::sector(acmacs::Location2D center, Scaled size, 
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::DrawElements::serum_circle(const Coordinates& coordinates, const acmacs::Transformation& transformation, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Dash radius_dash, Rotation start, Rotation end)
+void acmacs::draw::DrawElements::serum_circle(const PointCoordinates& coordinates, const acmacs::Transformation& transformation, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Dash radius_dash, Rotation start, Rotation end)
 {
     elements_.push_back(std::make_unique<SerumCircle>(coordinates, transformation, size, fill_color, outline_color, outline_width, radius_color, radius_width, radius_dash, start, end));
 
@@ -192,7 +192,7 @@ void acmacs::draw::DrawElements::serum_circle(const Coordinates& coordinates, co
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::DrawElements::continent_map(acmacs::Location2D origin, Pixels size)
+void acmacs::draw::DrawElements::continent_map(const acmacs::PointCoordinates& origin, Pixels size)
 {
     replace_or_add(std::make_unique<ContinentMap>(origin, size), elements_);
 

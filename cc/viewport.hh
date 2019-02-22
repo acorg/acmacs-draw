@@ -13,23 +13,23 @@ namespace acmacs
     {
       public:
         Viewport() : origin{0, 0}, size{0, 0} {}
-        Viewport(Location2D a, const Size& s) : origin(a), size(s) {}
+        Viewport(const PointCoordinates& a, const Size& s) : origin(a), size(s) {}
         Viewport(const Size& s) : origin{0, 0}, size(s) {}
-        Viewport(Location2D a, Location2D b) : origin(a), size(b - a) {}
+        Viewport(const PointCoordinates& a, const PointCoordinates& b) : origin(a), size(b - a) {}
         Viewport(double aX, double aY, double aSize) : origin{aX, aY}, size{aSize, aSize} {}
         Viewport(double aX, double aY, double aWidth, double aHeight) : origin{aX, aY}, size{aWidth, aHeight} {}
 
-        void set(Location2D a, const Size& s)
+        void set(const PointCoordinates& a, const Size& s)
         {
             origin = a;
             size = s;
         }
-        void set(Location2D a, Location2D b)
+        void set(const PointCoordinates& a, const PointCoordinates& b)
         {
             origin = a;
             size = b - a;
         }
-        void set(Location2D aOrigin, double aSize)
+        void set(const PointCoordinates& aOrigin, double aSize)
         {
             origin = aOrigin;
             size.set(aSize, aSize);
@@ -40,16 +40,16 @@ namespace acmacs
         //     origin.y(aY);
         //     size.set(aSize, aSize);
         // }
-        void set_from_center_size(Location2D aCenter, double aSize)
+        void set_from_center_size(const PointCoordinates& aCenter, double aSize)
         {
             origin = aCenter - aSize;
             size.set(aSize, aSize);
         }
-        void set_from_center_size(const std::vector<double>& aCenter, double aSize)
-        {
-            origin = Location2D(aCenter) - aSize / 2;
-            size.set(aSize, aSize);
-        }
+        // void set_from_center_size(const std::vector<double>& aCenter, double aSize)
+        // {
+        //     origin = Location2D(aCenter) - aSize / 2;
+        //     size.set(aSize, aSize);
+        // }
         double aspect() const { return size.aspect(); }
         void zoom(double scale)
         {
@@ -57,7 +57,7 @@ namespace acmacs
             origin = center() - new_size * 0.5;
             size = new_size;
         }
-        void center(Location2D aCenter) { origin = aCenter - size * 0.5; }
+        void center(const PointCoordinates& aCenter) { origin = aCenter - size * 0.5; }
         Size offset() const { return - origin; }
 
         // make viewport a square by extending the smaller side from center
@@ -80,11 +80,11 @@ namespace acmacs
         double right() const { return origin.x() + size.width; }
         double top() const { return origin.y(); }
         double bottom() const { return origin.y() + size.height; }
-        Location2D top_right() const { return origin + Location2D{size.width, 0}; }
-        Location2D bottom_right() const { return origin + size; }
-        Location2D bottom_left() const { return origin + Location2D{0, size.height}; }
-        Location2D center() const { return origin + size * 0.5; }
-        Location2D top_center() const { return origin + Location2D{size.width / 2, 0}; }
+        PointCoordinates top_right() const { return origin + PointCoordinates(size.width, 0); }
+        PointCoordinates bottom_right() const { return origin + size; }
+        PointCoordinates bottom_left() const { return origin + PointCoordinates(0, size.height); }
+        PointCoordinates center() const { return origin + size * 0.5; }
+        PointCoordinates top_center() const { return origin + PointCoordinates(size.width / 2, 0); }
 
         Scaled left_scaled() const { return Scaled{left()}; }
         Scaled right_scaled() const { return Scaled{right()}; }
@@ -93,7 +93,7 @@ namespace acmacs
 
         bool empty() const { return size.empty(); }
 
-        Location2D origin;
+        PointCoordinates origin;
         Size size;
 
         // std::string to_string() const { return "Viewport(" + origin.to_string() + ", " + size.to_string() + ")"; }

@@ -47,7 +47,7 @@ void acmacs::draw::LineDefinedByEquation::draw(drawing_stage stage, surface::Sur
 {
     if (stage == drawing_stage::procrustes_arrows) {
         const Viewport& viewport = surface.viewport();
-        const acmacs::Location2D
+        const acmacs::PointCoordinates
                 from{viewport.left(), viewport.left() * line_.slope() + line_.intercept()},
                 to{viewport.right(), viewport.right() * line_.slope() + line_.intercept()};
         surface.line(from, to, line_color_, line_width_);
@@ -74,7 +74,7 @@ void acmacs::draw::Arrow::draw(drawing_stage stage, surface::Surface& surface) c
 void acmacs::draw::Rectangle::draw(drawing_stage stage, surface::Surface& surface) const
 {
     if (stage == drawing_stage::procrustes_arrows) {
-        const std::vector<acmacs::Location2D> path{corner1_, {corner1_.x(), corner2_.y()}, corner2_, {corner2_.x(), corner1_.y()}};
+        const std::vector<acmacs::PointCoordinates> path{corner1_, {corner1_.x(), corner2_.y()}, corner2_, {corner2_.x(), corner1_.y()}};
         if (filled_)
             surface.path_fill(path.begin(), path.end(), color_);
         else
@@ -101,7 +101,7 @@ void acmacs::draw::Sector::draw(drawing_stage stage, surface::Surface& surface) 
 void acmacs::draw::SerumCircle::draw(drawing_stage stage, surface::Surface& surface) const
 {
     if (stage == drawing_stage::serum_circles) {
-        center(coordinates_.transform(transformation_));
+        center(transformation_.transform(coordinates_));
         Sector::draw(stage, surface);
     }
 

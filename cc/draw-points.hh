@@ -14,7 +14,7 @@
 
 namespace acmacs
 {
-    class LayoutInterface;
+    class Layout;
 }
 
 namespace acmacs::draw
@@ -26,7 +26,7 @@ namespace acmacs::draw
      public:
         PointLabel(size_t index) : index_(index), offset_{0, 1}, text_color_{BLACK}, text_size_{12} {}
 
-        PointLabel& offset(Location2D offs) { offset_ = offs; return *this; }
+        PointLabel& offset(const PointCoordinates& offs) { offset_ = offs; return *this; }
         PointLabel& display_name(std::string_view display_name) { display_name_ = display_name; return *this; }
         PointLabel& color(Color color) { text_color_ = color; return *this; }
         PointLabel& size(double size) { text_size_ = size; return *this; }
@@ -39,7 +39,7 @@ namespace acmacs::draw
 
         constexpr size_t index() const { return index_; }
         const std::string& display_name() const { return display_name_; }
-        Location2D offset() const { return offset_; }
+        PointCoordinates offset() const { return offset_; }
         Color text_color() const { return text_color_; }
         Pixels text_size() const { return text_size_; }
         const TextStyle text_style() const { return text_style_; }
@@ -48,7 +48,7 @@ namespace acmacs::draw
 
      private:
         size_t index_;
-        Location2D offset_;
+        PointCoordinates offset_;
         std::string display_name_;
         Color text_color_;
         Pixels text_size_;
@@ -90,7 +90,7 @@ namespace acmacs::draw
         using DrawingOrder = std::vector<size_t>;
         using UnpackedStyles = std::vector<PointStyle>;
 
-        Points(std::shared_ptr<acmacs::LayoutInterface> layout, const acmacs::Transformation& transformation);
+        Points(std::shared_ptr<acmacs::Layout> layout, const acmacs::Transformation& transformation);
 
         Points& drawing_order(const DrawingOrder& drawing_order) { drawing_order_ = drawing_order; return *this; }
         Points& styles(std::shared_ptr<PointStyles> styles) { styles_ = styles; return *this; }
@@ -103,7 +103,7 @@ namespace acmacs::draw
         const auto& transformation() const { return transformation_; }
 
      private:
-        std::shared_ptr<acmacs::LayoutInterface> layout_;
+        std::shared_ptr<acmacs::Layout> layout_;
         acmacs::Transformation transformation_;
         DrawingOrder drawing_order_;
         PointStyle default_style_;

@@ -25,7 +25,7 @@ acmacs::surface::JsDynamic::~JsDynamic()
 
 // ----------------------------------------------------------------------
 
-rjson::v1::array acmacs::surface::JsDynamic::convert(const acmacs::LayoutInterface& layout) const
+rjson::v1::array acmacs::surface::JsDynamic::convert(const acmacs::Layout& layout) const
 {
     rjson::v1::array result;
     for (auto point_no : acmacs::range(layout.number_of_points())) {

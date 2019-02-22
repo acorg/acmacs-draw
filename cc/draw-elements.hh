@@ -15,8 +15,7 @@
 
 namespace acmacs
 {
-    class LayoutInterface;
-    class Coordinates;
+    class Layout;
     class Transformation;
 }
 
@@ -71,17 +70,17 @@ namespace acmacs::draw
         void border(Color line_color, Pixels line_width);
         Title& title(const std::vector<std::string>& lines);
         Legend& legend();
-        Points& points(std::shared_ptr<acmacs::LayoutInterface> layout, const Transformation& transformation);
-        void line(acmacs::Location2D from, acmacs::Location2D to, Color line_color, Pixels line_width, bool apply_transformation = false);
+        Points& points(std::shared_ptr<acmacs::Layout> layout, const Transformation& transformation);
+        void line(const acmacs::PointCoordinates& from, const acmacs::PointCoordinates& to, Color line_color, Pixels line_width, bool apply_transformation = false);
         void line(LineDefinedByEquation line, Color line_color, Pixels line_width, bool apply_transformation = true);
-        void path(const std::vector<acmacs::Location2D>& path, Color line_color, Pixels line_width, std::optional<Color> close_and_fill);
-        void arrow(acmacs::Location2D from, acmacs::Location2D to, Color line_color, Pixels line_width, Color arrow_head_color, bool arrow_head_filled, Pixels arrow_width, bool apply_transformation = false);
-        void rectangle(acmacs::Location2D corner1, acmacs::Location2D corner2, Color color, bool filled, Pixels line_width);
-        void circle(acmacs::Location2D center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Aspect aspect, Rotation rotation);
-        void point(acmacs::Location2D center, Pixels size, Color fill_color, Color outline_color, Pixels outline_width, Aspect aspect, Rotation rotation, std::string label);
-        void sector(acmacs::Location2D center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Dash radius_dash, Rotation start, Rotation end);
-        void serum_circle(const Coordinates& coordinates, const Transformation& transformation, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Dash radius_dash, Rotation start, Rotation end);
-        void continent_map(acmacs::Location2D origin, Pixels size);
+        void path(const std::vector<acmacs::PointCoordinates>& path, Color line_color, Pixels line_width, std::optional<Color> close_and_fill);
+        void arrow(const acmacs::PointCoordinates& from, const acmacs::PointCoordinates& to, Color line_color, Pixels line_width, Color arrow_head_color, bool arrow_head_filled, Pixels arrow_width, bool apply_transformation = false);
+        void rectangle(const acmacs::PointCoordinates& corner1, const acmacs::PointCoordinates& corner2, Color color, bool filled, Pixels line_width);
+        void circle(const acmacs::PointCoordinates& center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Aspect aspect, Rotation rotation);
+        void point(const acmacs::PointCoordinates& center, Pixels size, Color fill_color, Color outline_color, Pixels outline_width, Aspect aspect, Rotation rotation, std::string label);
+        void sector(const acmacs::PointCoordinates& center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Dash radius_dash, Rotation start, Rotation end);
+        void serum_circle(const PointCoordinates& coordinates, const Transformation& transformation, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Dash radius_dash, Rotation start, Rotation end);
+        void continent_map(const acmacs::PointCoordinates& origin, Pixels size);
 
         bool add_all_labels() const { return is_json(); }
 

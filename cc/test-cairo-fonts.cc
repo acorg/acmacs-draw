@@ -7,7 +7,7 @@
 // ----------------------------------------------------------------------
 
 void draw(acmacs::surface::Surface& aSurface, const std::vector<std::string>& fonts);
-double show(acmacs::surface::Surface& aSurface, acmacs::Location2D origin, double size, std::string font_name);
+double show(acmacs::surface::Surface& aSurface, const acmacs::PointCoordinates& origin, double size, std::string font_name);
 void get_fonts(std::vector<std::string>& fonts);
 
 // ----------------------------------------------------------------------
@@ -20,6 +20,7 @@ int main(int /*argc*/, const char */*argv*/[])
         get_fonts(fonts);
           // std::cout << fonts.back() << std::endl;
           // fonts.erase(fonts.begin() + 418, fonts.end());
+        std::cerr << "INFO: generating /tmp/cairo-fonts.pdf\n";
         acmacs::surface::PdfCairo surface("/tmp/cairo-fonts.pdf", 500, 850);
         draw(surface, fonts);
     }
@@ -41,7 +42,7 @@ void draw(acmacs::surface::Surface& aSurface, const std::vector<std::string>& fo
     std::cout << "fonts:" << fonts.size() << " size:" << size << std::endl;
 
     // aSurface.background("white");
-    acmacs::Location2D loc;
+    acmacs::PointCoordinates loc(0.0, 0.0);
     for (size_t column = 0, font_no = 0; column < columns; ++column) {
         for (; font_no < fonts.size() && font_no < (column + 1) * column_size; ++font_no) {
             loc.y(loc.y() + show(aSurface, loc, size, fonts[font_no]));
@@ -53,7 +54,7 @@ void draw(acmacs::surface::Surface& aSurface, const std::vector<std::string>& fo
 
 // ----------------------------------------------------------------------
 
-double show(acmacs::surface::Surface& aSurface, acmacs::Location2D origin, double size, std::string font_name)
+double show(acmacs::surface::Surface& aSurface, const acmacs::PointCoordinates& origin, double size, std::string font_name)
 {
     // std::cout << font_name << std::endl;
     const double interline = 1.1;

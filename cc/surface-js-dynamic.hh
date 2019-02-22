@@ -13,7 +13,7 @@ namespace acmacs
 {
     class Size;
     class Viewport;
-    class LayoutInterface;
+    class Layout;
     class Transformation;
 }
 
@@ -42,7 +42,7 @@ namespace acmacs::surface
         rjson::v1::string convert(Color a) const { return a.to_hex_string(); }
         // const char* convert(const char* a) const { return a; }
         rjson::v1::array convert(const std::vector<size_t> list) const { return rjson::v1::array(rjson::v1::array::use_iterator, list.begin(), list.end()); }
-        rjson::v1::array convert(const acmacs::LayoutInterface& layout) const;
+        rjson::v1::array convert(const acmacs::Layout& layout) const;
         rjson::v1::array convert(const acmacs::Transformation& transformation) const;
         rjson::v1::boolean convert(bool a) { return a; }
 
