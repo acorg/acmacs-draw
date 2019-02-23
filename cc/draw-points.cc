@@ -155,7 +155,7 @@ void acmacs::draw::Points::draw_labels(surface::Surface& surface) const
         for (const auto& label : *labels_) {
             const auto index = label.index();
             if (const auto styl = style(index); *styl.shown) {
-                if (auto text_origin = layout->get(index); text_origin.not_nan()) { // point is not disconnected
+                if (auto text_origin = layout->get(index); text_origin.exists()) { // point is not disconnected
                     const double scaled_point_size = surface.convert(Pixels{*styl.size}).value();
                     const acmacs::Size ts = surface.text_size(label.display_name(), label.text_size(), label.text_style());
                     text_origin[0] += label.text_offset(label.offset().x(), scaled_point_size, ts.width, false);

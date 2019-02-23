@@ -22,7 +22,7 @@ namespace acmacs::surface
         using Viewport = acmacs::Viewport;
         using TextStyle = acmacs::TextStyle;
 
-        [[noreturn]] Surface(const Surface&) : mOriginInParent(PointCoordinates::with_nan_coordinates, 2) { throw std::runtime_error("Surface copying forbidden!"); } // cannto make it private due to using vector<SurfaceCairoChild>
+        [[noreturn]] Surface(const Surface&) : mOriginInParent(2) { throw std::runtime_error("Surface copying forbidden!"); } // cannto make it private due to using vector<SurfaceCairoChild>
         virtual ~Surface()
         {
         }
