@@ -124,7 +124,7 @@ namespace acmacs::surface
       protected:
         Surface() : mOriginInParent(0, 0), mWidthInParent{viewport().size.width} {}
         Surface(const PointCoordinates& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport)
-            : mViewport{aViewport}, mOriginInParent(PointCoordinates::create_copy, aOriginInParent), mWidthInParent{aWidthInParent.value()} {}
+            : mViewport{aViewport}, mOriginInParent(PointCoordinates::copy, aOriginInParent), mWidthInParent{aWidthInParent.value()} {}
 
         virtual Surface* make_child(const PointCoordinates& aOriginInParent, Scaled aWidthInParent, const Viewport& aViewport, bool aClip) = 0;
 
