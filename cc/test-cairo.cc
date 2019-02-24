@@ -18,9 +18,9 @@ int main(int /*argc*/, const char */*argv*/[])
         std::cerr << "INFO: generating /tmp/tc.pdf\n";
         acmacs::surface::PdfCairo surface("/tmp/tc.pdf", 500, 850);
         draw(surface);
-        auto& sub1 = surface.subsurface({110, 720}, Scaled{500}, {acmacs::PointCoordinates(0, 0), acmacs::Size{1000, 1000}}, false);
+        auto& sub1 = surface.subsurface({110, 720}, Scaled{500}, {acmacs::PointCoordinates::zero2D, acmacs::Size{1000, 1000}}, false);
         draw(sub1);
-        auto& sub2 = sub1.subsurface({110, 470}, Scaled{500}, {acmacs::PointCoordinates(0, 0), acmacs::Size{1000, 1000}}, true);
+        auto& sub2 = sub1.subsurface({110, 470}, Scaled{500}, {acmacs::PointCoordinates::zero2D, acmacs::Size{1000, 1000}}, true);
         draw(sub2);
     }
     catch (std::exception& err) {

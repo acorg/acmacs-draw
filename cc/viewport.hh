@@ -13,11 +13,11 @@ namespace acmacs
     class Viewport
     {
       public:
-        Viewport() : origin{0, 0}, size{0, 0} {}
-        Viewport(const Viewport& src) : origin(PointCoordinates::copy, src.origin), size(src.size) {}
-        Viewport(const PointCoordinates& a, const Size& s) : origin(PointCoordinates::copy, a), size(s) {}
-        Viewport(const Size& s) : origin{0, 0}, size(s) {}
-        Viewport(const PointCoordinates& a, const PointCoordinates& b) : origin(PointCoordinates::copy, a), size(b - a) {}
+        Viewport() : origin(PointCoordinates::zero2D), size{0, 0} {}
+        Viewport(const Viewport& src) : origin(src.origin), size(src.size) {}
+        Viewport(const PointCoordinates& a, const Size& s) : origin(a), size(s) {}
+        Viewport(const Size& s) : origin(PointCoordinates::zero2D), size(s) {}
+        Viewport(const PointCoordinates& a, const PointCoordinates& b) : origin(a), size(b - a) {}
         Viewport(double aX, double aY, double aSize) : origin(aX, aY), size{aSize, aSize} {}
         Viewport(double aX, double aY, double aWidth, double aHeight) : origin(aX, aY), size{aWidth, aHeight} {}
         Viewport& operator=(const Viewport& src) = default;
@@ -40,12 +40,6 @@ namespace acmacs
             origin = aOrigin;
             size.set(aSize, aSize);
         }
-        // void set(double aX, double aY, double aSize)
-        // {
-        //     origin.x(aX);
-        //     origin.y(aY);
-        //     size.set(aSize, aSize);
-        // }
         void set_from_center_size(const PointCoordinates& aCenter, double aSize)
         {
             assert(aSize > 0);

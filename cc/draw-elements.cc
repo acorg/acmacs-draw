@@ -48,7 +48,7 @@ void acmacs::draw::DrawElements::draw() const
 
     if (std::string_view(filename_.data() + filename_.size() - 4, 4) == ".pdf") {
         acmacs::surface::PdfCairo main_surface(filename_, size_, size_);
-        acmacs::surface::Surface& rescaled_surface = main_surface.subsurface({0, 0}, Scaled{main_surface.viewport().size.width}, viewport_, true);
+        acmacs::surface::Surface& rescaled_surface = main_surface.subsurface(PointCoordinates::zero2D, Scaled{main_surface.viewport().size.width}, viewport_, true);
         draw(rescaled_surface);
     }
     // else if (std::string_view(filename_.data() + filename_.size() - 5, 5) == ".html") {
