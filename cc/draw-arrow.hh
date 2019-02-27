@@ -117,7 +117,7 @@ namespace acmacs::draw
         void draw(drawing_stage stage, surface::Surface& surface) const override
             {
                 if (stage == drawing_stage::procrustes_arrows) {
-                    surface.circle_filled(center_, size_, aspect_, rotation_, outline_color_, outline_width_, fill_color_);
+                    surface.circle_filled(center_, size_, aspect_, rotation_, outline_color_, outline_width_, outline_dash_, fill_color_);
                     if (!label_.empty()) {
                         const Pixels size{10};
                         const auto tsize = surface.text_size(label_, size);
@@ -132,6 +132,7 @@ namespace acmacs::draw
         const Color fill_color_, outline_color_;
         const Pixels outline_width_;
         const Aspect aspect_;
+        const acmacs::surface::Dash outline_dash_{acmacs::surface::Dash::NoDash};
         const Rotation rotation_;
         const std::string label_;
 

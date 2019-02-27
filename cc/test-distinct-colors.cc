@@ -52,7 +52,7 @@ void draw(acmacs::surface::Surface& aSurface)
     double diameter = 15;
     double x = diameter * 2, y = 60;
     for (auto entry: Color::distinct()) {
-        aSurface.circle_filled({x, y}, Pixels{diameter}, AspectNormal, NoRotation, "black", Pixels{1}, entry);
+        aSurface.circle_filled({x, y}, Pixels{diameter}, AspectNormal, NoRotation, "black", Pixels{1}, acmacs::surface::Dash::NoDash, entry);
         aSurface.text({x + diameter * 2, y + diameter * 0.5}, entry.to_string(), entry, Pixels{12});
         y += diameter * 3;
     }

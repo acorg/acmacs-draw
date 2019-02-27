@@ -358,7 +358,7 @@ void acmacs::surface::internal_1::Cairo::circle(const acmacs::PointCoordinates& 
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_circle_filled(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::PointCoordinates& aCenter, S aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor)
+template <typename S> static inline void s_circle_filled(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::PointCoordinates& aCenter, S aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, acmacs::surface::Dash aOutlineDash, Color aFillColor)
 {
     context(aSurface)
             .set_line_width(aOutlineWidth)
@@ -369,18 +369,19 @@ template <typename S> static inline void s_circle_filled(acmacs::surface::intern
             .set_source_rgba(aFillColor)
             .fill_preserve()
             .set_source_rgba(aOutlineColor)
+            .set_line_dash(aOutlineDash)
             .stroke();
 }
 
-void acmacs::surface::internal_1::Cairo::circle_filled(const acmacs::PointCoordinates& aCenter, Pixels aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor)
+void acmacs::surface::internal_1::Cairo::circle_filled(const acmacs::PointCoordinates& aCenter, Pixels aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Dash aOutlineDash, Color aFillColor)
 {
-    s_circle_filled(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth, aFillColor);
+    s_circle_filled(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth, aOutlineDash, aFillColor);
 
 } // acmacs::surface::internal_1::Cairo::circle_filled
 
-void acmacs::surface::internal_1::Cairo::circle_filled(const acmacs::PointCoordinates& aCenter, Scaled aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor)
+void acmacs::surface::internal_1::Cairo::circle_filled(const acmacs::PointCoordinates& aCenter, Scaled aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Dash aOutlineDash, Color aFillColor)
 {
-    s_circle_filled(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth, aFillColor);
+    s_circle_filled(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth, aOutlineDash, aFillColor);
 
 } // acmacs::surface::internal_1::Cairo::circle_filled
 

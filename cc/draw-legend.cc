@@ -91,7 +91,7 @@ void acmacs::draw::internal::LegendPointLabel::draw(surface::Surface& surface, c
     const auto scaled_point_size = surface.convert(point_size_).value();
     const auto point_x = origin.x() + scaled_point_size / 2;
     const auto text_x = origin.x() * 2 + scaled_point_size;
-    surface.circle_filled({point_x, origin.y() + height / 2}, point_size_, AspectNormal, NoRotation, point_outline_, Pixels{1}, point_fill_);
+    surface.circle_filled({point_x, origin.y() + height / 2}, point_size_, AspectNormal, NoRotation, point_outline_, Pixels{1}, surface::Dash::NoDash, point_fill_);
     TitleLine::draw(surface, {text_x, origin.y() + height});
 
 } // acmacs::draw::internal::LegendPointLabel::draw

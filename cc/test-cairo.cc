@@ -40,8 +40,8 @@ void draw(acmacs::surface::Surface& aSurface)
     aSurface.rectangle(v.origin, v.size, 0xC0808080, Pixels{2});
 
     aSurface.line({150, 50}, {950, 160}, "red2", Pixels{2});
-    aSurface.circle_filled({100, 200}, Scaled{50}, Aspect{0.5}, Rotation{0.25}, BLACK, Pixels{1}, 0xC0FF0000);
-    aSurface.circle_filled({150, 200}, Pixels{10}, Aspect{1.4}, Rotation{0.75}, BLACK, Pixels{1}, 0xC0FFB000);
+    aSurface.circle_filled({100, 200}, Scaled{50}, Aspect{0.5}, Rotation{0.25}, BLACK, Pixels{1}, acmacs::surface::Dash::NoDash, 0xC0FF0000);
+    aSurface.circle_filled({150, 200}, Pixels{10}, Aspect{1.4}, Rotation{0.75}, BLACK, Pixels{1}, acmacs::surface::Dash::NoDash, 0xC0FFB000);
     aSurface.square_filled({200, 200}, Scaled{50}, Aspect{1.0}, Rotation{1.0}, BLACK, Pixels{1}, 0xC0FF00B0);
     aSurface.square_filled({250, 200}, Pixels{10}, Aspect{1.0}, Rotation{0.0}, BLACK, Pixels{1}, 0xC0FF00B0);
     aSurface.triangle_filled({300, 200}, Scaled{50}, Aspect{1.0}, Rotation{0.0}, BLACK, Pixels{1}, 0xC000B0B0);
