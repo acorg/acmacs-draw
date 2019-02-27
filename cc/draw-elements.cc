@@ -178,15 +178,15 @@ void acmacs::draw::DrawElements::point(const acmacs::PointCoordinates& center, P
 
 void acmacs::draw::DrawElements::sector(const acmacs::PointCoordinates& center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Dash radius_dash, Rotation start, Rotation end)
 {
-    elements_.push_back(std::make_unique<Sector>(center, size, fill_color, outline_color, outline_width, radius_color, radius_width, radius_dash, start, end));
+    elements_.push_back(std::make_unique<Sector>(center, size, fill_color, outline_color, outline_width, acmacs::surface::Dash::NoDash, radius_color, radius_width, radius_dash, start, end));
 
 } // acmacs::draw::DrawElements::sector
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::DrawElements::serum_circle(const PointCoordinates& coordinates, const acmacs::Transformation& transformation, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Dash radius_dash, Rotation start, Rotation end)
+void acmacs::draw::DrawElements::serum_circle(const PointCoordinates& coordinates, const acmacs::Transformation& transformation, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, acmacs::surface::Dash outline_dash, Color radius_color, Pixels radius_width, acmacs::surface::Dash radius_dash, Rotation start, Rotation end)
 {
-    elements_.push_back(std::make_unique<SerumCircle>(coordinates, transformation, size, fill_color, outline_color, outline_width, radius_color, radius_width, radius_dash, start, end));
+    elements_.push_back(std::make_unique<SerumCircle>(coordinates, transformation, size, fill_color, outline_color, outline_width, outline_dash, radius_color, radius_width, radius_dash, start, end));
 
 } // acmacs::draw::DrawElements::serum_circle
 

@@ -142,8 +142,8 @@ namespace acmacs::draw
     class Sector : public Element
     {
      public:
-        Sector(const PointCoordinates& center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Dash radius_dash, Rotation start, Rotation end)
-            : center_(center), size_(size), fill_color_(fill_color), outline_color_(outline_color), outline_width_(outline_width),
+        Sector(const PointCoordinates& center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, acmacs::surface::Dash outline_dash, Color radius_color, Pixels radius_width, acmacs::surface::Dash radius_dash, Rotation start, Rotation end)
+            : center_(center), size_(size), fill_color_(fill_color), outline_color_(outline_color), outline_width_(outline_width), outline_dash_{outline_dash},
               radius_color_(radius_color), radius_width_(radius_width), radius_dash_(radius_dash), start_(start), end_(end) {}
 
         void draw(drawing_stage stage, surface::Surface& surface) const override;
@@ -157,6 +157,7 @@ namespace acmacs::draw
         const Scaled size_;
         const Color fill_color_, outline_color_;
         const Pixels outline_width_;
+        const acmacs::surface::Dash outline_dash_;
         const Color radius_color_;
         const Pixels radius_width_;
         const acmacs::surface::Dash radius_dash_;
@@ -170,8 +171,8 @@ namespace acmacs::draw
     class SerumCircle : public Sector
     {
      public:
-        SerumCircle(const PointCoordinates& coordinates, const Transformation& transformation, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Color radius_color, Pixels radius_width, acmacs::surface::Dash radius_dash, Rotation start, Rotation end)
-            : Sector(PointCoordinates(0.0, 0.0), size, fill_color, outline_color, outline_width, radius_color, radius_width, radius_dash, start, end), coordinates_(coordinates), transformation_(transformation)
+        SerumCircle(const PointCoordinates& coordinates, const Transformation& transformation, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, acmacs::surface::Dash outline_dash, Color radius_color, Pixels radius_width, acmacs::surface::Dash radius_dash, Rotation start, Rotation end)
+            : Sector(PointCoordinates(0.0, 0.0), size, fill_color, outline_color, outline_width, outline_dash, radius_color, radius_width, radius_dash, start, end), coordinates_(coordinates), transformation_(transformation)
             { stage(drawing_stage::serum_circles); }
 
         void draw(drawing_stage stage, surface::Surface& surface) const override;
