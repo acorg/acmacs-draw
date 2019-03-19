@@ -109,6 +109,36 @@ class context
     context& append_path(CairoPath& aPath) { cairo_append_path(cairo_context(), aPath); return *this; }
     CairoPath copy_path() { return std::move(cairo_copy_path(cairo_context())); }
 
+    // http://www.eurion.net/python-snippets/snippet/Cairo%20Easter%20Eggs.html
+    template <typename S> context& egg(S s_half_height)
+    {
+        constexpr auto whratio = 1.0; // 2.0 / 3.0;
+        const double half_height = convert(s_half_height), half_width = half_height * whratio;
+        cairo_move_to(cairo_context(), 0, -half_height);
+        cairo_curve_to(cairo_context(),
+            half_width / 2, -half_height,
+            half_width, - half_height / 3,
+            -half_width + 2.0 * half_width, -half_height + 4 * half_height / 3
+                       );
+        cairo_curve_to(cairo_context(),
+            -half_width + 2.0 * half_width, -half_height + 5 * half_height / 3,
+            -half_width + 3 * half_width / 2, half_height,
+            0.0, half_height
+                       );
+        cairo_curve_to(cairo_context(),
+            -half_width / 2, half_height,
+            -half_width, -half_height + 5 * half_height / 3,
+            -half_width, -half_height + 4 * half_height / 3
+                       );
+        cairo_curve_to(cairo_context(),
+            -half_width, -half_height + 2 * half_height / 3,
+            -half_width / 2, -half_height,
+            0.0, -half_height
+                       );
+
+        return *this;
+    }
+
     template <typename S> context& prepare_for_text(S aSize, const TextStyle& aTextStyle) { cairo_select_font_face(cairo_context(), (*aTextStyle.font_family).c_str(), cairo_font_slant(*aTextStyle.slant), cairo_font_weight(*aTextStyle.weight)); cairo_set_font_size(cairo_context(), convert(aSize)); return *this; }
     context& show_text(std::string aText) { cairo_show_text(cairo_context(), aText.c_str()); return *this; }
     context& text_extents(std::string aText, cairo_text_extents_t& extents) { cairo_text_extents(cairo_context(), aText.c_str(), &extents); return *this; }
@@ -384,6 +414,61 @@ void acmacs::surface::internal_1::Cairo::circle_filled(const acmacs::PointCoordi
     s_circle_filled(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth, aOutlineDash, aFillColor);
 
 } // acmacs::surface::internal_1::Cairo::circle_filled
+
+// ----------------------------------------------------------------------
+
+template <typename S> static inline void s_egg(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::PointCoordinates& aCenter, S aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth)
+{
+    context(aSurface)
+            .set_line_width(aOutlineWidth)
+            .translate(aCenter)
+            .rotate(aAngle)
+            .aspect(aAspect)
+            .egg(aDiameter / 2)
+            .set_source_rgba(aOutlineColor)
+            .stroke();
+}
+
+void acmacs::surface::internal_1::Cairo::egg(const acmacs::PointCoordinates& aCenter, Pixels aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth)
+{
+    s_egg(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth);
+
+} // acmacs::surface::internal_1::Cairo::egg
+
+void acmacs::surface::internal_1::Cairo::egg(const acmacs::PointCoordinates& aCenter, Scaled aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth)
+{
+    s_egg(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth);
+
+} // acmacs::surface::internal_1::Cairo::egg
+
+// ----------------------------------------------------------------------
+
+template <typename S> static inline void s_egg_filled(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::PointCoordinates& aCenter, S aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, acmacs::surface::Dash aOutlineDash, Color aFillColor)
+{
+    context(aSurface)
+            .set_line_width(aOutlineWidth)
+            .translate(aCenter)
+            .rotate(aAngle)
+            .aspect(aAspect)
+            .egg(aDiameter / 2)
+            .set_source_rgba(aFillColor)
+            .fill_preserve()
+            .set_source_rgba(aOutlineColor)
+            .set_line_dash(aOutlineDash)
+            .stroke();
+}
+
+void acmacs::surface::internal_1::Cairo::egg_filled(const acmacs::PointCoordinates& aCenter, Pixels aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Dash aOutlineDash, Color aFillColor)
+{
+    s_egg_filled(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth, aOutlineDash, aFillColor);
+
+} // acmacs::surface::internal_1::Cairo::egg_filled
+
+void acmacs::surface::internal_1::Cairo::egg_filled(const acmacs::PointCoordinates& aCenter, Scaled aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Dash aOutlineDash, Color aFillColor)
+{
+    s_egg_filled(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth, aOutlineDash, aFillColor);
+
+} // acmacs::surface::internal_1::Cairo::egg_filled
 
 // ----------------------------------------------------------------------
 

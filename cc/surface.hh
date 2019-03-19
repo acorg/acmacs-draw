@@ -72,6 +72,12 @@ namespace acmacs::surface
         void circle(const PointCoordinates& aCenter, Scaled aDiameter, Color aOutlineColor, Pixels aOutlineWidth) { circle(aCenter, aDiameter, Aspect{1}, Rotation{0}, aOutlineColor, aOutlineWidth); }
         virtual void circle_filled(const PointCoordinates& aCenter, Pixels aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Dash aOutlineDash, Color aFillColor) = 0;
         virtual void circle_filled(const PointCoordinates& aCenter, Scaled aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Dash aOutlineDash, Color aFillColor) = 0;
+        virtual void egg(const PointCoordinates& aCenter, Pixels aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth) = 0;
+        virtual void egg(const PointCoordinates& aCenter, Scaled aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth) = 0;
+        void egg(const PointCoordinates& aCenter, Pixels aDiameter, Color aOutlineColor, Pixels aOutlineWidth) { egg(aCenter, aDiameter, Aspect{1}, Rotation{0}, aOutlineColor, aOutlineWidth); }
+        void egg(const PointCoordinates& aCenter, Scaled aDiameter, Color aOutlineColor, Pixels aOutlineWidth) { egg(aCenter, aDiameter, Aspect{1}, Rotation{0}, aOutlineColor, aOutlineWidth); }
+        virtual void egg_filled(const PointCoordinates& aCenter, Pixels aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Dash aOutlineDash, Color aFillColor) = 0;
+        virtual void egg_filled(const PointCoordinates& aCenter, Scaled aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Dash aOutlineDash, Color aFillColor) = 0;
         virtual void sector_filled(const PointCoordinates& aCenter, Scaled aDiameter, Rotation aStart, Rotation aEnd, Color aOutlineColor, Pixels aOutlineWidth, Color aRadiusColor, Pixels aRadiusWidth,
                            Dash aRadiusDash, Color aFillColor) = 0;
         virtual void square_filled(const PointCoordinates& aCenter, Pixels aSide, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Color aFillColor,
