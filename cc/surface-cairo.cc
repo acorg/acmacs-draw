@@ -109,33 +109,65 @@ class context
     context& append_path(CairoPath& aPath) { cairo_append_path(cairo_context(), aPath); return *this; }
     CairoPath copy_path() { return std::move(cairo_copy_path(cairo_context())); }
 
-    // http://www.eurion.net/python-snippets/snippet/Cairo%20Easter%20Eggs.html
+    // // http://www.eurion.net/python-snippets/snippet/Cairo%20Easter%20Eggs.html
+    // template <typename S> context& egg(S s_half_height)
+    // {
+    //     constexpr auto whratio = 1.0; // 2.0 / 3.0;
+    //     const double half_height = convert(s_half_height), half_width = half_height * whratio;
+    //     cairo_move_to(cairo_context(), 0, -half_height);
+    //     cairo_curve_to(cairo_context(),
+    //         half_width / 2, -half_height,
+    //         half_width, - half_height / 3,
+    //         -half_width + 2.0 * half_width, -half_height + 4 * half_height / 3
+    //                    );
+    //     cairo_curve_to(cairo_context(),
+    //         -half_width + 2.0 * half_width, -half_height + 5 * half_height / 3,
+    //         -half_width + 3 * half_width / 2, half_height,
+    //         0.0, half_height
+    //                    );
+    //     cairo_curve_to(cairo_context(),
+    //         -half_width / 2, half_height,
+    //         -half_width, -half_height + 5 * half_height / 3,
+    //         -half_width, -half_height + 4 * half_height / 3
+    //                    );
+    //     cairo_curve_to(cairo_context(),
+    //         -half_width, -half_height + 2 * half_height / 3,
+    //         -half_width / 2, -half_height,
+    //         0.0, -half_height
+    //                    );
+
+    //     return *this;
+    // }
+
+    // https://books.google.de/books?id=StdwgT34RCwC&pg=PA107
     template <typename S> context& egg(S s_half_height)
     {
-        constexpr auto whratio = 1.0; // 2.0 / 3.0;
-        const double half_height = convert(s_half_height), half_width = half_height * whratio;
-        cairo_move_to(cairo_context(), 0, -half_height);
+        const auto half_height = convert(s_half_height);
+        cairo_move_to(cairo_context(), 0, half_height);
         cairo_curve_to(cairo_context(),
-            half_width / 2, -half_height,
-            half_width, - half_height / 3,
-            -half_width + 2.0 * half_width, -half_height + 4 * half_height / 3
-                       );
+                       half_height * 1.4, half_height * 0.95,
+                       half_height * 0.8, - half_height * 0.98,
+                       0, - half_height);
         cairo_curve_to(cairo_context(),
-            -half_width + 2.0 * half_width, -half_height + 5 * half_height / 3,
-            -half_width + 3 * half_width / 2, half_height,
-            0.0, half_height
-                       );
-        cairo_curve_to(cairo_context(),
-            -half_width / 2, half_height,
-            -half_width, -half_height + 5 * half_height / 3,
-            -half_width, -half_height + 4 * half_height / 3
-                       );
-        cairo_curve_to(cairo_context(),
-            -half_width, -half_height + 2 * half_height / 3,
-            -half_width / 2, -half_height,
-            0.0, -half_height
-                       );
+                       - half_height * 0.8, - half_height * 0.98,
+                       - half_height * 1.4, half_height * 0.95,
+                       0, half_height);
+        cairo_close_path(cairo_context());
+        return *this;
+    }
 
+    template <typename S> context& ugly_egg(S s_half_height)
+    {
+        const auto half_height = convert(s_half_height);
+        // const auto c1x = half_height * 1.4, c1y = half_height * 0.95, c2x = half_height * 0.8, c2y = - half_height * 0.98;
+        const auto c1x = half_height * 1.0, c1y = half_height * 0.6, c2x = half_height * 0.8, c2y = - half_height * 0.6;
+        cairo_move_to(cairo_context(), 0, half_height);
+        cairo_line_to(cairo_context(), c1x, c1y);
+        cairo_line_to(cairo_context(), c2x, c2y);
+        cairo_line_to(cairo_context(), 0, - half_height);
+        cairo_line_to(cairo_context(), - c2x, c2y);
+        cairo_line_to(cairo_context(), - c1x, c1y);
+        cairo_close_path(cairo_context());
         return *this;
     }
 
@@ -469,6 +501,61 @@ void acmacs::surface::internal_1::Cairo::egg_filled(const acmacs::PointCoordinat
     s_egg_filled(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth, aOutlineDash, aFillColor);
 
 } // acmacs::surface::internal_1::Cairo::egg_filled
+
+// ----------------------------------------------------------------------
+
+template <typename S> static inline void s_ugly_egg(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::PointCoordinates& aCenter, S aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth)
+{
+    context(aSurface)
+            .set_line_width(aOutlineWidth)
+            .translate(aCenter)
+            .rotate(aAngle)
+            .aspect(aAspect)
+            .ugly_egg(aDiameter / 2)
+            .set_source_rgba(aOutlineColor)
+            .stroke();
+}
+
+void acmacs::surface::internal_1::Cairo::ugly_egg(const acmacs::PointCoordinates& aCenter, Pixels aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth)
+{
+    s_ugly_egg(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth);
+
+} // acmacs::surface::internal_1::Cairo::ugly_egg
+
+void acmacs::surface::internal_1::Cairo::ugly_egg(const acmacs::PointCoordinates& aCenter, Scaled aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth)
+{
+    s_ugly_egg(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth);
+
+} // acmacs::surface::internal_1::Cairo::ugly_egg
+
+// ----------------------------------------------------------------------
+
+template <typename S> static inline void s_ugly_egg_filled(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::PointCoordinates& aCenter, S aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, acmacs::surface::Dash aOutlineDash, Color aFillColor)
+{
+    context(aSurface)
+            .set_line_width(aOutlineWidth)
+            .translate(aCenter)
+            .rotate(aAngle)
+            .aspect(aAspect)
+            .ugly_egg(aDiameter / 2)
+            .set_source_rgba(aFillColor)
+            .fill_preserve()
+            .set_source_rgba(aOutlineColor)
+            .set_line_dash(aOutlineDash)
+            .stroke();
+}
+
+void acmacs::surface::internal_1::Cairo::ugly_egg_filled(const acmacs::PointCoordinates& aCenter, Pixels aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Dash aOutlineDash, Color aFillColor)
+{
+    s_ugly_egg_filled(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth, aOutlineDash, aFillColor);
+
+} // acmacs::surface::internal_1::Cairo::ugly_egg_filled
+
+void acmacs::surface::internal_1::Cairo::ugly_egg_filled(const acmacs::PointCoordinates& aCenter, Scaled aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Dash aOutlineDash, Color aFillColor)
+{
+    s_ugly_egg_filled(*this, aCenter, aDiameter, aAspect, aAngle, aOutlineColor, aOutlineWidth, aOutlineDash, aFillColor);
+
+} // acmacs::surface::internal_1::Cairo::ugly_egg_filled
 
 // ----------------------------------------------------------------------
 

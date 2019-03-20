@@ -47,6 +47,9 @@ void acmacs::draw::Points::draw_points(surface::Surface& surface) const
                     case acmacs::PointShape::Egg:
                         surface.egg_filled(layout->get(point_no), Pixels{*styl.size}, *styl.aspect, *styl.rotation, *styl.outline, *styl.outline_width, surface::Dash::NoDash, *styl.fill);
                         break;
+                    case acmacs::PointShape::UglyEgg:
+                        surface.ugly_egg_filled(layout->get(point_no), Pixels{*styl.size}, *styl.aspect, *styl.rotation, *styl.outline, *styl.outline_width, surface::Dash::NoDash, *styl.fill);
+                        break;
                     case acmacs::PointShape::Box:
                         surface.square_filled(layout->get(point_no), Pixels{*styl.size}, *styl.aspect, *styl.rotation, *styl.outline, *styl.outline_width, *styl.fill);
                         break;
