@@ -121,7 +121,7 @@ namespace acmacs::draw
                     if (!label_.empty()) {
                         const Pixels size{10};
                         const auto tsize = surface.text_size(label_, size);
-                        surface.text({center_[0] - tsize.width / 2, center_[1] + surface.convert(size_).value() / 2 + tsize.height}, label_, BLACK, size);
+                        surface.text({center_.x() - tsize.width / 2, center_.y() + surface.convert(size_).value() / 2 + tsize.height}, label_, BLACK, size);
                     }
                 }
             }
