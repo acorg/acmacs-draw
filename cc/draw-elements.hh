@@ -59,7 +59,7 @@ namespace acmacs::draw
     class DrawElements
     {
      public:
-        DrawElements(std::string filename, double size) : filename_(filename), size_(size) {}
+        DrawElements(std::string_view filename, double size) : filename_(filename), size_(size) {}
 
         void draw() const;
         const std::string& output() const { return output_; } // if filename_ is "//.json"

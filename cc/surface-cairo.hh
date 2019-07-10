@@ -111,7 +111,7 @@ namespace acmacs::surface
     class PdfCairo : public internal_1::Cairo
     {
       public:
-        PdfCairo(std::string aFilename, double aWidth, double aHeight, double aViewportWidth = default_canvas_width);
+        PdfCairo(std::string_view aFilename, double aWidth, double aHeight, double aViewportWidth = default_canvas_width);
         ~PdfCairo() override;
 
         cairo_t* cairo_context() override { return mCairoContext; }

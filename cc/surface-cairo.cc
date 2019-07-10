@@ -851,9 +851,9 @@ acmacs::Size acmacs::surface::internal_1::Cairo::text_size(std::string aText, Sc
 
 // ----------------------------------------------------------------------
 
-acmacs::surface::PdfCairo::PdfCairo(std::string aFilename, double aWidth, double aHeight, double aViewportWidth)
+acmacs::surface::PdfCairo::PdfCairo(std::string_view aFilename, double aWidth, double aHeight, double aViewportWidth)
 {
-    auto surface = cairo_pdf_surface_create(aFilename.empty() ? nullptr : aFilename.c_str(), aWidth, aHeight);
+    auto surface = cairo_pdf_surface_create(aFilename.empty() ? nullptr : std::string{aFilename}.c_str(), aWidth, aHeight);
     mCairoContext = cairo_create(surface);
     cairo_surface_destroy(surface);
     change_width_in_parent(aWidth);
