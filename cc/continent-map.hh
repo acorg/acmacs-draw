@@ -14,7 +14,7 @@ namespace acmacs::surface
 
 extern const char* const ContinentLabels[9];
 
-Color continent_color(std::string aContinent);
+// Color continent_color(std::string aContinent);
 void continent_map_draw(acmacs::surface::Surface& aSurface);
 acmacs::Size continent_map_size();
 double continent_map_aspect();
