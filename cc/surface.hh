@@ -68,20 +68,20 @@ namespace acmacs::surface
 
         virtual void circle(const PointCoordinates& aCenter, Pixels aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth) = 0;
         virtual void circle(const PointCoordinates& aCenter, Scaled aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth) = 0;
-        void circle(const PointCoordinates& aCenter, Pixels aDiameter, Color aOutlineColor, Pixels aOutlineWidth) { circle(aCenter, aDiameter, Aspect{1}, Rotation{0}, aOutlineColor, aOutlineWidth); }
-        void circle(const PointCoordinates& aCenter, Scaled aDiameter, Color aOutlineColor, Pixels aOutlineWidth) { circle(aCenter, aDiameter, Aspect{1}, Rotation{0}, aOutlineColor, aOutlineWidth); }
+        void circle(const PointCoordinates& aCenter, Pixels aDiameter, Color aOutlineColor, Pixels aOutlineWidth) { circle(aCenter, aDiameter, Aspect{1}, NoRotation, aOutlineColor, aOutlineWidth); }
+        void circle(const PointCoordinates& aCenter, Scaled aDiameter, Color aOutlineColor, Pixels aOutlineWidth) { circle(aCenter, aDiameter, Aspect{1}, NoRotation, aOutlineColor, aOutlineWidth); }
         virtual void circle_filled(const PointCoordinates& aCenter, Pixels aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Dash aOutlineDash, Color aFillColor) = 0;
         virtual void circle_filled(const PointCoordinates& aCenter, Scaled aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Dash aOutlineDash, Color aFillColor) = 0;
         virtual void egg(const PointCoordinates& aCenter, Pixels aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth) = 0;
         virtual void egg(const PointCoordinates& aCenter, Scaled aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth) = 0;
-        void egg(const PointCoordinates& aCenter, Pixels aDiameter, Color aOutlineColor, Pixels aOutlineWidth) { egg(aCenter, aDiameter, Aspect{1}, Rotation{0}, aOutlineColor, aOutlineWidth); }
-        void egg(const PointCoordinates& aCenter, Scaled aDiameter, Color aOutlineColor, Pixels aOutlineWidth) { egg(aCenter, aDiameter, Aspect{1}, Rotation{0}, aOutlineColor, aOutlineWidth); }
+        void egg(const PointCoordinates& aCenter, Pixels aDiameter, Color aOutlineColor, Pixels aOutlineWidth) { egg(aCenter, aDiameter, Aspect{1}, NoRotation, aOutlineColor, aOutlineWidth); }
+        void egg(const PointCoordinates& aCenter, Scaled aDiameter, Color aOutlineColor, Pixels aOutlineWidth) { egg(aCenter, aDiameter, Aspect{1}, NoRotation, aOutlineColor, aOutlineWidth); }
         virtual void egg_filled(const PointCoordinates& aCenter, Pixels aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Dash aOutlineDash, Color aFillColor) = 0;
         virtual void egg_filled(const PointCoordinates& aCenter, Scaled aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Dash aOutlineDash, Color aFillColor) = 0;
         virtual void ugly_egg(const PointCoordinates& aCenter, Pixels aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth) = 0;
         virtual void ugly_egg(const PointCoordinates& aCenter, Scaled aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth) = 0;
-        void ugly_egg(const PointCoordinates& aCenter, Pixels aDiameter, Color aOutlineColor, Pixels aOutlineWidth) { ugly_egg(aCenter, aDiameter, Aspect{1}, Rotation{0}, aOutlineColor, aOutlineWidth); }
-        void ugly_egg(const PointCoordinates& aCenter, Scaled aDiameter, Color aOutlineColor, Pixels aOutlineWidth) { ugly_egg(aCenter, aDiameter, Aspect{1}, Rotation{0}, aOutlineColor, aOutlineWidth); }
+        void ugly_egg(const PointCoordinates& aCenter, Pixels aDiameter, Color aOutlineColor, Pixels aOutlineWidth) { ugly_egg(aCenter, aDiameter, Aspect{1}, NoRotation, aOutlineColor, aOutlineWidth); }
+        void ugly_egg(const PointCoordinates& aCenter, Scaled aDiameter, Color aOutlineColor, Pixels aOutlineWidth) { ugly_egg(aCenter, aDiameter, Aspect{1}, NoRotation, aOutlineColor, aOutlineWidth); }
         virtual void ugly_egg_filled(const PointCoordinates& aCenter, Pixels aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Dash aOutlineDash, Color aFillColor) = 0;
         virtual void ugly_egg_filled(const PointCoordinates& aCenter, Scaled aDiameter, Aspect aAspect, Rotation aAngle, Color aOutlineColor, Pixels aOutlineWidth, Dash aOutlineDash, Color aFillColor) = 0;
         virtual void sector_filled(const PointCoordinates& aCenter, Scaled aDiameter, Rotation aStart, Rotation aEnd, Color aOutlineColor, Pixels aOutlineWidth, Color aRadiusColor, Pixels aRadiusWidth,
@@ -113,10 +113,10 @@ namespace acmacs::surface
         PointCoordinates arrow_head(const PointCoordinates& a, double angle, double sign, Color aColor, Pixels aArrowWidth, bool aFilled);
         void grid(Scaled aStep, Color aLineColor, Pixels aLineWidth);
 
-        virtual void text(const PointCoordinates& a, std::string aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle = TextStyle(), Rotation aRotation = Rotation{0}) = 0;
-        virtual void text(const PointCoordinates& a, std::string aText, Color aColor, Scaled aSize, const TextStyle& aTextStyle = TextStyle(), Rotation aRotation = Rotation{0}) = 0;
-        virtual void text_right_aligned(const PointCoordinates& aEnd, std::string aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle = TextStyle(), Rotation aRotation = Rotation{0}) = 0;
-        virtual void text_right_aligned(const PointCoordinates& aEnd, std::string aText, Color aColor, Scaled aSize, const TextStyle& aTextStyle = TextStyle(), Rotation aRotation = Rotation{0}) = 0;
+        virtual void text(const PointCoordinates& a, std::string aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle = TextStyle(), Rotation aRotation = NoRotation) = 0;
+        virtual void text(const PointCoordinates& a, std::string aText, Color aColor, Scaled aSize, const TextStyle& aTextStyle = TextStyle(), Rotation aRotation = NoRotation) = 0;
+        virtual void text_right_aligned(const PointCoordinates& aEnd, std::string aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle = TextStyle(), Rotation aRotation = NoRotation) = 0;
+        virtual void text_right_aligned(const PointCoordinates& aEnd, std::string aText, Color aColor, Scaled aSize, const TextStyle& aTextStyle = TextStyle(), Rotation aRotation = NoRotation) = 0;
         virtual Size text_size(std::string aText, Pixels aSize, const TextStyle& aTextStyle = TextStyle(), double* x_bearing = nullptr) = 0;
         virtual Size text_size(std::string aText, Scaled aSize, const TextStyle& aTextStyle = TextStyle(), double* x_bearing = nullptr) = 0;
 
