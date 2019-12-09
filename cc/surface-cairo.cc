@@ -172,8 +172,8 @@ class context
     }
 
     template <typename S> context& prepare_for_text(S aSize, const TextStyle& aTextStyle) { cairo_select_font_face(cairo_context(), (*aTextStyle.font_family).c_str(), cairo_font_slant(*aTextStyle.slant), cairo_font_weight(*aTextStyle.weight)); cairo_set_font_size(cairo_context(), convert(aSize)); return *this; }
-    context& show_text(std::string aText) { cairo_show_text(cairo_context(), aText.c_str()); return *this; }
-    context& text_extents(std::string aText, cairo_text_extents_t& extents) { cairo_text_extents(cairo_context(), aText.c_str(), &extents); return *this; }
+    context& show_text(std::string_view aText) { cairo_show_text(cairo_context(), aText.data()); return *this; }
+    context& text_extents(std::string_view aText, cairo_text_extents_t& extents) { cairo_text_extents(cairo_context(), aText.data(), &extents); return *this; }
 
       // if acmacs::PointCoordinates::x is negative - move_to, else - path_to. It assumes origin is {0,0}!!!
     context& move_to_negative_line_to_positive(std::vector<acmacs::PointCoordinates>::const_iterator first, std::vector<acmacs::PointCoordinates>::const_iterator last)
@@ -786,7 +786,7 @@ void acmacs::surface::internal_1::Cairo::path_fill_negative_move(const double* f
 
 // ----------------------------------------------------------------------
 
-template <typename S> static inline void s_text(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::PointCoordinates& a, std::string aText, Color aColor, S aSize, const acmacs::TextStyle& aTextStyle, Rotation aRotation)
+template <typename S> static inline void s_text(acmacs::surface::internal_1::Cairo& aSurface, const acmacs::PointCoordinates& a, std::string_view aText, Color aColor, S aSize, const acmacs::TextStyle& aTextStyle, Rotation aRotation)
 {
     context(aSurface)
             .prepare_for_text(aSize, aTextStyle)
@@ -797,7 +797,7 @@ template <typename S> static inline void s_text(acmacs::surface::internal_1::Cai
             .new_path();        // clear text path (bug in cairo?)
 }
 
-template <typename S> static inline acmacs::Size s_text_size(acmacs::surface::internal_1::Cairo& aSurface, std::string aText, S aSize, const acmacs::TextStyle& aTextStyle, double* x_bearing)
+template <typename S> static inline acmacs::Size s_text_size(acmacs::surface::internal_1::Cairo& aSurface, std::string_view aText, S aSize, const acmacs::TextStyle& aTextStyle, double* x_bearing)
 {
     cairo_text_extents_t text_extents;
     context(aSurface)
@@ -811,25 +811,25 @@ template <typename S> static inline acmacs::Size s_text_size(acmacs::surface::in
 
 // ----------------------------------------------------------------------
 
-void acmacs::surface::internal_1::Cairo::text(const acmacs::PointCoordinates& a, std::string aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle, Rotation aRotation)
+void acmacs::surface::internal_1::Cairo::text(const acmacs::PointCoordinates& a, std::string_view aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle, Rotation aRotation)
 {
     s_text(*this, a, aText, aColor, aSize, aTextStyle, aRotation);
 
 } // acmacs::surface::internal_1::Cairo::text
 
-void acmacs::surface::internal_1::Cairo::text(const acmacs::PointCoordinates& a, std::string aText, Color aColor, Scaled aSize, const TextStyle& aTextStyle, Rotation aRotation)
+void acmacs::surface::internal_1::Cairo::text(const acmacs::PointCoordinates& a, std::string_view aText, Color aColor, Scaled aSize, const TextStyle& aTextStyle, Rotation aRotation)
 {
     s_text(*this, a, aText, aColor, aSize, aTextStyle, aRotation);
 
 } // acmacs::surface::internal_1::Cairo::text
 
-void acmacs::surface::internal_1::Cairo::text_right_aligned(const acmacs::PointCoordinates& aEnd, std::string aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle, Rotation aRotation)
+void acmacs::surface::internal_1::Cairo::text_right_aligned(const acmacs::PointCoordinates& aEnd, std::string_view aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle, Rotation aRotation)
 {
     s_text(*this, {aEnd.x() - s_text_size(*this, aText, aSize, aTextStyle, nullptr).width, aEnd.y()}, aText, aColor, aSize, aTextStyle, aRotation);
 
 } // acmacs::surface::internal_1::Cairo::text_right_aligned
 
-void acmacs::surface::internal_1::Cairo::text_right_aligned(const acmacs::PointCoordinates& aEnd, std::string aText, Color aColor, Scaled aSize, const TextStyle& aTextStyle, Rotation aRotation)
+void acmacs::surface::internal_1::Cairo::text_right_aligned(const acmacs::PointCoordinates& aEnd, std::string_view aText, Color aColor, Scaled aSize, const TextStyle& aTextStyle, Rotation aRotation)
 {
     s_text(*this, {aEnd.x() - s_text_size(*this, aText, aSize, aTextStyle, nullptr).width, aEnd.y()}, aText, aColor, aSize, aTextStyle, aRotation);
 
@@ -837,13 +837,13 @@ void acmacs::surface::internal_1::Cairo::text_right_aligned(const acmacs::PointC
 
 // ----------------------------------------------------------------------
 
-acmacs::Size acmacs::surface::internal_1::Cairo::text_size(std::string aText, Pixels aSize, const TextStyle& aTextStyle, double* x_bearing)
+acmacs::Size acmacs::surface::internal_1::Cairo::text_size(std::string_view aText, Pixels aSize, const TextStyle& aTextStyle, double* x_bearing)
 {
     return s_text_size(*this, aText, aSize, aTextStyle, x_bearing);
 
 } // acmacs::surface::internal_1::Cairo::text_size
 
-acmacs::Size acmacs::surface::internal_1::Cairo::text_size(std::string aText, Scaled aSize, const TextStyle& aTextStyle, double* x_bearing)
+acmacs::Size acmacs::surface::internal_1::Cairo::text_size(std::string_view aText, Scaled aSize, const TextStyle& aTextStyle, double* x_bearing)
 {
     return s_text_size(*this, aText, aSize, aTextStyle, x_bearing);
 
@@ -853,7 +853,7 @@ acmacs::Size acmacs::surface::internal_1::Cairo::text_size(std::string aText, Sc
 
 acmacs::surface::PdfCairo::PdfCairo(std::string_view aFilename, double aWidth, double aHeight, double aViewportWidth)
 {
-    auto surface = cairo_pdf_surface_create(aFilename.empty() ? nullptr : std::string{aFilename}.c_str(), aWidth, aHeight);
+    auto surface = cairo_pdf_surface_create(aFilename.empty() ? nullptr : aFilename.data(), aWidth, aHeight);
     mCairoContext = cairo_create(surface);
     cairo_surface_destroy(surface);
     change_width_in_parent(aWidth);

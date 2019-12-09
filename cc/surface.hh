@@ -113,12 +113,12 @@ namespace acmacs::surface
         PointCoordinates arrow_head(const PointCoordinates& a, double angle, double sign, Color aColor, Pixels aArrowWidth, bool aFilled);
         void grid(Scaled aStep, Color aLineColor, Pixels aLineWidth);
 
-        virtual void text(const PointCoordinates& a, std::string aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle = TextStyle(), Rotation aRotation = NoRotation) = 0;
-        virtual void text(const PointCoordinates& a, std::string aText, Color aColor, Scaled aSize, const TextStyle& aTextStyle = TextStyle(), Rotation aRotation = NoRotation) = 0;
-        virtual void text_right_aligned(const PointCoordinates& aEnd, std::string aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle = TextStyle(), Rotation aRotation = NoRotation) = 0;
-        virtual void text_right_aligned(const PointCoordinates& aEnd, std::string aText, Color aColor, Scaled aSize, const TextStyle& aTextStyle = TextStyle(), Rotation aRotation = NoRotation) = 0;
-        virtual Size text_size(std::string aText, Pixels aSize, const TextStyle& aTextStyle = TextStyle(), double* x_bearing = nullptr) = 0;
-        virtual Size text_size(std::string aText, Scaled aSize, const TextStyle& aTextStyle = TextStyle(), double* x_bearing = nullptr) = 0;
+        virtual void text(const PointCoordinates& a, std::string_view aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle = TextStyle(), Rotation aRotation = NoRotation) = 0;
+        virtual void text(const PointCoordinates& a, std::string_view aText, Color aColor, Scaled aSize, const TextStyle& aTextStyle = TextStyle(), Rotation aRotation = NoRotation) = 0;
+        virtual void text_right_aligned(const PointCoordinates& aEnd, std::string_view aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle = TextStyle(), Rotation aRotation = NoRotation) = 0;
+        virtual void text_right_aligned(const PointCoordinates& aEnd, std::string_view aText, Color aColor, Scaled aSize, const TextStyle& aTextStyle = TextStyle(), Rotation aRotation = NoRotation) = 0;
+        virtual Size text_size(std::string_view aText, Pixels aSize, const TextStyle& aTextStyle = TextStyle(), double* x_bearing = nullptr) = 0;
+        virtual Size text_size(std::string_view aText, Scaled aSize, const TextStyle& aTextStyle = TextStyle(), double* x_bearing = nullptr) = 0;
 
         Scaled convert(Pixels a) const { return Scaled{a.value() / scale()}; }
         Scaled convert(Scaled a) const { return a; }
