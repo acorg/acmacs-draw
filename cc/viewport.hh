@@ -114,9 +114,9 @@ template <> struct fmt::formatter<acmacs::Viewport> : public fmt::formatter<acma
 {
     template <typename FormatContext> auto format(const acmacs::Viewport& viewport, FormatContext& ctx)
     {
-        format_to(ctx.out(), "Viewport[{:{}}, {:{}}, {:{}}", viewport.left(), format_float, viewport.top(), format_float, viewport.size.width, format_float);
+        format_to(ctx.out(), "Viewport[{}, {}, {}", format_val(viewport.left()), format_val(viewport.top()), format_val(viewport.size.width));
         if (!float_equal(viewport.size.width, viewport.size.height))
-            format_to(ctx.out(), ", {:{}}", viewport.size.height, format_float);
+            format_to(ctx.out(), ", {}", format_val(viewport.size.height));
         return format_to(ctx.out(), "]");
     }
 };
