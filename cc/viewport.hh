@@ -74,22 +74,28 @@ namespace acmacs
         // zoom out viewport to make width a whole number)
         void whole_width() { zoom(std::ceil(size.width) / size.width); }
 
-        double left() const { return origin.x(); }
-        double right() const { return origin.x() + size.width; }
-        double top() const { return origin.y(); }
-        double bottom() const { return origin.y() + size.height; }
+        constexpr double left() const { return origin.x(); }
+        constexpr double right() const { return origin.x() + size.width; }
+        constexpr double top() const { return origin.y(); }
+        constexpr double bottom() const { return origin.y() + size.height; }
         PointCoordinates top_right() const { return origin + PointCoordinates(size.width, 0); }
         PointCoordinates bottom_right() const { return origin + size; }
         PointCoordinates bottom_left() const { return origin + PointCoordinates(0, size.height); }
         PointCoordinates center() const { return origin + size * 0.5; }
         PointCoordinates top_center() const { return origin + PointCoordinates(size.width / 2, 0); }
 
-        Scaled left_scaled() const { return Scaled{left()}; }
-        Scaled right_scaled() const { return Scaled{right()}; }
-        Scaled top_scaled() const { return Scaled{top()}; }
-        Scaled bottom_scaled() const { return Scaled{bottom()}; }
+        constexpr Scaled left_scaled() const { return Scaled{left()}; }
+        constexpr Scaled right_scaled() const { return Scaled{right()}; }
+        constexpr Scaled top_scaled() const { return Scaled{top()}; }
+        constexpr Scaled bottom_scaled() const { return Scaled{bottom()}; }
 
         bool empty() const { return size.empty(); }
+
+        bool is_overlap(const Viewport& rhs) const
+        {
+            // https://stackoverflow.com/questions/20925818/algorithm-to-check-if-two-boxes-overlap
+            return left() < rhs.right() && rhs.left() < right() && top() < rhs.bottom() && rhs.top() < bottom();
+        }
 
         PointCoordinates origin;
         Size size;
@@ -98,18 +104,22 @@ namespace acmacs
 
     }; // class Viewport
 
-    // ----------------------------------------------------------------------
-
-    inline std::ostream& operator<<(std::ostream& out, const Viewport& aViewport)
-    {
-        out << "Viewport[" << std::fixed << std::setw(5) << std::setprecision(2) << aViewport.origin.x() << ", " << aViewport.origin.y() << ", " << aViewport.size.width;
-        if (!float_equal(aViewport.size.width, aViewport.size.height))
-            out << ", " << aViewport.size.height;
-        return out << ']';
-    }
-
 } // namespace acmacs
 
+// ----------------------------------------------------------------------
+
+// format for Viewport is format for double of each value (left, top, width, height), e.g. :.8f
+
+template <> struct fmt::formatter<acmacs::Viewport> : public fmt::formatter<acmacs::fmt_float_formatter>
+{
+    template <typename FormatContext> auto format(const acmacs::Viewport& viewport, FormatContext& ctx)
+    {
+        format_to(ctx.out(), "Viewport[{:{}}, {:{}}, {:{}}", viewport.left(), format_float, viewport.top(), format_float, viewport.size.width, format_float);
+        if (!float_equal(viewport.size.width, viewport.size.height))
+            format_to(ctx.out(), ", {:{}}", viewport.size.height, format_float);
+        return format_to(ctx.out(), "]");
+    }
+};
 
 // ----------------------------------------------------------------------
 /// Local Variables:

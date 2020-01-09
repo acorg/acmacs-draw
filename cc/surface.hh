@@ -187,14 +187,18 @@ namespace acmacs::surface
 
     }; // class SurfaceChild<Parent>
 
-    // ----------------------------------------------------------------------
-
-    inline std::ostream& operator<<(std::ostream& out, const Surface& aSurface)
-    {
-        return out << "Surface(" << aSurface.viewport() << ", Origin" << aSurface.origin_in_parent() << ", width=" << aSurface.width_in_parent() << ')';
-    }
-
 } // namespace acmacs::surface
+
+// ----------------------------------------------------------------------
+
+template <> struct fmt::formatter<acmacs::surface::Surface> : public fmt::formatter<acmacs::fmt_default_formatter>
+{
+    template <typename FormatContext> auto format(const acmacs::surface::Surface& surface, FormatContext& ctx)
+    {
+        return format_to(ctx.out(), "Surface[{}, Origin{}, width={}]", surface.viewport(), surface.origin_in_parent(), surface.width_in_parent());
+    }
+};
+
 
 // ----------------------------------------------------------------------
 /// Local Variables:
