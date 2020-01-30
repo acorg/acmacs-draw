@@ -83,6 +83,9 @@ namespace acmacs
         PointCoordinates bottom_left() const { return origin + PointCoordinates(0, size.height); }
         PointCoordinates center() const { return origin + size * 0.5; }
         PointCoordinates top_center() const { return origin + PointCoordinates(size.width / 2, 0); }
+        PointCoordinates bottom_center() const { return origin + PointCoordinates(size.width / 2, size.height); }
+        PointCoordinates left_center() const { return origin + PointCoordinates(0, size.height / 2); }
+        PointCoordinates right_center() const { return origin + PointCoordinates(size.width, size.height / 2); }
 
         constexpr Scaled left_scaled() const { return Scaled{left()}; }
         constexpr Scaled right_scaled() const { return Scaled{right()}; }
