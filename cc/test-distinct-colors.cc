@@ -1,3 +1,4 @@
+#include "acmacs-base/color-distinct.hh"
 #include "surface-cairo.hh"
 
 // ----------------------------------------------------------------------
@@ -26,34 +27,14 @@ int main(int argc, const char *argv[])
 
 // ----------------------------------------------------------------------
 
-// static const char* ana_colors[] =
-// {
-//     "#03569b",
-//     "#e72f27",
-//     "#ffc808",
-//     "#a2b324",
-//     "#a5b8c7",
-//     "#049457",
-//     "#f1b066",
-//     "#742f32",
-//     "#9e806e",
-//     "#75ada9",
-//     "#675b2c",
-//     "#a020f0",
-//     "#8b8989",
-//     "#e9a390",
-//     "#dde8cf",
-//     "#00939f",
-// };
-
 void draw(acmacs::surface::Surface& aSurface)
 {
-    aSurface.text({10, 20}, "Ana", "black", Pixels{12});
+    aSurface.text({10, 20}, "Ana", BLACK, Pixels{12});
     double diameter = 15;
     double x = diameter * 2, y = 60;
-    for (auto entry: Color::distinct()) {
-        aSurface.circle_filled({x, y}, Pixels{diameter}, AspectNormal, NoRotation, "black", Pixels{1}, acmacs::surface::Dash::NoDash, entry);
-        aSurface.text({x + diameter * 2, y + diameter * 0.5}, entry.to_string(), entry, Pixels{12});
+    for (auto entry: acmacs::color::distinct()) {
+        aSurface.circle_filled({x, y}, Pixels{diameter}, AspectNormal, NoRotation, BLACK, Pixels{1}, acmacs::surface::Dash::NoDash, entry);
+        aSurface.text({x + diameter * 2, y + diameter * 0.5}, fmt::format("{}", entry), entry, Pixels{12});
         y += diameter * 3;
     }
 }

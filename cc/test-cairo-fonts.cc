@@ -60,7 +60,7 @@ double show(acmacs::surface::Surface& aSurface, const acmacs::PointCoordinates& 
     const double interline = 1.1;
     acmacs::TextStyle style(font_name);
     auto text_size = aSurface.text_size("W", Scaled{size}, style);
-    aSurface.text({origin.x(), origin.y() + text_size.height * interline}, font_name, "black", Scaled{size}, style);
+    aSurface.text({origin.x(), origin.y() + text_size.height * interline}, font_name, BLACK, Scaled{size}, style);
     return text_size.height * interline;
 
 } // show

@@ -1,4 +1,5 @@
 #include "acmacs-base/pybind11.hh"
+#include "acmacs-base/color-distinct.hh"
 #include "surface-cairo.hh"
 
 // ----------------------------------------------------------------------
@@ -15,15 +16,17 @@ PYBIND11_MODULE(acmacs_draw_backend, m)
       // Color
       // ----------------------------------------------------------------------
 
+    const auto color_to_string = [](const Color& color) { return fmt::format("{}", color); };
+
     py::class_<Color>(m, "Color")
             .def(py::init<std::string>(), py::arg("color") = "black")
-            .def("__str__", &Color::to_string)
-            .def("to_string", &Color::to_string)
-            .def("to_hex_string", &Color::to_string)
+            .def("__str__", color_to_string)
+            .def("to_string", color_to_string)
+            .def("to_hex_string", color_to_string)
             .def("light", &Color::light)
             ;
 
-    m.def("distinct_colors", &Color::distinct_s);
+    m.def("distinct_colors", &acmacs::color::distinct_s);
 
     py::class_<acmacs::surface::Surface>(m, "Surface")
             .def("subsurface_s", [](Surface& aSurface, double x, double y, double width, double sub_width, double sub_height, bool clip) -> Surface& { return aSurface.subsurface({x, y}, Scaled{width}, Size{sub_width, sub_height}, clip); }, py::arg("origin_x"), py::arg("origin_y"), py::arg("width_in_parent"), py::arg("viewport_width"), py::arg("viewport_height"), py::arg("clip"), py::return_value_policy::reference)

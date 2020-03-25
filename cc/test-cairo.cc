@@ -39,7 +39,7 @@ void draw(acmacs::surface::Surface& aSurface)
     aSurface.grid(Scaled{aSurface.viewport().size.width / 10}, 0xC0808080, Pixels{1});
     aSurface.rectangle(v.origin, v.size, 0xC0808080, Pixels{2});
 
-    aSurface.line({150, 50}, {950, 160}, "red2", Pixels{2});
+    aSurface.line({150, 50}, {950, 160}, Color{"red2"}, Pixels{2});
     aSurface.circle_filled({100, 200}, Scaled{50}, Aspect{0.5}, Rotation{0.25}, BLACK, Pixels{1}, acmacs::surface::Dash::NoDash, 0xC0FF0000);
     aSurface.circle_filled({150, 200}, Pixels{10}, Aspect{1.4}, Rotation{0.75}, BLACK, Pixels{1}, acmacs::surface::Dash::NoDash, 0xC0FFB000);
     aSurface.square_filled({200, 200}, Scaled{50}, Aspect{1.0}, Rotation{1.0}, BLACK, Pixels{1}, 0xC0FF00B0);
@@ -47,18 +47,18 @@ void draw(acmacs::surface::Surface& aSurface)
     aSurface.triangle_filled({300, 200}, Scaled{50}, Aspect{1.0}, Rotation{0.0}, BLACK, Pixels{1}, 0xC000B0B0);
     aSurface.triangle_filled({350, 200}, Pixels{10}, Aspect{1.0}, Rotation{0.0}, BLACK, Pixels{1}, 0xC000B0B0);
 
-    aSurface.double_arrow({100, 300}, {600, 250}, "blue", Pixels{2}, Pixels{6});
+    aSurface.double_arrow({100, 300}, {600, 250}, BLUE, Pixels{2}, Pixels{6});
 
-    aSurface.text({700, 500}, "Pan-dan", "magenta", Scaled{30});
+    aSurface.text({700, 500}, "Pan-dan", MAGENTA, Scaled{30});
     acmacs::Size s1 = aSurface.text_size("Pan-dan", Scaled{30});
-    aSurface.text({700 + s1.width, 500}, "-dati", "magenta", Scaled{30});
+    aSurface.text({700 + s1.width, 500}, "-dati", MAGENTA, Scaled{30});
 
-    aSurface.text({700, 550}, "Pan-dan", "magenta", Pixels{10});
+    aSurface.text({700, 550}, "Pan-dan", MAGENTA, Pixels{10});
     acmacs::Size s2 = aSurface.text_size("Pan-dan", Pixels{10});
-    aSurface.text({700 + s2.width, 550}, "-dati", "purple", Pixels{10});
+    aSurface.text({700 + s2.width, 550}, "-dati", PURPLE, Pixels{10});
 
-      // aSurface.text({700, 600}, "Wan-dan-dati", "blue", 20);
-      // aSurface.text({700, 700}, "Wan-dan-dati", "blue", 30);
+      // aSurface.text({700, 600}, "Wan-dan-dati", BLUE, 20);
+      // aSurface.text({700, 700}, "Wan-dan-dati", BLUE, 30);
 }
 
 // ----------------------------------------------------------------------
