@@ -39,22 +39,22 @@ void acmacs::draw::Points::draw_points(surface::Surface& surface) const
 
     for (auto point_no : drawing_order_) {
         if (layout->point_has_coordinates(point_no)) {
-            if (const auto& styl = style(point_no); *styl.shown) {
-                switch (*styl.shape) {
+            if (const auto& styl = style(point_no); styl.shown) {
+                switch (styl.shape) {
                     case acmacs::PointShape::Circle:
-                        surface.circle_filled(layout->at(point_no), Pixels{*styl.size}, *styl.aspect, *styl.rotation, color::get(*styl.outline), *styl.outline_width, surface::Dash::NoDash, color::get(*styl.fill));
+                        surface.circle_filled(layout->at(point_no), Pixels{styl.size}, styl.aspect, styl.rotation, color::get(styl.outline), styl.outline_width, surface::Dash::NoDash, color::get(styl.fill));
                         break;
                     case acmacs::PointShape::Egg:
-                        surface.egg_filled(layout->at(point_no), Pixels{*styl.size}, *styl.aspect, *styl.rotation, color::get(*styl.outline), *styl.outline_width, surface::Dash::NoDash, color::get(*styl.fill));
+                        surface.egg_filled(layout->at(point_no), Pixels{styl.size}, styl.aspect, styl.rotation, color::get(styl.outline), styl.outline_width, surface::Dash::NoDash, color::get(styl.fill));
                         break;
                     case acmacs::PointShape::UglyEgg:
-                        surface.ugly_egg_filled(layout->at(point_no), Pixels{*styl.size}, *styl.aspect, *styl.rotation, color::get(*styl.outline), *styl.outline_width, surface::Dash::NoDash, color::get(*styl.fill));
+                        surface.ugly_egg_filled(layout->at(point_no), Pixels{styl.size}, styl.aspect, styl.rotation, color::get(styl.outline), styl.outline_width, surface::Dash::NoDash, color::get(styl.fill));
                         break;
                     case acmacs::PointShape::Box:
-                        surface.square_filled(layout->at(point_no), Pixels{*styl.size}, *styl.aspect, *styl.rotation, color::get(*styl.outline), *styl.outline_width, color::get(*styl.fill));
+                        surface.square_filled(layout->at(point_no), Pixels{styl.size}, styl.aspect, styl.rotation, color::get(styl.outline), styl.outline_width, color::get(styl.fill));
                         break;
                     case acmacs::PointShape::Triangle:
-                        surface.triangle_filled(layout->at(point_no), Pixels{*styl.size}, *styl.aspect, *styl.rotation, color::get(*styl.outline), *styl.outline_width, color::get(*styl.fill));
+                        surface.triangle_filled(layout->at(point_no), Pixels{styl.size}, styl.aspect, styl.rotation, color::get(styl.outline), styl.outline_width, color::get(styl.fill));
                         break;
                 }
             }
@@ -73,20 +73,20 @@ void acmacs::draw::Points::draw_points(surface::Surface& surface) const
 //     surface.context_assign("lineCap", "\"butt\"");
 //     for (auto point_no : drawing_order_) {
 //         if (layout->point_has_coordinates(point_no)) {
-//             if (const auto& styl = style(point_no); *styl.shown) {
+//             if (const auto& styl = style(point_no); styl.shown) {
 //                 surface::JsStatic::ContextSave save(surface);
 //                 const auto coord = layout->at(point_no);
-//                 const auto size = surface.convert(*styl.size);
+//                 const auto size = surface.convert(styl.size);
 //                 const auto aspect = styl.aspect->value();
-//                 surface.context_assign("lineWidth", *styl.outline_width);
-//                 surface.context_assign("fillStyle", *styl.fill);
-//                 surface.context_assign("strokeStyle", *styl.outline);
+//                 surface.context_assign("lineWidth", styl.outline_width);
+//                 surface.context_assign("fillStyle", styl.fill);
+//                 surface.context_assign("strokeStyle", styl.outline);
 //                 surface.context_func("translate", coord[0], coord[1]);
-//                 if (*styl.rotation != NoRotation)
-//                     surface.context_func("rotate", *styl.rotation);
-//                 switch (*styl.shape) {
+//                 if (styl.rotation != NoRotation)
+//                     surface.context_func("rotate", styl.rotation);
+//                 switch (styl.shape) {
 //                     case acmacs::PointShape::Circle:
-//                         if (*styl.aspect != AspectNormal)
+//                         if (styl.aspect != AspectNormal)
 //                             surface.context_func("scale", aspect, 1);
 //                         surface.context_func("beginPath");
 //                         surface.context_func("arc", 0, 0, size / 2, 0, "2*Math.PI");
@@ -133,7 +133,7 @@ void acmacs::draw::Points::draw_points(surface::Surface& surface) const
 //         set_if_not_default("size", styl.size);
 //         set_if_not_default("rotation", styl.rotation);
 //         set_if_not_default("aspect", styl.aspect);
-//         target_style.set_field("shape", rjson::v1::string{*styl.shape});
+//         target_style.set_field("shape", rjson::v1::string{styl.shape});
 //         target_styles.insert(std::move(target_style));
 //     }
 
@@ -160,9 +160,9 @@ void acmacs::draw::Points::draw_labels(surface::Surface& surface) const
         std::shared_ptr<Layout> layout{layout_->transform(transformation_)};
         for (const auto& label : *labels_) {
             const auto index = label.index();
-            if (const auto styl = style(index); *styl.shown) {
+            if (const auto styl = style(index); styl.shown) {
                 if (auto text_origin = layout->at(index).copy(); text_origin.exists()) { // point is not disconnected (coordinates exist)
-                    const double scaled_point_size = surface.convert(Pixels{*styl.size}).value();
+                    const double scaled_point_size = surface.convert(Pixels{styl.size}).value();
                     const acmacs::Size ts = surface.text_size(label.display_name(), label.text_size(), label.text_style());
                     text_origin[number_of_dimensions_t{0}] += label.text_offset(label.offset().x(), scaled_point_size, ts.width, false);
                     text_origin[number_of_dimensions_t{1}] += label.text_offset(label.offset().y(), scaled_point_size, ts.height, true);

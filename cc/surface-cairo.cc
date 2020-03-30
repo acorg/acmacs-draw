@@ -171,7 +171,7 @@ class context
         return *this;
     }
 
-    template <typename S> context& prepare_for_text(S aSize, const TextStyle& aTextStyle) { cairo_select_font_face(cairo_context(), (*aTextStyle.font_family).c_str(), cairo_font_slant(*aTextStyle.slant), cairo_font_weight(*aTextStyle.weight)); cairo_set_font_size(cairo_context(), convert(aSize)); return *this; }
+    template <typename S> context& prepare_for_text(S aSize, const TextStyle& aTextStyle) { cairo_select_font_face(cairo_context(), (aTextStyle.font_family).c_str(), cairo_font_slant(aTextStyle.slant), cairo_font_weight(aTextStyle.weight)); cairo_set_font_size(cairo_context(), convert(aSize)); return *this; }
     context& show_text(std::string_view aText) { cairo_show_text(cairo_context(), aText.data()); return *this; }
     context& text_extents(std::string_view aText, cairo_text_extents_t& extents) { cairo_text_extents(cairo_context(), aText.data(), &extents); return *this; }
 
