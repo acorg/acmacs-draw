@@ -108,7 +108,7 @@ namespace acmacs::draw
                         line_height_ = line_size.height;
                 }
                 const double padding = surface.convert(padding_).value();
-                size({width + padding * 2, line_height_ * (lines_.size() - 1) * interline_ + line_height_ + padding * 2});
+                size({width + padding * 2, line_height_ * static_cast<double>(lines_.size() - 1) * interline_ + line_height_ + padding * 2});
             }
 
         }; // class Box

@@ -38,7 +38,7 @@ void draw(acmacs::surface::Surface& aSurface, const std::vector<std::string>& fo
     const size_t columns = 3;
     const size_t column_size = fonts.size() / columns + 1;
     const auto f_size = aSurface.text_size("W", Scaled{1});
-    const double size = aSurface.viewport().size.height / (column_size * f_size.height * 1.15);
+    const double size = aSurface.viewport().size.height / (static_cast<double>(column_size) * f_size.height * 1.15);
     std::cout << "fonts:" << fonts.size() << " size:" << size << std::endl;
 
     // aSurface.background("white");
