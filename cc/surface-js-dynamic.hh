@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "acmacs-base/color.hh"
-#include "acmacs-base/rjson.hh"
+#include "acmacs-base/rjson-v2.hh"
 #include "acmacs-draw/viewport.hh"
 
 // ----------------------------------------------------------------------
