@@ -600,7 +600,7 @@ template <typename S> static inline void s_square_filled(acmacs::surface::intern
             .set_line_cap(aLineCap)
             .translate(aCenter)
             .rotate(aAngle)
-            .rectangle(- aSide / 2 * aAspect.value(), - aSide / 2, aSide / 2 * aAspect.value(), aSide / 2)
+            .rectangle(- aSide / 2 * aAspect, - aSide / 2, aSide / 2 * aAspect, aSide / 2)
             .set_source_rgba(aFillColor)
             .fill_preserve()
             .set_source_rgba(aOutlineColor)
