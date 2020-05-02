@@ -94,7 +94,8 @@ namespace acmacs::draw
         template <typename Surface> void draw(Surface&& surface) const
             {
                 for (auto stage = drawing_stage::__first; stage != drawing_stage::__last; increment(stage)) {
-                    for (auto& element : elements_) {
+                    for (const auto& element : elements_) {
+                        // AD_DEBUG("draw {} stage:{}", typeid(*element).name(), stage);
                         element->draw(stage, surface);
                     }
                 }
