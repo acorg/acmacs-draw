@@ -109,7 +109,9 @@ namespace acmacs::surface
         virtual void path_fill(std::vector<PointCoordinates>::const_iterator first, std::vector<PointCoordinates>::const_iterator last, Color aFillColor) = 0;
         virtual void path_fill(const double* first, const double* last, Color aFillColor) = 0;
 
-        void double_arrow(const PointCoordinates& a, const PointCoordinates& b, Color aColor, Pixels aLineWidth, Pixels aArrowWidth);
+        enum class arrow_head_at { first, second, both };
+        void arrow(const PointCoordinates& a, const PointCoordinates& b, Color aColor, Pixels aLineWidth, Pixels aArrowWidth, arrow_head_at aha);
+        void double_arrow(const PointCoordinates& a, const PointCoordinates& b, Color aColor, Pixels aLineWidth, Pixels aArrowWidth) { arrow(a, b, aColor, aLineWidth, aArrowWidth, arrow_head_at::both); }
         PointCoordinates arrow_head(const PointCoordinates& a, double angle, double sign, Color aColor, Pixels aArrowWidth, bool aFilled);
         void grid(Scaled aStep, Color aLineColor, Pixels aLineWidth);
 
