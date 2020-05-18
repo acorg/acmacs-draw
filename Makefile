@@ -39,13 +39,14 @@ LDLIBS = $(AD_LIB)/$(call shared_lib_name,libacmacsbase,1,0) $(CAIRO_LIBS) $(CXX
 
 # ----------------------------------------------------------------------
 
-install: install-headers $(TARGETS)
+install: install-headers make-installation-dirs $(TARGETS)
 	$(call install_lib,$(ACMACS_DRAW_LIB))
 	$(call install_py_lib,$(ACMACS_DRAW_PY_LIB))
 
 install-disabled:
-	@#mkdir -p $(AD_SHARE)/js/draw; ln -sf $(shell pwd)/js/* $(AD_SHARE)/js/draw
-	@#ln -sf $(shell pwd)/bin/* $(AD_BIN)
+	$(call make_dir,$(AD_SHARE)/js/draw)
+    #ln -sf $(shell pwd)/js/* $(AD_SHARE)/js/draw
+	#ln -sf $(shell pwd)/bin/* $(AD_BIN)
 
 test: install $(DIST)/test-cairo $(DIST)/test-cairo-fonts $(DIST)/test-distinct-colors
 ifneq ($(DEBUG),1)
