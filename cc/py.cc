@@ -23,7 +23,7 @@ PYBIND11_MODULE(acmacs_draw_backend, m)
             .def("__str__", color_to_string)
             .def("to_string", color_to_string)
             .def("to_hex_string", color_to_string)
-            .def("light", &Color::light)
+            // .def("light", &Color::light)
             ;
 
     m.def("distinct_colors", &acmacs::color::distinct_s);

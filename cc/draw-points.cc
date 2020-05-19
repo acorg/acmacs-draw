@@ -42,19 +42,19 @@ void acmacs::draw::Points::draw_points(surface::Surface& surface) const
             if (const auto& styl = style(point_no); styl.shown()) {
                 switch (styl.shape()) {
                     case acmacs::PointShape::Circle:
-                        surface.circle_filled(layout->at(point_no), styl.size(), styl.aspect(), styl.rotation(), color::get(styl.outline()), styl.outline_width(), surface::Dash::NoDash, color::get(styl.fill()));
+                        surface.circle_filled(layout->at(point_no), styl.size(), styl.aspect(), styl.rotation(), styl.outline(), styl.outline_width(), surface::Dash::NoDash, styl.fill());
                         break;
                     case acmacs::PointShape::Egg:
-                        surface.egg_filled(layout->at(point_no), styl.size(), styl.aspect(), styl.rotation(), color::get(styl.outline()), styl.outline_width(), surface::Dash::NoDash, color::get(styl.fill()));
+                        surface.egg_filled(layout->at(point_no), styl.size(), styl.aspect(), styl.rotation(), styl.outline(), styl.outline_width(), surface::Dash::NoDash, styl.fill());
                         break;
                     case acmacs::PointShape::UglyEgg:
-                        surface.ugly_egg_filled(layout->at(point_no), styl.size(), styl.aspect(), styl.rotation(), color::get(styl.outline()), styl.outline_width(), surface::Dash::NoDash, color::get(styl.fill()));
+                        surface.ugly_egg_filled(layout->at(point_no), styl.size(), styl.aspect(), styl.rotation(), styl.outline(), styl.outline_width(), surface::Dash::NoDash, styl.fill());
                         break;
                     case acmacs::PointShape::Box:
-                        surface.square_filled(layout->at(point_no), styl.size(), styl.aspect(), styl.rotation(), color::get(styl.outline()), styl.outline_width(), color::get(styl.fill()));
+                        surface.square_filled(layout->at(point_no), styl.size(), styl.aspect(), styl.rotation(), styl.outline(), styl.outline_width(), styl.fill());
                         break;
                     case acmacs::PointShape::Triangle:
-                        surface.triangle_filled(layout->at(point_no), styl.size(), styl.aspect(), styl.rotation(), color::get(styl.outline()), styl.outline_width(), color::get(styl.fill()));
+                        surface.triangle_filled(layout->at(point_no), styl.size(), styl.aspect(), styl.rotation(), styl.outline(), styl.outline_width(), styl.fill());
                         break;
                 }
             }
