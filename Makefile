@@ -10,9 +10,19 @@ TARGETS = \
 
 SRC_DIR = $(abspath $(ACMACSD_ROOT)/sources)
 
-ACMACS_DRAW_SOURCES = continent-path.cc continent-map.cc geographic-path.cc geographic-map.cc \
-  surface.cc surface-cairo.cc \
-  draw-elements.cc draw-grid.cc draw-legend.cc draw-points.cc draw-arrow.cc
+ACMACS_DRAW_SOURCES = \
+  draw-elements.cc    \
+  surface-cairo.cc    \
+  draw-points.cc      \
+  draw-arrow.cc       \
+  draw-legend.cc      \
+  surface.cc          \
+  continent-map.cc    \
+  geographic-map.cc   \
+  draw-grid.cc        \
+  continent-path.cc   \
+  geographic-path.cc
+
 # surface-html.cc surface-js-dynamic.cc surface-js-static.cc
 
 ACMACS_DRAW_PY_SOURCES = py.cc $(ACMACS_DRAW_SOURCES)
