@@ -193,7 +193,7 @@ namespace acmacs::surface
 
 // ----------------------------------------------------------------------
 
-template <> struct fmt::formatter<acmacs::surface::Surface> : public fmt::formatter<acmacs::fmt_default_formatter>
+template <> struct fmt::formatter<acmacs::surface::Surface> : public fmt::formatter<acmacs::fmt_helper::default_formatter>
 {
     template <typename FormatContext> auto format(const acmacs::surface::Surface& surface, FormatContext& ctx)
     {

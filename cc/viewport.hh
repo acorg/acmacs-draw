@@ -113,7 +113,7 @@ namespace acmacs
 
 // format for Viewport is format for double of each value (left, top, width, height), e.g. :.8f
 
-template <> struct fmt::formatter<acmacs::Viewport> : public fmt::formatter<acmacs::fmt_float_formatter>
+template <> struct fmt::formatter<acmacs::Viewport> : public fmt::formatter<acmacs::fmt_helper::float_formatter>
 {
     template <typename FormatContext> auto format(const acmacs::Viewport& viewport, FormatContext& ctx)
     {
