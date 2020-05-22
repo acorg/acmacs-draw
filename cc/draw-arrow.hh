@@ -53,7 +53,7 @@ namespace acmacs::draw
 
     }; // class LineDefinedByEquation
 
-// ----------------------------------------------------------------------
+    // ----------------------------------------------------------------------
 
     class Path : public Element
     {
@@ -71,7 +71,7 @@ namespace acmacs::draw
 
     }; // class Path
 
-// ----------------------------------------------------------------------
+    // ----------------------------------------------------------------------
 
     class Arrow : public Line
     {
@@ -88,7 +88,7 @@ namespace acmacs::draw
 
     }; // class Arrow
 
-// ----------------------------------------------------------------------
+    // ----------------------------------------------------------------------
 
     class Rectangle : public Element
     {
@@ -106,7 +106,7 @@ namespace acmacs::draw
 
     }; // class Rectangle
 
-// ----------------------------------------------------------------------
+    // ----------------------------------------------------------------------
 
     template <typename ScaledOrPixels> class Circle : public Element
     {
@@ -138,7 +138,7 @@ namespace acmacs::draw
 
     }; // class Circle
 
-// ----------------------------------------------------------------------
+    // ----------------------------------------------------------------------
 
     class Sector : public Element
     {
@@ -167,7 +167,7 @@ namespace acmacs::draw
 
     }; // class Circle
 
-// ----------------------------------------------------------------------
+    // ----------------------------------------------------------------------
 
     class SerumCircle : public Sector
     {
@@ -183,6 +183,27 @@ namespace acmacs::draw
         const Transformation transformation_;
 
     }; // class SerumCircle
+
+    // ----------------------------------------------------------------------
+
+    class PathWithArrows : public Element // to support map_elements::v2::Path in acmacs-map-draw
+    {
+     public:
+        PathWithArrows(const std::vector<PointCoordinates>& path, bool close, Color fill, Color outline, Pixels outline_width)
+            : path_{path}, close_{close}, fill_{fill}, outline_{outline}, outline_width_{outline_width} {}
+
+        void draw(drawing_stage stage, surface::Surface& surface) const override;
+
+     private:
+        const std::vector<PointCoordinates> path_;
+        bool close_;
+        const Color fill_, outline_;
+        const Pixels outline_width_;
+
+    }; // class Path
+
+    // ----------------------------------------------------------------------
+
 
 } // namespace acmacs::draw
 

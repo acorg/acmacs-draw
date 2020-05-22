@@ -108,6 +108,21 @@ void acmacs::draw::SerumCircle::draw(drawing_stage stage, surface::Surface& surf
 } // acmacs::draw::SerumCircle::draw
 
 // ----------------------------------------------------------------------
+
+void acmacs::draw::PathWithArrows::draw(drawing_stage stage, surface::Surface& surface) const
+{
+    if (stage == drawing_stage::procrustes_arrows) {
+        surface.path_outline(std::begin(path_), std::end(path_), outline_, outline_width_, close_);
+        if (close_)
+            surface.path_fill(std::begin(path_), std::end(path_), fill_);
+    }
+
+} // acmacs::draw::PathWithArrows::draw
+
+// ----------------------------------------------------------------------
+
+
+// ----------------------------------------------------------------------
 /// Local Variables:
 /// eval: (if (fboundp 'eu-rename-buffer) (eu-rename-buffer))
 /// End:
