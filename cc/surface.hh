@@ -4,7 +4,6 @@
 #include <memory>
 #include <cassert>
 
-#include "acmacs-base/log.hh"
 #include "acmacs-base/color.hh"
 #include "acmacs-base/size-scale.hh"
 #include "acmacs-base/text-style.hh"
