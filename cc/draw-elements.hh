@@ -55,6 +55,7 @@ namespace acmacs::draw
     class Title;
     class Legend;
     class Points;
+    class Path;
 
     class DrawElements
     {
@@ -73,7 +74,7 @@ namespace acmacs::draw
         Points& points(std::shared_ptr<acmacs::Layout> layout, const Transformation& transformation);
         void line(const acmacs::PointCoordinates& from, const acmacs::PointCoordinates& to, Color line_color, Pixels line_width, bool apply_transformation = false);
         void line(LineDefinedByEquation line, Color line_color, Pixels line_width, bool apply_transformation = true);
-        void path(const std::vector<acmacs::PointCoordinates>& path, Color line_color, Pixels line_width, std::optional<Color> close_and_fill);
+        acmacs::draw::Path& path(const std::vector<acmacs::PointCoordinates>& path, Color line_color, Pixels line_width, std::optional<Color> close_and_fill);
         void arrow(const acmacs::PointCoordinates& from, const acmacs::PointCoordinates& to, Color line_color, Pixels line_width, Color arrow_head_color, bool arrow_head_filled, Pixels arrow_width, bool apply_transformation = false);
         void rectangle(const acmacs::PointCoordinates& corner1, const acmacs::PointCoordinates& corner2, Color color, bool filled, Pixels line_width);
         void circle(const acmacs::PointCoordinates& center, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, Aspect aspect, Rotation rotation);
@@ -83,6 +84,14 @@ namespace acmacs::draw
         void continent_map(const acmacs::PointCoordinates& origin, Pixels size);
 
         bool add_all_labels() const { return is_json(); }
+
+        template <typename Element, typename ... Args> Element& add(Args&& ... args)
+        {
+            auto ptr = std::make_unique<Element>(std::forward<Args>(args) ...);
+            auto& element = *ptr;
+            elements_.push_back(std::move(ptr));
+            return element;
+        }
 
      private:
         std::string filename_;

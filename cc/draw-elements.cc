@@ -134,9 +134,9 @@ void acmacs::draw::DrawElements::line(acmacs::LineDefinedByEquation line, Color 
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::DrawElements::path(const std::vector<acmacs::PointCoordinates>& path, Color line_color, Pixels line_width, std::optional<Color> close_and_fill)
+acmacs::draw::Path& acmacs::draw::DrawElements::path(const std::vector<acmacs::PointCoordinates>& path, Color line_color, Pixels line_width, std::optional<Color> close_and_fill)
 {
-    elements_.push_back(std::make_unique<acmacs::draw::Path>(path, line_color, line_width, close_and_fill));
+    return add<acmacs::draw::Path>(path, line_color, line_width, close_and_fill);
 
 } // acmacs::draw::DrawElements::path
 
