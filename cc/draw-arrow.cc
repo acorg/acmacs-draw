@@ -112,15 +112,27 @@ void acmacs::draw::SerumCircle::draw(drawing_stage stage, surface::Surface& surf
 void acmacs::draw::PathWithArrows::draw(drawing_stage stage, surface::Surface& surface) const
 {
     if (stage == drawing_stage::procrustes_arrows) {
+        // draw arrows first
+        for (const auto& arrow : arrows_) {
+            if (const auto from_no = arrow.from();
+                arrow.at() < path_.size() && (from_no.has_value() ? ((*from_no + 1) == arrow.at() || (*from_no - 1) == arrow.at()) : (arrow.at() == 0 || arrow.at() == (path_.size() - 1)))) {
+                const auto& to = path_[arrow.at()];
+                const auto& from = from_no.has_value() ? path_.at(*from_no) : (arrow.at() == 0 ? path_.at(1) : path_.at(path_.size() - 2));
+
+                const bool x_eq = float_equal(to.x(), from.x());
+                const double sign2 = x_eq ? (from.y() < to.y() ? 1.0 : -1.0) : (to.x() < from.x() ? 1.0 : -1.0);
+                const double angle = x_eq ? -M_PI_2 : std::atan((to.y() - from.y()) / (to.x() - from.x()));
+                const auto end = surface.arrow_head(to, angle, sign2, arrow.width(), arrow.outline(outline_), arrow.outline_width(), arrow.fill(outline_));
+            }
+            else
+                AD_WARNING("invalid arrow specification");
+        }
         surface.path_outline(std::begin(path_), std::end(path_), outline_, outline_width_, close_);
         if (close_)
             surface.path_fill(std::begin(path_), std::end(path_), fill_);
     }
 
 } // acmacs::draw::PathWithArrows::draw
-
-// ----------------------------------------------------------------------
-
 
 // ----------------------------------------------------------------------
 /// Local Variables:

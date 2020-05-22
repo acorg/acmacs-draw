@@ -112,7 +112,8 @@ namespace acmacs::surface
         enum class arrow_head_at { first, second, both };
         void arrow(const PointCoordinates& a, const PointCoordinates& b, Color aColor, Pixels aLineWidth, Pixels aArrowWidth, arrow_head_at aha);
         void double_arrow(const PointCoordinates& a, const PointCoordinates& b, Color aColor, Pixels aLineWidth, Pixels aArrowWidth) { arrow(a, b, aColor, aLineWidth, aArrowWidth, arrow_head_at::both); }
-        PointCoordinates arrow_head(const PointCoordinates& a, double angle, double sign, Color aColor, Pixels aArrowWidth, bool aFilled);
+        PointCoordinates arrow_head(const PointCoordinates& arrow_end, double angle, double sign, Color aColor, Pixels aArrowWidth, bool aFilled);
+        PointCoordinates arrow_head(const PointCoordinates& arrow_end, double angle, double sign, Pixels aArrowWidth, Color outline, Pixels outline_width, Color fill);
         void grid(Scaled aStep, Color aLineColor, Pixels aLineWidth);
 
         virtual void text(const PointCoordinates& a, std::string_view aText, Color aColor, Pixels aSize, const TextStyle& aTextStyle = TextStyle(), Rotation aRotation = NoRotation) = 0;

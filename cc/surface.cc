@@ -67,6 +67,27 @@ acmacs::PointCoordinates Surface::arrow_head(const PointCoordinates& arrow_end, 
 } // Surface::arrow_head
 
 // ----------------------------------------------------------------------
+
+acmacs::PointCoordinates Surface::arrow_head(const PointCoordinates& arrow_end, double angle, double sign, Pixels aArrowWidth, Color outline, Pixels outline_width, Color fill)
+{
+    constexpr double ARROW_WIDTH_TO_LENGTH_RATIO = 2.0;
+
+    const double arrow_width = aArrowWidth.value() / scale();
+    const double arrow_length = arrow_width * ARROW_WIDTH_TO_LENGTH_RATIO;
+    const PointCoordinates line_attachment_point(arrow_end.x() + sign * arrow_length * std::cos(angle), arrow_end.y() + sign * arrow_length * std::sin(angle));
+    const PointCoordinates arrow_base_1(line_attachment_point.x() + sign * arrow_width * std::cos(angle + M_PI_2) * 0.5, line_attachment_point.y() + sign * arrow_width * std::sin(angle + M_PI_2) * 0.5);
+    const PointCoordinates arrow_base_2(line_attachment_point.x() + sign * arrow_width * std::cos(angle - M_PI_2) * 0.5, line_attachment_point.y() + sign * arrow_width * std::sin(angle - M_PI_2) * 0.5);
+
+    const std::vector<PointCoordinates> path{arrow_end, arrow_base_1, arrow_base_2};
+    if (fill != TRANSPARENT)
+        path_fill(path.begin(), path.end(), fill);
+    path_outline(path.begin(), path.end(), outline, outline_width, true, LineCap::Butt);
+
+    return line_attachment_point;
+
+} // Surface::arrow_head
+
+// ----------------------------------------------------------------------
 /// Local Variables:
 /// eval: (if (fboundp 'eu-rename-buffer) (eu-rename-buffer))
 /// End:
