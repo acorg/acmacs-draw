@@ -109,6 +109,14 @@ void acmacs::draw::SerumCircle::draw(drawing_stage stage, surface::Surface& surf
 
 // ----------------------------------------------------------------------
 
+bool acmacs::draw::PathWithArrows::ArrowData::valid(size_t path_size) const
+{
+    return at_ < path_size && (from_.has_value() ? ((*from_ + 1) == at_ || (*from_ - 1) == at_) : (at_ == 0 || at_ == (path_size - 1)));
+
+} // acmacs::draw::PathWithArrows::ArrowData::valid
+
+// ----------------------------------------------------------------------
+
 void acmacs::draw::PathWithArrows::draw(drawing_stage stage, surface::Surface& surface) const
 {
     if (stage == drawing_stage::procrustes_arrows) {
@@ -125,7 +133,7 @@ void acmacs::draw::PathWithArrows::draw(drawing_stage stage, surface::Surface& s
                 const auto end = surface.arrow_head(to, angle, sign2, arrow.width(), arrow.outline(outline_), arrow.outline_width(), arrow.fill(outline_));
             }
             else
-                AD_WARNING("invalid arrow specification");
+                AD_WARNING("invalid arrow specification for arrow at {}", arrow.at());
         }
         surface.path_outline(std::begin(path_), std::end(path_), outline_, outline_width_, close_);
         if (close_)

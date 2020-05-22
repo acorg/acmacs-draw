@@ -206,6 +206,8 @@ namespace acmacs::draw
             constexpr void width(Pixels width) { width_ = width; }
             constexpr void outline_width(Pixels outline_width) { outline_width_ = outline_width; }
 
+            bool valid(size_t path_size) const;
+
           private:
             size_t at_{0};                    // vertex index in the path
             std::optional<size_t> from_;      // used when vertex is in the middle of the path
