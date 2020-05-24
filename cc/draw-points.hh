@@ -28,8 +28,8 @@ namespace acmacs::draw
 
         PointLabel& offset(const PointCoordinates& offs) { offset_ = offs; return *this; }
         PointLabel& display_name(std::string_view display_name) { display_name_ = display_name; return *this; }
-        PointLabel& color(Color color) { text_color_ = color; return *this; }
-        PointLabel& size(double size) { text_size_ = Pixels{size}; return *this; }
+        PointLabel& color(const acmacs::color::Modifier& color) { text_color_.add(color); return *this; }
+        PointLabel& size(Pixels size) { text_size_ = size; return *this; }
         // template <typename S, typename = std::enable_if_t<acmacs::sfinae::is_string_v<S>>> PointLabel& weight(S weight) { text_style_.weight = weight; return *this; }
         // template <typename S, typename = std::enable_if_t<acmacs::sfinae::is_string_v<S>>> PointLabel& slant(S slant) { text_style_.slant = slant; return *this; }
         // template <typename S, typename = std::enable_if_t<acmacs::sfinae::is_string_v<S>>> PointLabel& font_family(S family) { text_style_.font_family = family; return *this; }
@@ -50,7 +50,7 @@ namespace acmacs::draw
         size_t index_;
         PointCoordinates offset_;
         std::string display_name_;
-        Color text_color_;
+        acmacs::color::Modifier text_color_;
         Pixels text_size_;
         TextStyle text_style_;
 
