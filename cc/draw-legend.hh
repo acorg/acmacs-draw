@@ -10,33 +10,52 @@ namespace acmacs::draw
     {
         class Window : public Element
         {
-         public:
+          public:
             Window() = default;
-            Window(const acmacs::PointCoordinates& origin)
-                : origin_(origin) {}
+            Window(const acmacs::PointCoordinates& origin) : origin_(origin) {}
 
-            auto& origin(const acmacs::PointCoordinates& origin) { origin_ = origin; return *this; }
-            auto& size(const acmacs::Size& size) { size_ = size; return *this; }
-            auto& background(Color background) { background_ = background; return *this; }
-            auto& border_color(Color border_color) { border_color_ = border_color; return *this; }
-            auto& border_width(Pixels border_width) { border_width_ = border_width; return *this; }
+            auto& origin(const acmacs::PointCoordinates& origin)
+            {
+                origin_ = origin;
+                return *this;
+            }
+            auto& size(const acmacs::Size& size)
+            {
+                size_ = size;
+                return *this;
+            }
+            auto& background(Color background)
+            {
+                background_ = background;
+                return *this;
+            }
+            auto& border_color(Color border_color)
+            {
+                border_color_ = border_color;
+                return *this;
+            }
+            auto& border_width(Pixels border_width)
+            {
+                border_width_ = border_width;
+                return *this;
+            }
 
             void draw(drawing_stage stage, surface::Surface& surface) const override;
             // void draw(drawing_stage stage, surface::JsStatic& surface) const override;
 
-         protected:
+          protected:
             virtual void draw_window(surface::Surface& surface) const;
             virtual void draw_content(surface::Surface& surface) const = 0;
             // virtual void draw_window(surface::JsStatic& surface) const;
-              //virtual void draw_content(surface::JsStatic& surface) const = 0;
+            // virtual void draw_content(surface::JsStatic& surface) const = 0;
 
-              // double height() const { return size_.height; }
+            // double height() const { return size_.height; }
             void size(const acmacs::Size& size) const { size_ = size; }
             acmacs::PointCoordinates scaled_origin(surface::Surface& surface) const;
             // acmacs::PointCoordinates scaled_origin(surface::JsStatic& surface) const;
             acmacs::PointCoordinates origin() const { return origin_; }
 
-         private:
+          private:
             acmacs::PointCoordinates origin_{10, 10};
             mutable acmacs::Size size_{100, 100};
             Color background_ = GREY97;
@@ -49,11 +68,19 @@ namespace acmacs::draw
 
         template <typename Line> class Box : public Window
         {
-         public:
+          public:
             Box(drawing_stage stage) : stage_(stage) {}
 
-            auto& interline(double interline) { interline_ = interline; return *this; }
-            auto& padding(Pixels padding) { padding_ = padding; return *this; }
+            auto& interline(double interline)
+            {
+                interline_ = interline;
+                return *this;
+            }
+            auto& padding(Pixels padding)
+            {
+                padding_ = padding;
+                return *this;
+            }
 
             void stage(drawing_stage stage) { stage_ = stage; }
 
@@ -75,14 +102,14 @@ namespace acmacs::draw
 
           protected:
             void draw_content(surface::Surface& surface) const override
-                {
-                    const double padding = surface.convert(padding_).value();
-                    double y = padding;
-                    for (const auto& line: lines_) {
-                        line.draw(surface, {padding, y}, line_height_);
-                        y += line_height_ * interline_;
-                    }
+            {
+                const double padding = surface.convert(padding_).value();
+                double y = padding;
+                for (const auto& line : lines_) {
+                    line.draw(surface, {padding, y}, line_height_);
+                    y += line_height_ * interline_;
                 }
+            }
 
             std::vector<Line>& lines() { return lines_; }
             const std::vector<Line>& lines() const { return lines_; }
@@ -90,7 +117,7 @@ namespace acmacs::draw
             iterator begin() { return lines_.begin(); }
             iterator end() { return lines_.end(); }
 
-         private:
+          private:
             drawing_stage stage_;
             std::vector<Line> lines_;
             double interline_{2};
@@ -115,11 +142,13 @@ namespace acmacs::draw
 
         class TitleLine
         {
-         public:
+          public:
             TitleLine() = default;
-            TitleLine(std::string text) : text_(text) {}
-            TitleLine(std::string text, Color text_color, Pixels text_size, const acmacs::TextStyle& text_style)
-                : text_(text), text_color_(text_color), text_size_(text_size), text_style_(text_style) {}
+            TitleLine(std::string_view text) : text_{text} {}
+            TitleLine(std::string_view text, Color text_color, Pixels text_size, const acmacs::TextStyle& text_style)
+                : text_{text}, text_color_(text_color), text_size_(text_size), text_style_(text_style)
+            {
+            }
 
             void text_color(Color text_color) { text_color_ = text_color; }
             void text_size(Pixels text_size) { text_size_ = text_size; }
@@ -132,10 +161,10 @@ namespace acmacs::draw
             // void draw(surface::JsDynamic& surface, const char* field) const;
             acmacs::Size size(surface::Surface& surface) const { return surface.text_size(text_, text_size_, text_style_); }
 
-         protected:
+          protected:
             void draw(surface::Surface& surface, const acmacs::PointCoordinates& origin) const { surface.text(origin, text_, text_color_, text_size_, text_style_); }
 
-         private:
+          private:
             std::string text_;
             Color text_color_{BLACK};
             Pixels text_size_{12};
@@ -145,19 +174,23 @@ namespace acmacs::draw
 
         class LegendPointLabel : public TitleLine
         {
-         public:
+          public:
             LegendPointLabel() = default;
-            LegendPointLabel(std::string text, Pixels point_size, Color point_outline, Color point_fill)
-                : TitleLine(text), point_size_(point_size), point_outline_(point_outline), point_fill_(point_fill) {}
-            LegendPointLabel(std::string text, Color text_color, Pixels text_size, const acmacs::TextStyle& text_style, Pixels point_size, Color point_outline, Color point_fill)
-                : TitleLine(text, text_color, text_size, text_style), point_size_(point_size), point_outline_(point_outline), point_fill_(point_fill) {}
+            LegendPointLabel(std::string_view text, Pixels point_size, Color point_outline, Color point_fill)
+                : TitleLine(text), point_size_(point_size), point_outline_(point_outline), point_fill_(point_fill)
+            {
+            }
+            LegendPointLabel(std::string_view text, Color text_color, Pixels text_size, const acmacs::TextStyle& text_style, Pixels point_size, Color point_outline, Color point_fill)
+                : TitleLine(text, text_color, text_size, text_style), point_size_(point_size), point_outline_(point_outline), point_fill_(point_fill)
+            {
+            }
 
             void point_size(Pixels point_size) { point_size_ = point_size; }
 
             void draw(surface::Surface& surface, const acmacs::PointCoordinates& origin, double height) const;
             acmacs::Size size(surface::Surface& surface) const;
 
-         private:
+          private:
             Pixels point_size_{12};
             Color point_outline_{BLACK}, point_fill_{TRANSPARENT};
 
@@ -167,16 +200,28 @@ namespace acmacs::draw
 
     class Title : public internal::Box<internal::TitleLine>
     {
-     public:
+      public:
         Title(const std::vector<std::string>& texts) : internal::Box<internal::TitleLine>(drawing_stage::title)
-            {
-                lines().resize(texts.size());
-                std::transform(texts.begin(), texts.end(), begin(), [](const auto& txt) { return txt; });
-            }
+        {
+            lines().resize(texts.size());
+            std::transform(texts.begin(), texts.end(), begin(), [](const auto& txt) -> std::string_view { return std::string_view{txt}; });
+        }
 
-        auto& text_color(Color text_color) { std::for_each(begin(), end(), [=](auto& line) { line.text_color(text_color); }); return *this; }
-        auto& text_size(Pixels text_size) { std::for_each(begin(), end(), [=](auto& line) { line.text_size(text_size); }); return *this; }
-        auto& text_style(const acmacs::TextStyle& text_style) { std::for_each(begin(), end(), [&](auto& line) { line.text_style(text_style); }); return *this; }
+        auto& text_color(Color text_color)
+        {
+            std::for_each(begin(), end(), [=](auto& line) { line.text_color(text_color); });
+            return *this;
+        }
+        auto& text_size(Pixels text_size)
+        {
+            std::for_each(begin(), end(), [=](auto& line) { line.text_size(text_size); });
+            return *this;
+        }
+        auto& text_style(const acmacs::TextStyle& text_style)
+        {
+            std::for_each(begin(), end(), [&](auto& line) { line.text_style(text_style); });
+            return *this;
+        }
 
         using internal::Box<internal::TitleLine>::draw;
         // void draw(drawing_stage stage, surface::JsDynamic& surface) const override { internal::Box<internal::TitleLine>::draw_field(stage, surface, "title"); }
@@ -185,22 +230,25 @@ namespace acmacs::draw
 
     class Legend : public internal::Box<internal::LegendPointLabel>
     {
-     public:
+      public:
         Legend() : internal::Box<internal::LegendPointLabel>(drawing_stage::legend) {}
 
-        void add(std::string text, Pixels point_size, Color point_outline, Color point_fill) { lines().emplace_back(text, point_size, point_outline, point_fill); }
-        void add(std::string text, Color text_color, Pixels text_size, const acmacs::TextStyle& text_style, Pixels point_size, Color point_outline, Color point_fill) { lines().emplace_back(text, text_color, text_size, text_style, point_size, point_outline, point_fill); }
+        void add(std::string_view text, Pixels point_size, Color point_outline, Color point_fill) { lines().emplace_back(text, point_size, point_outline, point_fill); }
+        void add(std::string_view text, Color text_color, Pixels text_size, const acmacs::TextStyle& text_style, Pixels point_size, Color point_outline, Color point_fill)
+        {
+            lines().emplace_back(text, text_color, text_size, text_style, point_size, point_outline, point_fill);
+        }
 
     }; // class Legend
 
     class ContinentMap : public Element
     {
-     public:
+      public:
         ContinentMap(const acmacs::PointCoordinates& origin, Pixels size) : origin_(origin), size_(size) {}
 
         void draw(drawing_stage stage, surface::Surface& surface) const override;
 
-     private:
+      private:
         acmacs::PointCoordinates origin_;
         Pixels size_;
 
