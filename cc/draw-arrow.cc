@@ -120,7 +120,18 @@ bool acmacs::draw::PathWithArrows::ArrowData::valid(size_t path_size) const
 void acmacs::draw::PathWithArrows::draw(drawing_stage stage, surface::Surface& surface) const
 {
     if (stage == drawing_stage::procrustes_arrows) {
-        // draw arrows first
+        if (close_)
+            surface.path_fill(std::begin(path_), std::end(path_), fill_);
+        surface.path_outline(std::begin(path_), std::end(path_), outline_, outline_width_, close_);
+        draw_arrows(surface);
+    }
+
+} // acmacs::draw::PathWithArrows::draw
+
+// ----------------------------------------------------------------------
+
+void acmacs::draw::PathWithArrows::draw_arrows(surface::Surface& surface) const
+{
         for (const auto& arrow : arrows_) {
             if (const auto from_no = arrow.from();
                 arrow.at() < path_.size() && (from_no.has_value() ? ((*from_no + 1) == arrow.at() || (*from_no - 1) == arrow.at()) : (arrow.at() == 0 || arrow.at() == (path_.size() - 1)))) {
@@ -135,12 +146,8 @@ void acmacs::draw::PathWithArrows::draw(drawing_stage stage, surface::Surface& s
             else
                 AD_WARNING("invalid arrow specification for arrow at {}", arrow.at());
         }
-        surface.path_outline(std::begin(path_), std::end(path_), outline_, outline_width_, close_);
-        if (close_)
-            surface.path_fill(std::begin(path_), std::end(path_), fill_);
-    }
 
-} // acmacs::draw::PathWithArrows::draw
+} // acmacs::draw::PathWithArrows::draw_arrows
 
 // ----------------------------------------------------------------------
 /// Local Variables:

@@ -231,6 +231,8 @@ namespace acmacs::draw
         const Pixels outline_width_;
         std::vector<ArrowData> arrows_;
 
+        void draw_arrows(surface::Surface& surface) const;
+
     }; // class Path
 
     // ----------------------------------------------------------------------
