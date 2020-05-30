@@ -61,6 +61,7 @@ namespace acmacs::draw
      public:
         PointLabels() = default;
 
+        void reset() { clear(); }
         PointLabel& add(size_t index) { if (auto found = std::find_if(begin(), end(), [=](const auto& label) { return label.index() == index; }); found == end()) return emplace_back(index); else return *found; }
         void remove(size_t index) { erase(std::remove_if(begin(), end(), [index](const auto& label) { return label.index() == index; }), end()); }
 
