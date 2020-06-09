@@ -43,10 +43,17 @@ void acmacs::draw::DrawElements::draw() const
     }
     catch (ElementNotFound&) {
     }
+    generate();
 
+} // acmacs::draw::DrawElements::draw
+
+// ----------------------------------------------------------------------
+
+void acmacs::draw::DrawElementsToFile::generate() const
+{
     if (std::string_view(filename_.data() + filename_.size() - 4, 4) == ".pdf") {
         acmacs::surface::PdfCairo main_surface(filename_, size_, size_);
-        acmacs::surface::Surface& rescaled_surface = main_surface.subsurface(PointCoordinates::zero2D, Scaled{main_surface.viewport().size.width}, viewport_, true);
+        acmacs::surface::Surface& rescaled_surface = main_surface.subsurface(PointCoordinates::zero2D, Scaled{main_surface.viewport().size.width}, viewport(), true);
         draw(rescaled_surface);
     }
     // else if (std::string_view(filename_.data() + filename_.size() - 5, 5) == ".html") {
@@ -66,7 +73,15 @@ void acmacs::draw::DrawElements::draw() const
         throw std::runtime_error("Unrecognized filename suffix: " + filename_);
     }
 
-} // acmacs::draw::DrawElements::draw
+} // acmacs::draw::DrawElementsToFile::generate
+
+// ----------------------------------------------------------------------
+
+void acmacs::draw::DrawElementsToSurface::generate() const
+{
+    draw(surface_);
+
+} // acmacs::draw::DrawElementsToSurface::generate
 
 // ----------------------------------------------------------------------
 

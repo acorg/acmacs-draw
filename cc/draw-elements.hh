@@ -60,7 +60,8 @@ namespace acmacs::draw
     class DrawElements
     {
      public:
-        DrawElements(std::string_view filename, double size) : filename_(filename), size_(size) {}
+        DrawElements() = default;
+        virtual ~DrawElements() = default;
 
         void draw() const;
         const std::string& output() const { return output_; } // if filename_ is "//.json"
@@ -83,7 +84,7 @@ namespace acmacs::draw
         void serum_circle(const PointCoordinates& coordinates, const Transformation& transformation, Scaled size, Color fill_color, Color outline_color, Pixels outline_width, acmacs::surface::Dash outline_dash, Color radius_color, Pixels radius_width, acmacs::surface::Dash radius_dash, Rotation start, Rotation end);
         void continent_map(const acmacs::PointCoordinates& origin, Pixels size);
 
-        bool add_all_labels() const { return is_json(); }
+        virtual bool add_all_labels() const { return false; }
 
         template <typename Element, typename ... Args> Element& add(Args&& ... args)
         {
@@ -93,12 +94,9 @@ namespace acmacs::draw
             return element;
         }
 
-     private:
-        std::string filename_;
-        double size_;
-        std::vector<std::unique_ptr<Element>> elements_;
-        acmacs::Viewport viewport_;
-        mutable std::string output_;    // if filename_ is "//.json"
+      protected:
+        virtual void generate() const = 0;
+        constexpr const auto& viewport() const { return viewport_; }
 
         template <typename Surface> void draw(Surface&& surface) const
             {
@@ -110,12 +108,48 @@ namespace acmacs::draw
                 }
             }
 
-        bool is_json_buffer() const { return filename_ == "//.json"; }
-        bool is_json() const { return std::string_view(filename_.data() + filename_.size() - 5, 5) == ".json"; }
+     private:
+        std::vector<std::unique_ptr<Element>> elements_;
+        acmacs::Viewport viewport_;
+        mutable std::string output_;    // if filename_ is "//.json"
 
     }; // class DrawElements
 
     // ----------------------------------------------------------------------
+
+    class DrawElementsToFile : public DrawElements
+    {
+      public:
+        DrawElementsToFile(std::string_view filename, double size) : filename_(filename), size_(size) {}
+
+        bool add_all_labels() const override { return is_json(); }
+
+      protected:
+        void generate() const override;
+
+      private:
+        std::string filename_;
+        double size_;
+
+        bool is_json_buffer() const { return filename_ == "//.json"; }
+        bool is_json() const { return std::string_view(filename_.data() + filename_.size() - 5, 5) == ".json"; }
+
+    }; // class DrawElementsToFile
+
+
+    class DrawElementsToSurface : public DrawElements
+    {
+      public:
+        DrawElementsToSurface(acmacs::surface::Surface& surface) : surface_{surface} {}
+
+      protected:
+        void generate() const override;
+
+      private:
+        acmacs::surface::Surface& surface_;
+
+    }; // class DrawElementsToSurface
+
 
 } // namespace acmacs::draw
 
