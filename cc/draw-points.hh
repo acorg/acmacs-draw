@@ -24,8 +24,9 @@ namespace acmacs::draw
     class PointLabel
     {
      public:
-        PointLabel(size_t index) : index_(index), offset_{0, 1}, text_color_{BLACK}, text_size_{12} {}
+        PointLabel(size_t index) : index_(index) {}
 
+        constexpr PointLabel& show(bool show) { show_ = show; return *this; }
         PointLabel& offset(const PointCoordinates& offs) { offset_ = offs; return *this; }
         PointLabel& display_name(std::string_view display_name) { display_name_ = display_name; return *this; }
         PointLabel& color(const acmacs::color::Modifier& color) { text_color_.add(color); return *this; }
@@ -38,6 +39,7 @@ namespace acmacs::draw
         PointLabel& font_family(std::string_view family) { text_style_.font_family = std::string(family); return *this; }
 
         constexpr size_t index() const { return index_; }
+        constexpr bool show() const { return show_; }
         const std::string& display_name() const { return display_name_; }
         PointCoordinates offset() const { return offset_; }
         Color text_color() const { return text_color_; }
@@ -46,12 +48,13 @@ namespace acmacs::draw
 
         static double text_offset(double offset_hint, double point_size, double text_size, bool text_origin_at_opposite);
 
-     private:
+      private:
+        bool show_{true};
         size_t index_;
-        PointCoordinates offset_;
+        PointCoordinates offset_{0, 1};
         std::string display_name_;
-        acmacs::color::Modifier text_color_;
-        Pixels text_size_;
+        acmacs::color::Modifier text_color_{BLACK};
+        Pixels text_size_{12};
         TextStyle text_style_;
 
     }; // class PointLabel
