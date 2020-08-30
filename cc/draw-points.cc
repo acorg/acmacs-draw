@@ -40,6 +40,7 @@ void acmacs::draw::Points::draw_points(surface::Surface& surface) const
     for (auto point_no : drawing_order_) {
         if (layout->point_has_coordinates(point_no)) {
             if (const auto& styl = style(point_no); styl.shown()) {
+                // AD_DEBUG("{:4d} {} {} {}", point_no, styl.fill(), styl.outline(), styl.size());
                 switch (styl.shape()) {
                     case acmacs::PointShape::Circle:
                         surface.circle_filled(layout->at(point_no), styl.size(), styl.aspect(), styl.rotation(), styl.outline(), styl.outline_width(), surface::Dash::NoDash, styl.fill());
