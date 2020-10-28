@@ -4,6 +4,7 @@
 TARGETS = \
   $(ACMACS_DRAW_LIB) \
   $(ACMACS_DRAW_PY_LIB) \
+  $(DIST)/drawi \
   $(DIST)/test-cairo \
   $(DIST)/test-cairo-fonts \
   $(DIST)/test-distinct-colors
@@ -21,7 +22,9 @@ ACMACS_DRAW_SOURCES = \
   geographic-map.cc   \
   draw-grid.cc        \
   continent-path.cc   \
-  geographic-path.cc
+  geographic-path.cc  \
+  drawi-settings.cc   \
+  drawi-draw.cc
 
 # surface-html.cc surface-js-dynamic.cc surface-js-static.cc
 
@@ -52,6 +55,7 @@ LDLIBS = $(AD_LIB)/$(call shared_lib_name,libacmacsbase,1,0) $(CAIRO_LIBS) $(CXX
 install: install-headers make-installation-dirs $(TARGETS)
 	$(call install_lib,$(ACMACS_DRAW_LIB))
 	$(call install_py_lib,$(ACMACS_DRAW_PY_LIB))
+	$(call symbolic_link_wildcard,$(DIST)/draw*,$(AD_BIN))
 
 install-disabled:
 	$(call make_dir,$(AD_SHARE)/js/draw)
