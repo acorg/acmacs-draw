@@ -4,16 +4,28 @@
 
 // ----------------------------------------------------------------------
 
+namespace acmacs::draw
+{
+    class DrawElementsToFile;
+}
+
 namespace acmacs::drawi::inline v1
 {
     class Draw;
 
     using error = settings::v3::error;
 
+    class unrecognized : public error
+    {
+      public:
+        using error::error;
+        unrecognized() : error{""} {}
+    };
+
     class Settings : public settings::v3::Data
     {
       public:
-        Settings(Draw& draw);
+        Settings(acmacs::draw::DrawElementsToFile& draw);
 
         using settings::v3::Data::load;
 
@@ -21,11 +33,14 @@ namespace acmacs::drawi::inline v1
 
     protected:
         bool apply_viewport();
-        bool apply_grid();
         bool apply_point();
 
+        bool apply_background();
+        bool apply_border();
+        bool apply_grid();
+
       private:
-        Draw& draw_;
+        acmacs::draw::DrawElementsToFile& draw_;
 
         void update_env();
 

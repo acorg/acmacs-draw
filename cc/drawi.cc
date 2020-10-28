@@ -3,7 +3,7 @@
 #include "acmacs-base/temp-file.hh"
 #include "acmacs-base/filesystem.hh"
 #include "acmacs-base/quicklook.hh"
-#include "acmacs-draw/drawi-draw.hh"
+#include "acmacs-draw/draw-elements.hh"
 #include "acmacs-draw/drawi-settings.hh"
 
 // ----------------------------------------------------------------------
@@ -44,7 +44,7 @@ int main(int argc, char* const argv[])
         const auto [output, always_open] = get_output(opt.input, opt.output);
         constexpr double output_size = 800;
         {
-            acmacs::drawi::Draw draw{output, output_size};
+            acmacs::draw::DrawElementsToFile draw{output, output_size};
             acmacs::drawi::Settings settings{draw};
             settings.load(opt.input);
 
@@ -64,6 +64,7 @@ int main(int argc, char* const argv[])
             else {
                 settings.apply("drawi"sv);
             }
+            draw.draw();
         }
 
         if (opt.open || always_open)

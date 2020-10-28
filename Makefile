@@ -23,8 +23,7 @@ ACMACS_DRAW_SOURCES = \
   draw-grid.cc        \
   continent-path.cc   \
   geographic-path.cc  \
-  drawi-settings.cc   \
-  drawi-draw.cc
+  drawi-settings.cc
 
 # surface-html.cc surface-js-dynamic.cc surface-js-static.cc
 
