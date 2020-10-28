@@ -1,4 +1,5 @@
 #include "acmacs-base/argv.hh"
+#include "acmacs-base/string-split.hh"
 #include "acmacs-base/temp-file.hh"
 #include "acmacs-base/filesystem.hh"
 #include "acmacs-base/quicklook.hh"
@@ -13,6 +14,7 @@ struct MapiOptions : public acmacs::argv::v2::argv
     MapiOptions(int a_argc, const char* const a_argv[], on_error on_err = on_error::exit) { parse(a_argc, a_argv, on_err); }
 
 
+    option<str_array> apply{*this, 'a', "apply", desc{"comma separated names or json array to apply instead of \"drawi\""}};
     option<bool>      open{*this, "open"};
     option<str_array> verbose{*this, 'v', "verbose", desc{"comma separated list (or multiple switches) of enablers"}};
 
@@ -45,6 +47,23 @@ int main(int argc, char* const argv[])
             acmacs::drawi::Draw draw{output, output_size};
             acmacs::drawi::Settings settings{draw};
             settings.load(opt.input);
+
+            if (!opt.apply.empty()) {
+                for (const auto& to_apply : opt.apply) {
+                    if (!to_apply.empty()) {
+                        if (to_apply[0] == '{' || to_apply[0] == '[') {
+                            settings.apply(to_apply);
+                        }
+                        else {
+                            for (const auto& to_apply_one : acmacs::string::split(to_apply))
+                                settings.apply(to_apply_one);
+                        }
+                    }
+                }
+            }
+            else {
+                settings.apply("drawi"sv);
+            }
         }
 
         if (opt.open || always_open)
