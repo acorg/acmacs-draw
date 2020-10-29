@@ -116,6 +116,36 @@ bool acmacs::drawi::v1::Settings::apply_border()
 
 // ----------------------------------------------------------------------
 
+inline static void update_style(acmacs::PointStyle& style, std::string_view key, const rjson::v3::value& val)
+{
+    using namespace std::string_view_literals;
+    // AD_DEBUG("apply_antigens {}: {}", key, val);
+    if (key == "fill"sv)
+        style.fill(rjson::v3::read_color_or_empty(val));
+    else if (key == "outline"sv)
+        style.outline(rjson::v3::read_color_or_empty(val));
+    else if (key == "show"sv)
+        style.shown(rjson::v3::read_bool(val, true));
+    else if (key == "hide"sv)
+        style.shown(!rjson::v3::read_bool(val, true));
+    else if (key == "shape"sv)
+        style.shape(acmacs::PointShape{val.to<std::string_view>()});
+    else if (key == "size"sv)
+        style.size(Pixels{val.to<double>()});
+    else if (key == "outline-width"sv)
+        style.outline_width(Pixels{val.to<double>()});
+    else if (key == "aspect"sv)
+        style.aspect(Aspect{val.to<double>()});
+    else if (key == "rotation"sv)
+        style.rotation(Rotation{val.to<double>()});
+    else if (key.empty() || key[0] == '?' || key == "order"sv)
+        ;                       // ignore
+    else
+        AD_WARNING("update_style: \"{}\" is not supported", key);
+}
+
+// ----------------------------------------------------------------------
+
 bool acmacs::drawi::v1::Settings::apply_point()
 {
     using namespace std::string_view_literals;
@@ -134,6 +164,14 @@ bool acmacs::drawi::v1::Settings::apply_point()
             return PointCoordinates::zero2D;
         throw std::exception{};
     }));
+
+    for (const auto key : {"fill"sv, "outline"sv, "outline-width"sv, "show"sv, "hide"sv, "size"sv, "shape"sv, "aspect"sv, "rotation"sv})
+    {
+        if (const auto& val = getenv(key); !val.is_null())
+            update_style(style, key, val);
+    }
+
+    // label
 
     return true;
 
