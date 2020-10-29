@@ -15,6 +15,7 @@ ACMACS_DRAW_SOURCES = \
   draw-elements.cc    \
   surface-cairo.cc    \
   draw-points.cc      \
+  point-style-data.cc \
   draw-arrow.cc       \
   draw-legend.cc      \
   surface.cc          \

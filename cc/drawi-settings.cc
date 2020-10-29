@@ -119,6 +119,7 @@ bool acmacs::drawi::v1::Settings::apply_border()
 bool acmacs::drawi::v1::Settings::apply_point()
 {
     using namespace std::string_view_literals;
+    auto& points = draw_.points();
     return true;
 
 } // acmacs::drawi::v1::Settings::apply_point

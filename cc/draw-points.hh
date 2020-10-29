@@ -95,6 +95,7 @@ namespace acmacs::draw
         using DrawingOrder = std::vector<size_t>;
         using UnpackedStyles = std::vector<PointStyle>;
 
+        Points();
         Points(std::shared_ptr<acmacs::Layout> layout, const acmacs::Transformation& transformation);
 
         Points& drawing_order(const DrawingOrder& drawing_order) { drawing_order_ = drawing_order; return *this; }

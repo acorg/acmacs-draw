@@ -125,6 +125,18 @@ acmacs::draw::Legend& acmacs::draw::DrawElements::legend()
 
 // ----------------------------------------------------------------------
 
+acmacs::draw::Points& acmacs::draw::DrawElements::points()
+{
+    if (auto found = std::find_if(elements_.begin(), elements_.end(), [](const auto& elt) { return dynamic_cast<Points*>(elt.get()) != nullptr; }); found != elements_.end())
+        return *dynamic_cast<Points*>(found->get());
+
+    elements_.push_back(std::make_unique<Points>());
+    return *dynamic_cast<Points*>(elements_.back().get());
+
+} // acmacs::draw::DrawElements::points
+
+// ----------------------------------------------------------------------
+
 acmacs::draw::Points& acmacs::draw::DrawElements::points(std::shared_ptr<acmacs::Layout> layout, const acmacs::Transformation& transformation)
 {
     return replace_or_add(std::make_unique<Points>(layout, transformation), elements_);

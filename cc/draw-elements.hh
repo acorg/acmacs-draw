@@ -72,6 +72,7 @@ namespace acmacs::draw
         void border(Color line_color, Pixels line_width);
         Title& title(const std::vector<std::string>& lines);
         Legend& legend();
+        Points& points();
         Points& points(std::shared_ptr<acmacs::Layout> layout, const Transformation& transformation);
         void line(const acmacs::PointCoordinates& from, const acmacs::PointCoordinates& to, Color line_color, Pixels line_width, bool apply_transformation = false);
         void line(LineDefinedByEquation line, Color line_color, Pixels line_width, bool apply_transformation = true);

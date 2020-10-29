@@ -4,6 +4,7 @@
 // #include "acmacs-draw/surface-js-static.hh"
 // #include "acmacs-draw/surface-js-dynamic.hh"
 #include "acmacs-draw/draw-points.hh"
+#include "acmacs-draw/point-style-data.hh"
 
 // ----------------------------------------------------------------------
 
@@ -25,10 +26,19 @@ double acmacs::draw::PointLabel::text_offset(double offset_hint, double point_si
 
 // ----------------------------------------------------------------------
 
-acmacs::draw::Points::Points(std::shared_ptr<acmacs::Layout> layout, const acmacs::Transformation& transformation)
-    : layout_(layout), transformation_(transformation), drawing_order_(acmacs::filled_with_indexes(layout->number_of_points()))
+acmacs::draw::Points::Points()
+    : layout_{std::make_shared<acmacs::Layout>()},
+      styles_{std::make_shared<PointStylesData>()}
 {
+} // acmacs::draw::Points::Points
 
+// ----------------------------------------------------------------------
+
+acmacs::draw::Points::Points(std::shared_ptr<acmacs::Layout> layout, const acmacs::Transformation& transformation)
+    : layout_{layout},
+      transformation_{transformation},
+      drawing_order_{acmacs::filled_with_indexes(layout->number_of_points())}
+{
 } // acmacs::draw::Points::Points
 
 // ----------------------------------------------------------------------
