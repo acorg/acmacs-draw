@@ -43,6 +43,20 @@ acmacs::draw::Points::Points(std::shared_ptr<acmacs::Layout> layout, const acmac
 
 // ----------------------------------------------------------------------
 
+acmacs::PointStyle& acmacs::draw::Points::add(const PointCoordinates& coord)
+{
+    const auto point_no = layout_->append_point();
+    layout_->update(point_no, coord);
+    drawing_order_.push_back(point_no);
+    auto* styles = dynamic_cast<PointStylesData*>(styles_.get());
+    if (!styles)
+        throw std::runtime_error {"acmacs::draw::Points::add: invalid styles value"};
+    return styles->add(default_style_);
+
+} // acmacs::draw::Points::add
+
+// ----------------------------------------------------------------------
+
 void acmacs::draw::Points::draw_points(surface::Surface& surface) const
 {
     std::shared_ptr<Layout> layout{layout_->transform(transformation_)};

@@ -1,7 +1,7 @@
 #include "acmacs-base/color-modifier.hh"
 #include "acmacs-base/rjson-v3-helper.hh"
 #include "acmacs-draw/drawi-settings.hh"
-#include "acmacs-draw/draw-elements.hh"
+#include "acmacs-draw/draw-points.hh"
 
 // ----------------------------------------------------------------------
 
@@ -120,6 +120,21 @@ bool acmacs::drawi::v1::Settings::apply_point()
 {
     using namespace std::string_view_literals;
     auto& points = draw_.points();
+
+    auto& style = points.add(getenv("c"sv).visit([]<typename Value>(const Value& value) -> PointCoordinates {
+        if constexpr (std::is_same_v<Value, rjson::v3::detail::array>) {
+            switch (value.size()) {
+                case 2:
+                    return PointCoordinates{value[0].template to<double>(), value[1].template to<double>()};
+                case 3:
+                    return PointCoordinates{value[0].template to<double>(), value[1].template to<double>(), value[2].template to<double>()};
+            }
+        }
+        else if constexpr (std::is_same_v<Value, rjson::v3::detail::null>)
+            return PointCoordinates::zero2D;
+        throw std::exception{};
+    }));
+
     return true;
 
 } // acmacs::drawi::v1::Settings::apply_point

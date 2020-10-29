@@ -108,6 +108,9 @@ namespace acmacs::draw
 
         const auto& transformation() const { return transformation_; }
 
+        // drawi
+        PointStyle& add(const PointCoordinates& coord);
+
      private:
         std::shared_ptr<acmacs::Layout> layout_;
         acmacs::Transformation transformation_;
