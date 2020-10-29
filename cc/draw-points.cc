@@ -28,7 +28,9 @@ double acmacs::draw::PointLabel::text_offset(double offset_hint, double point_si
 
 acmacs::draw::Points::Points()
     : layout_{std::make_shared<acmacs::Layout>()},
-      styles_{std::make_shared<PointStylesData>()}
+      styles_{std::make_shared<PointStylesData>()},
+      labels_here_{std::make_unique<PointLabels>()},
+      labels_{labels_here_.get()}
 {
 } // acmacs::draw::Points::Points
 
@@ -43,7 +45,7 @@ acmacs::draw::Points::Points(std::shared_ptr<acmacs::Layout> layout, const acmac
 
 // ----------------------------------------------------------------------
 
-acmacs::PointStyle& acmacs::draw::Points::add(const PointCoordinates& coord)
+std::pair<size_t, acmacs::PointStyle*> acmacs::draw::Points::add(const PointCoordinates& coord)
 {
     const auto point_no = layout_->append_point();
     layout_->update(point_no, coord);
@@ -51,7 +53,7 @@ acmacs::PointStyle& acmacs::draw::Points::add(const PointCoordinates& coord)
     auto* styles = dynamic_cast<PointStylesData*>(styles_.get());
     if (!styles)
         throw std::runtime_error {"acmacs::draw::Points::add: invalid styles value"};
-    return styles->add(default_style_);
+    return {point_no, &styles->add(default_style_)};
 
 } // acmacs::draw::Points::add
 

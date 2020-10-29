@@ -109,14 +109,16 @@ namespace acmacs::draw
         const auto& transformation() const { return transformation_; }
 
         // drawi
-        PointStyle& add(const PointCoordinates& coord);
+        std::pair<size_t, PointStyle*> add(const PointCoordinates& coord);
+        PointLabel& add_label(size_t point_no) { return labels_here_->add(point_no); }
 
-     private:
+      private:
         std::shared_ptr<acmacs::Layout> layout_;
         acmacs::Transformation transformation_;
         DrawingOrder drawing_order_;
         PointStyle default_style_;
         std::shared_ptr<PointStyles> styles_;
+        std::unique_ptr<PointLabels> labels_here_;
         const PointLabels* labels_ = nullptr;
 
         void draw_points(surface::Surface& surface) const;

@@ -146,12 +146,22 @@ inline static void update_style(acmacs::PointStyle& style, std::string_view key,
 
 // ----------------------------------------------------------------------
 
+void acmacs::drawi::v1::Settings::update_label(acmacs::draw::PointLabel& label, const rjson::v3::value& source)
+{
+    using namespace std::string_view_literals;
+    if (const auto& text = substitute(source["text"sv]); !text.is_null())
+        label.display_name(text.to<std::string_view>());
+
+} // acmacs::drawi::v1::Settings::update_label
+
+// ----------------------------------------------------------------------
+
 bool acmacs::drawi::v1::Settings::apply_point()
 {
     using namespace std::string_view_literals;
     auto& points = draw_.points();
 
-    auto& style = points.add(getenv("c"sv).visit([]<typename Value>(const Value& value) -> PointCoordinates {
+    auto [point_no, style] = points.add(getenv("c"sv).visit([]<typename Value>(const Value& value) -> PointCoordinates {
         if constexpr (std::is_same_v<Value, rjson::v3::detail::array>) {
             switch (value.size()) {
                 case 2:
@@ -168,10 +178,11 @@ bool acmacs::drawi::v1::Settings::apply_point()
     for (const auto key : {"fill"sv, "outline"sv, "outline-width"sv, "show"sv, "hide"sv, "size"sv, "shape"sv, "aspect"sv, "rotation"sv})
     {
         if (const auto& val = getenv(key); !val.is_null())
-            update_style(style, key, val);
+            update_style(*style, key, val);
     }
 
-    // label
+    if (const auto& label = getenv("label"sv); !label.is_null())
+        update_label(points.add_label(point_no), label);
 
     return true;
 

@@ -4,9 +4,15 @@
 
 // ----------------------------------------------------------------------
 
+namespace acmacs
+{
+    class PointStyle;
+}
+
 namespace acmacs::draw
 {
     class DrawElementsToFile;
+    class PointLabel;
 }
 
 namespace acmacs::drawi::inline v1
@@ -43,6 +49,7 @@ namespace acmacs::drawi::inline v1
         acmacs::draw::DrawElementsToFile& draw_;
 
         void update_env();
+        void update_label(acmacs::draw::PointLabel& label, const rjson::v3::value& source);
 
     };
 
