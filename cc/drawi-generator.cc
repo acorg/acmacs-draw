@@ -19,6 +19,7 @@ void acmacs::drawi::v1::Generator::generate(std::string_view filename) const
                 kv{"outline", fmt::format("{}", point.outline_)},
                 kv{"outline-width", *point.outline_width_},
                 kv{"shape", point.shape_},
+                kv{"label", object{kv{"text", point.label_}}}
                 };
     // shape
     object drawi_setup{kv{"drawi", drawi}};

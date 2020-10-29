@@ -29,6 +29,7 @@ namespace acmacs::drawi::inline v1
             Point& outline_width(Pixels a_outline_width) { outline_width_ = a_outline_width; return *this; }
             Point& size(Pixels a_size) { size_ = a_size; return *this; }
             Point& shape(std::string_view a_shape) { shape_ = a_shape; return *this; }
+            Point& label(std::string_view a_label) { label_ = a_label; return *this; }
 
             PointCoordinates coord_{PointCoordinates::zero2D};
             Color fill_{TRANSPARENT};
@@ -36,6 +37,7 @@ namespace acmacs::drawi::inline v1
             Pixels outline_width_{1};
             Pixels size_{5};
             std::string shape_{Circle};
+            std::string label_{};
         };
 
         constexpr Point& add_point() { return points_.emplace_back(); }
