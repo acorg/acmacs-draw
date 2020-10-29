@@ -9,10 +9,19 @@ void acmacs::drawi::v1::Generator::generate(std::string_view filename) const
     using namespace to_json;
     array drawi;
     drawi << "border"
-          << "grid" << object{key_val{"N", "viewport"}, key_val{"abs", array{viewport().left(), viewport().top(), viewport().size.width, viewport().size.height}}};
-    object drawi_setup;
-    drawi_setup << key_val{"drawi", drawi};
-    acmacs::file::write(filename, fmt::format("{}", drawi_setup));
+          << "grid"
+          << object{kv{"N", "viewport"}, kv{"abs", array{viewport().left(), viewport().top(), viewport().size.width, viewport().size.height}}};
+    for (const auto& point : points_)
+        drawi << object{kv{"N", "point"},
+                kv{"c", array{point.coord_.x(), point.coord_.y()}},
+                kv{"size", *point.size_},
+                kv{"fill", fmt::format("{}", point.fill_)},
+                kv{"outline", fmt::format("{}", point.outline_)},
+                kv{"outline_width", *point.outline_width_},
+                };
+    // shape
+    object drawi_setup{kv{"drawi", drawi}};
+    acmacs::file::write(filename, fmt::format("{:4}", drawi_setup));
 
 } // acmacs::drawi::v1::Generator::generate
 
