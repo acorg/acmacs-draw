@@ -1,6 +1,13 @@
-# Time-stamp: <2020-10-29 12:25:44 eu>
+# Time-stamp: <2020-10-29 12:28:04 eu>
 
-* Structure
+* Usage
+
+#+BEGIN_SRC bash
+drawi setup.drawi output.pdf --open
+#+END_SRC
+
+
+* .drawi Structure
 
 #+BEGIN_SRC json
   {
@@ -14,6 +21,7 @@
       ]
   }
 #+END_SRC
+
 
 * Point
 
