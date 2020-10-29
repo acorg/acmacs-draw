@@ -10,7 +10,7 @@ void acmacs::drawi::v1::Generator::generate(std::string_view filename) const
     array drawi;
     drawi << "border"
           << "grid"
-          << object{kv{"N", "viewport"}, kv{"abs", array{viewport().left(), viewport().top(), viewport().size.width, viewport().size.height}}};
+          << object{kv{"N", "viewport"}, kv{"abs", array{viewport().left(), viewport().top(), viewport().size.width, viewport().size.height}}, json::compact_output::yes};
     for (const auto& point : points_)
         drawi << object{kv{"N", "point"},
                 kv{"c", array{point.coord_.x(), point.coord_.y()}},
@@ -19,9 +19,12 @@ void acmacs::drawi::v1::Generator::generate(std::string_view filename) const
                 kv{"outline", fmt::format("{}", point.outline_)},
                 kv{"outline-width", *point.outline_width_},
                 kv{"shape", point.shape_},
-                kv{"label", object{kv{"text", point.label_}}}
-                };
-    // shape
+                kv{"label", object{kv{"text", point.label_},
+                        kv{"offset", array{point.label_offset_.x(), point.label_offset_.y()}},
+                        kv{"size", *point.label_size_},
+                        kv{"color", fmt::format("{}", point.label_color_)}}},
+                json::compact_output::yes};
+
     object drawi_setup{kv{"drawi", drawi}};
     acmacs::file::write(filename, fmt::format("{:4}", drawi_setup));
 

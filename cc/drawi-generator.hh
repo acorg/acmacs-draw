@@ -38,6 +38,9 @@ namespace acmacs::drawi::inline v1
             Pixels size_{5};
             std::string shape_{Circle};
             std::string label_{};
+            PointCoordinates label_offset_{0, 1};
+            Pixels label_size_{10};
+            Color label_color_{BLACK};
         };
 
         constexpr Point& add_point() { return points_.emplace_back(); }
