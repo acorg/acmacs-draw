@@ -119,7 +119,6 @@ bool acmacs::drawi::v1::Settings::apply_border()
 inline static void update_style(acmacs::PointStyle& style, std::string_view key, const rjson::v3::value& val)
 {
     using namespace std::string_view_literals;
-    // AD_DEBUG("apply_antigens {}: {}", key, val);
     if (key == "fill"sv)
         style.fill(rjson::v3::read_color_or_empty(val));
     else if (key == "outline"sv)
@@ -151,6 +150,20 @@ void acmacs::drawi::v1::Settings::update_label(acmacs::draw::PointLabel& label, 
     using namespace std::string_view_literals;
     if (const auto& text = substitute(source["text"sv]); !text.is_null())
         label.display_name(text.to<std::string_view>());
+    label.show(rjson::v3::read_bool(substitute(source["show"sv]), true));
+
+    if (const auto offset = rjson::v3::read_point_coordinates(substitute(source["offset"sv])); offset.has_value())
+        label.offset(*offset);
+    if (const auto color = rjson::v3::read_color(substitute(source["color"sv])); color.has_value())
+        label.color(*color);
+    if (const auto size = rjson::v3::read_number<Pixels>(substitute(source["size"sv])); size.has_value())
+        label.size(*size);
+    if (const auto weight = rjson::v3::read_string(substitute(source["weight"sv])); weight.has_value())
+        label.weight(*weight);
+    if (const auto slant = rjson::v3::read_string(substitute(source["slant"sv])); slant.has_value())
+        label.slant(*slant);
+    if (const auto font_family = rjson::v3::read_string(substitute(source["font_family"sv])); font_family.has_value())
+        label.font_family(*font_family);
 
 } // acmacs::drawi::v1::Settings::update_label
 
