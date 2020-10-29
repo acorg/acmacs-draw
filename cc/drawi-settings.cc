@@ -53,30 +53,37 @@ bool acmacs::drawi::v1::Settings::apply_viewport()
     bool updated{false};
     getenv("abs"sv).visit([&updated, this]<typename Val>(const Val& value) {
         if constexpr (std::is_same_v<Val, rjson::v3::detail::array>) {
-            if (value.size() != 3)
-                throw unrecognized{fmt::format("unrecognized: {} (3 numbers expected)", value)};
-            draw_.viewport(Viewport{value[0].template to<double>(), value[1].template to<double>(), value[2].template to<double>()});
+            switch (value.size()) {
+                case 3:
+                    draw_.viewport(Viewport{value[0].template to<double>(), value[1].template to<double>(), value[2].template to<double>()});
+                    break;
+                case 4:
+                    draw_.viewport(Viewport{value[0].template to<double>(), value[1].template to<double>(), value[2].template to<double>(), value[3].template to<double>()});
+                    break;
+                default:
+                    throw unrecognized{fmt::format("unrecognized: {} (3 or 4 numbers expected)", value)};
+            }
             updated = true;
         }
         else if constexpr (!std::is_same_v<Val, rjson::v3::detail::null>)
             throw unrecognized{fmt::format("unrecognized: {}", value)};
     });
 
-    // getenv("rel"sv).visit([&updated, this]<typename Val>(const Val& value) {
-    //     if constexpr (std::is_same_v<Val, rjson::v3::detail::array>) {
-    //         if (value.size() != 3)
-    //             throw unrecognized{fmt::format("unrecognized: {} (3 numbers expected)", value)};
-    //         // chart_draw().calculate_viewport();
-    //         // const auto& orig_viewport = chart_draw().viewport_before_changing();
-    //         // const auto new_size = value[2].template to<double>() + orig_viewport.size.width;
-    //         // if (new_size < 1)
-    //         //     throw unrecognized{"invalid size difference in \"rel\""};
-    //         // chart_draw().set_viewport(orig_viewport.origin + acmacs::PointCoordinates{value[0].template to<double>(), value[1].template to<double>()}, new_size);
-    //         updated = true;
-    //     }
-    //     else if constexpr (!std::is_same_v<Val, rjson::v3::detail::null>)
-    //         throw unrecognized{fmt::format("unrecognized: {}", value)};
-    // });
+    getenv("rel"sv).visit([&updated, this]<typename Val>(const Val& value) {
+        if constexpr (std::is_same_v<Val, rjson::v3::detail::array>) {
+            if (value.size() != 3)
+                throw unrecognized{fmt::format("unrecognized: {} (3 numbers expected)", value)};
+            // chart_draw().calculate_viewport();
+            const Viewport& orig_viewport = draw_.viewport();
+            const auto new_size = value[2].template to<double>() + orig_viewport.size.width;
+            if (new_size < 1)
+                throw unrecognized{"invalid size difference in \"rel\""};
+            draw_.viewport(Viewport{orig_viewport.origin + acmacs::PointCoordinates{value[0].template to<double>(), value[1].template to<double>()}, Size{new_size, new_size}});
+            updated = true;
+        }
+        else if constexpr (!std::is_same_v<Val, rjson::v3::detail::null>)
+            throw unrecognized{fmt::format("unrecognized: {}", value)};
+    });
 
     if (!updated)
         throw unrecognized{"neither \"abs\" nor \"rel\" found"};

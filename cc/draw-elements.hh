@@ -66,7 +66,8 @@ namespace acmacs::draw
         void draw() const;
         const std::string& output() const { return output_; } // if filename_ is "//.json"
 
-        void viewport(const acmacs::Viewport& viewport) { viewport_ = viewport; }
+        void viewport(const Viewport& viewport) { viewport_ = viewport; }
+        constexpr const Viewport& viewport() const { return viewport_; }
         void background(Color color);
         void grid(Scaled step, Color line_color, Pixels line_width);
         void border(Color line_color, Pixels line_width);
@@ -97,7 +98,6 @@ namespace acmacs::draw
 
       protected:
         virtual void generate() const = 0;
-        constexpr const auto& viewport() const { return viewport_; }
 
         template <typename Surface> void draw(Surface&& surface) const
             {
