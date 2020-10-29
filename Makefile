@@ -56,6 +56,7 @@ install: install-headers make-installation-dirs $(TARGETS)
 	$(call install_lib,$(ACMACS_DRAW_LIB))
 	$(call install_py_lib,$(ACMACS_DRAW_PY_LIB))
 	$(call symbolic_link_wildcard,$(DIST)/draw*,$(AD_BIN))
+	$(call symbolic_link_wildcard,$(abspath doc)/*.org,$(AD_DOC))
 
 install-disabled:
 	$(call make_dir,$(AD_SHARE)/js/draw)

@@ -1,0 +1,43 @@
+# Time-stamp: <2020-10-29 12:25:44 eu>
+
+* Structure
+
+#+BEGIN_SRC json
+  {
+      "drawi": [
+          {"N": "viewport", "abs": [-2, -2, 4]},
+          {"N": "background", "?color": "yellow"},
+          {"N": "border", "line-width": 1},
+          "grid",
+          {"N": "point", "c": [0, 0], "size": 10, "shape": "circle", "outline": "black", "outline-width": 1, "fill": "green", "label": {"text": "AAAAaaa", "offset": [0, 1], "size": 10, "color": "magenta"}},
+          {"N": "point", "c": [0.9, 0.8], "size": 20, "shape": "circle", "outline": "black", "outline-width": 1, "fill": "cyan", "label": {"show": true, "text": "Bb-Bb", "offset": [1, 0], "size": 20, "color": "brown"}},
+      ]
+  }
+#+END_SRC
+
+* Point
+
+#+BEGIN_SRC json
+  {
+      "N": "point",
+      "c": [0, 0], -- center
+      "size": 10,
+      "shape": "circle", -- "Circle", "Egg", "UglyEgg", "Box", "Rectangle", "Triangle" acmacs-base/point-style.hh
+      "outline": "black",
+      "outline-width": 1,
+      "fill": "green",
+      "label": {"text": "AAAAaaa", "offset": [0, 1], "size": 10, "color": "magenta"}
+  }
+#+END_SRC
+
+
+* COMMENT ====== local vars
+:PROPERTIES:
+:VISIBILITY: folded
+:END:
+#+STARTUP: showall indent
+Local Variables:
+eval: (auto-fill-mode 0)
+eval: (add-hook 'before-save-hook 'time-stamp)
+eval: (set (make-local-variable org-confirm-elisp-link-function) nil)
+End:
