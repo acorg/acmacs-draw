@@ -7,13 +7,15 @@
 void acmacs::drawi::v1::Generator::generate(std::string_view filename) const
 {
     using namespace to_json;
+    const auto fmtd = [](double val) { return raw{fmt::format("{:7.4f}", val)}; };
+
     array drawi;
     drawi << "border"
           << "grid"
-          << object{kv{"N", "viewport"}, kv{"abs", array{viewport().left(), viewport().top(), viewport().size.width, viewport().size.height}}, json::compact_output::yes};
+          << object{kv{"N", "viewport"}, kv{"abs", array{fmtd(viewport().left()), fmtd(viewport().top()), fmtd(viewport().size.width), fmtd(viewport().size.height)}}, json::compact_output::yes};
     for (const auto& point : points_)
         drawi << object{kv{"N", "point"},
-                kv{"c", array{point.coord_.x(), point.coord_.y()}},
+                kv{"c", array{fmtd(point.coord_.x()), fmtd(point.coord_.y())}},
                 kv{"size", *point.size_},
                 kv{"fill", fmt::format("{}", point.fill_)},
                 kv{"outline", fmt::format("{}", point.outline_)},
