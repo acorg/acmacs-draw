@@ -17,17 +17,25 @@ namespace acmacs::drawi::inline v1
 
         struct Point
         {
+            static inline const std::string_view Circle{"circle"};
+            static inline const std::string_view Egg{"egg"};
+            static inline const std::string_view UglyEgg{"uglyegg"};
+            static inline const std::string_view Box{"box"};
+            static inline const std::string_view Triangle{"triangle"};
+
             Point& coord(const PointCoordinates& new_coord) { coord_ = new_coord; return *this; }
             Point& fill(Color a_fill) { fill_ = a_fill; return *this; }
             Point& outline(Color a_outline) { outline_ = a_outline; return *this; }
             Point& outline_width(Pixels a_outline_width) { outline_width_ = a_outline_width; return *this; }
             Point& size(Pixels a_size) { size_ = a_size; return *this; }
+            Point& shape(std::string_view a_shape) { shape_ = a_shape; return *this; }
 
             PointCoordinates coord_{PointCoordinates::zero2D};
             Color fill_{TRANSPARENT};
             Color outline_{BLACK};
             Pixels outline_width_{1};
             Pixels size_{5};
+            std::string shape_{Circle};
         };
 
         constexpr Point& add_point() { return points_.emplace_back(); }
