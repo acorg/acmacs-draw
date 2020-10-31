@@ -43,7 +43,7 @@ namespace acmacs::drawi::inline v1
             Color label_color_{BLACK};
         };
 
-        constexpr Point& add_point() { return points_.emplace_back(); }
+        Point& add_point() { return points_.emplace_back(); }
 
       private:
         Viewport viewport_{-5, -5, 10};
