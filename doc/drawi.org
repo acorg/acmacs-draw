@@ -1,4 +1,4 @@
-# Time-stamp: <2020-10-29 12:28:04 eu>
+# Time-stamp: <2020-11-03 12:13:35 eu>
 
 * Usage
 
@@ -18,6 +18,9 @@ drawi setup.drawi output.pdf --open
           "grid",
           {"N": "point", "c": [0, 0], "size": 10, "shape": "circle", "outline": "black", "outline-width": 1, "fill": "green", "label": {"text": "AAAAaaa", "offset": [0, 1], "size": 10, "color": "magenta"}},
           {"N": "point", "c": [0.9, 0.8], "size": 20, "shape": "circle", "outline": "black", "outline-width": 1, "fill": "cyan", "label": {"show": true, "text": "Bb-Bb", "offset": [1, 0], "size": 20, "color": "brown"}},
+
+          {"N": "point-modify", "select": "all", "shape": "triangle", "size": 7, "fill": "green:p+0.8", "label": {"size": 7}},
+          {"N": "point-modify", "select": {"name": "~2018"}, "fill": "heatmap[9, 12]"},
       ]
   }
 #+END_SRC
@@ -38,6 +41,19 @@ drawi setup.drawi output.pdf --open
   }
 #+END_SRC
 
+* point-modify
+
+#+BEGIN_SRC json
+  {
+      "N": "point-modify",
+      "size": 10,
+      "shape": "circle",
+      "outline": "black",
+      "outline-width": 1,
+      "fill": "heatmap[5, 10]",
+      "label": {"text": "AAAAaaa", "offset": [0, 1], "size": 10, "color": "magenta"}
+  }
+#+END_SRC
 
 * COMMENT ====== local vars
 :PROPERTIES:
