@@ -208,6 +208,25 @@ void acmacs::drawi::v1::Settings::update_label(acmacs::draw::PointLabel& label, 
 
 // ----------------------------------------------------------------------
 
+void acmacs::drawi::v1::Settings::update_label(acmacs::draw::PointRefs& refs, const rjson::v3::value& source)
+{
+    for (auto point_no : refs)
+        update_label(refs.points().add_label(point_no), source);
+
+} // acmacs::drawi::v1::Settings::update_label
+
+// ----------------------------------------------------------------------
+
+template <typename PointRef> void acmacs::drawi::v1::Settings::update_label(PointRef&& ref)
+{
+    using namespace std::string_view_literals;
+    if (const auto& label = getenv("label"sv); !label.is_null())
+        update_label(std::forward<PointRef>(ref), label);
+
+} // acmacs::drawi::v1::Settings::update_label
+
+// ----------------------------------------------------------------------
+
 bool acmacs::drawi::v1::Settings::apply_point()
 {
     using namespace std::string_view_literals;
@@ -228,9 +247,10 @@ bool acmacs::drawi::v1::Settings::apply_point()
     }));
 
     update_style(*style);
+    update_label(points.add_label(point_no));
 
-    if (const auto& label = getenv("label"sv); !label.is_null())
-        update_label(points.add_label(point_no), label);
+    // if (const auto& label = getenv("label"sv); !label.is_null())
+    //     update_label(points.add_label(point_no), label);
 
     return true;
 
@@ -262,6 +282,7 @@ bool acmacs::drawi::v1::Settings::apply_point_modify()
     }
 
     update_style(points);
+    update_label(points);
 
     return true;
 

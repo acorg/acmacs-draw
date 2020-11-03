@@ -52,11 +52,13 @@ namespace acmacs::drawi::inline v1
 
         void update_env();
         void update_label(acmacs::draw::PointLabel& label, const rjson::v3::value& source);
+        void update_label(acmacs::draw::PointRefs& refs, const rjson::v3::value& source);
 
         void update_style(acmacs::PointStyle& style, std::string_view key, const rjson::v3::value& val);
         void update_style(size_t point_no, std::string_view key, const rjson::v3::value& val);
         void update_style(acmacs::draw::PointRefs& refs, std::string_view key, const rjson::v3::value& val);
         template <typename StyleRef> void update_style(StyleRef&& ref);
+        template <typename PointRef> void update_label(PointRef&& ref);
     };
 }
 
