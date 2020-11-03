@@ -1,5 +1,6 @@
 #include "acmacs-base/argv.hh"
 #include "acmacs-base/string-split.hh"
+#include "acmacs-base/string-compare.hh"
 #include "acmacs-base/temp-file.hh"
 #include "acmacs-base/filesystem.hh"
 #include "acmacs-base/quicklook.hh"
@@ -18,8 +19,7 @@ struct MapiOptions : public acmacs::argv::v2::argv
     option<bool>      open{*this, "open"};
     option<str_array> verbose{*this, 'v', "verbose", desc{"comma separated list (or multiple switches) of enablers"}};
 
-    argument<str> input{*this, arg_name{"input.drawi"}, mandatory};
-    argument<str> output{*this, arg_name{"output.pdf"}};
+    argument<str_array> inputs_output{*this, arg_name{"input.drawi|output.pdf"}, mandatory};
 };
 
 int main(int argc, char* const argv[])
@@ -31,22 +31,26 @@ int main(int argc, char* const argv[])
         acmacs::log::enable(opt.verbose);
 
         std::unique_ptr<acmacs::file::temp> temp_file;
-        const auto get_output = [&temp_file](std::string_view input_name, std::string_view output_name) -> std::pair<std::string_view, bool> {
-            if (output_name.empty()) {
-                temp_file = make_unique<acmacs::file::temp>(fmt::format("{}.pdf", fs::path(input_name).stem()));
+        const auto get_output = [&temp_file](const std::vector<std::string_view>& names) -> std::pair<std::string_view, bool> {
+            if (names.size() > 1 && (names.back() == "/dev/null"sv || names.back() == "/"sv)) {
+                return {{}, false};
+            }
+            else if (names.size() < 2 || !acmacs::string::endswith(names.back(), ".pdf"sv)) {
+                temp_file = make_unique<acmacs::file::temp>(fmt::format("{}.pdf", fs::path(names.front()).stem()));
                 return {*temp_file, true};
             }
-            else if (output_name == "/dev/null"sv || output_name == "/"sv) // do not generate pdf
-                return {{}, false};
             else
-                return {output_name, false};
+                return {names.back(), false};
         };
-        const auto [output, always_open] = get_output(opt.input, opt.output);
+        const auto [output, always_open] = get_output(opt.inputs_output);
         constexpr double output_size = 800;
         {
             acmacs::draw::DrawElementsToFile draw{output, output_size};
             acmacs::drawi::Settings settings{draw};
-            settings.load(opt.input);
+            for (const auto& input : opt.inputs_output) {
+                if (input.find('.') != std::string_view::npos && !acmacs::string::endswith(input, ".pdf"sv))
+                    settings.load(input);
+            }
 
             if (!opt.apply.empty()) {
                 for (const auto& to_apply : opt.apply) {
