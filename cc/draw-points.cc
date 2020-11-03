@@ -1,5 +1,6 @@
 #include "acmacs-base/layout.hh"
 #include "acmacs-base/range.hh"
+#include "acmacs-base/range-v3.hh"
 #include "acmacs-draw/surface.hh"
 // #include "acmacs-draw/surface-js-static.hh"
 // #include "acmacs-draw/surface-js-dynamic.hh"
@@ -42,6 +43,15 @@ acmacs::draw::Points::Points(std::shared_ptr<acmacs::Layout> layout, const acmac
       drawing_order_{acmacs::filled_with_indexes(layout->number_of_points())}
 {
 } // acmacs::draw::Points::Points
+
+// ----------------------------------------------------------------------
+
+acmacs::draw::PointRefs::PointRefs(Points& a_points)
+    : std::vector<size_t>(a_points.layout_->number_of_points()),
+      points_{a_points}
+{
+    ranges::copy(ranges::views::ints(0ul, size()), begin());
+}
 
 // ----------------------------------------------------------------------
 

@@ -29,6 +29,8 @@ bool acmacs::drawi::v1::Settings::apply_built_in(std::string_view name) // retur
     try {
         if (name == "point"sv)
             return apply_point();
+        else if (name == "point-modify"sv)
+            return apply_point_modify();
         else if (name == "viewport"sv)
             return apply_viewport();
         else if (name == "grid"sv)
@@ -123,7 +125,7 @@ bool acmacs::drawi::v1::Settings::apply_border()
 
 // ----------------------------------------------------------------------
 
-inline static void update_style(acmacs::PointStyle& style, std::string_view key, const rjson::v3::value& val)
+void acmacs::drawi::v1::Settings::update_style(acmacs::PointStyle& style, std::string_view key, const rjson::v3::value& val)
 {
     using namespace std::string_view_literals;
     if (key == "fill"sv)
@@ -148,7 +150,37 @@ inline static void update_style(acmacs::PointStyle& style, std::string_view key,
         ;                       // ignore
     else
         AD_WARNING("update_style: \"{}\" is not supported", key);
-}
+
+} // acmacs::drawi::v1::Settings::update_style
+
+// ----------------------------------------------------------------------
+
+void acmacs::drawi::v1::Settings::update_style(size_t point_no, std::string_view key, const rjson::v3::value& val)
+{
+    update_style(draw_.points().style_ref(point_no), key, val);
+
+} // acmacs::drawi::v1::Settings::update_style
+
+// ----------------------------------------------------------------------
+
+void acmacs::drawi::v1::Settings::update_style(acmacs::draw::PointRefs& refs, std::string_view key, const rjson::v3::value& val)
+{
+    for (auto point_no : refs)
+        update_style(refs.points().style_ref(point_no), key, val);
+
+} // acmacs::drawi::v1::Settings::update_style
+
+// ----------------------------------------------------------------------
+
+template <typename StyleRef> void acmacs::drawi::v1::Settings::update_style(StyleRef&& ref)
+{
+    using namespace std::string_view_literals;
+    for (const auto key : {"fill"sv, "outline"sv, "outline-width"sv, "show"sv, "hide"sv, "size"sv, "shape"sv, "aspect"sv, "rotation"sv}) {
+        if (const auto& val = getenv(key); !val.is_null())
+            update_style(std::forward<StyleRef>(ref), key, val);
+    }
+
+} // acmacs::drawi::v1::Settings::update_style
 
 // ----------------------------------------------------------------------
 
@@ -195,11 +227,7 @@ bool acmacs::drawi::v1::Settings::apply_point()
         throw std::exception{};
     }));
 
-    for (const auto key : {"fill"sv, "outline"sv, "outline-width"sv, "show"sv, "hide"sv, "size"sv, "shape"sv, "aspect"sv, "rotation"sv})
-    {
-        if (const auto& val = getenv(key); !val.is_null())
-            update_style(*style, key, val);
-    }
+    update_style(*style);
 
     if (const auto& label = getenv("label"sv); !label.is_null())
         update_label(points.add_label(point_no), label);
@@ -207,6 +235,37 @@ bool acmacs::drawi::v1::Settings::apply_point()
     return true;
 
 } // acmacs::drawi::v1::Settings::apply_point
+
+// ----------------------------------------------------------------------
+
+struct unrecognized_select {};
+
+bool acmacs::drawi::v1::Settings::apply_point_modify()
+{
+    using namespace std::string_view_literals;
+    auto points = draw_.points().all_points();
+
+    try {
+        getenv("select"sv).visit([]<typename Value>(const Value& value) {
+            if constexpr (std::is_same_v<Value, rjson::v3::detail::string>) {
+                if (value.template to<std::string_view>() == "all"sv) {
+                }
+                else
+                    throw unrecognized_select{};
+            }
+            else
+                throw unrecognized_select{};
+        });
+    }
+    catch (unrecognized_select&) {
+        throw error{fmt::format("unrecognized \"point-modify\" \"select\" clause: {}", getenv("select"sv))};
+    }
+
+    update_style(points);
+
+    return true;
+
+} // acmacs::drawi::v1::Settings::apply_point_modify
 
 // ----------------------------------------------------------------------
 

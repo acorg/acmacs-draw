@@ -1,9 +1,5 @@
 #pragma once
 
-#include <optional>
-#include <memory>
-#include <vector>
-
 #include "acmacs-base/sfinae.hh"
 #include "acmacs-base/transformation.hh"
 #include "acmacs-base/point-style.hh"
@@ -73,34 +69,68 @@ namespace acmacs::draw
 
 // ----------------------------------------------------------------------
 
+    class Points;
+
+    class PointRefs : public std::vector<size_t>
+    {
+      public:
+        Points& points() { return points_; }
+
+      private:
+        PointRefs(Points& a_points);
+        Points& points_;
+        friend class Points;
+    };
+
+// ----------------------------------------------------------------------
+
     class Points : public Element
     {
-     private:
-       template <typename S> void draw_forward(drawing_stage stage, S&& surface) const
-       {
-           switch (stage) {
-               case drawing_stage::points:
-                   draw_points(std::forward<S>(surface));
-                   break;
-               case drawing_stage::labels:
-                   draw_labels(std::forward<S>(surface));
-                   break;
-               case drawing_stage::__first: case drawing_stage::background: case drawing_stage::grid: case drawing_stage::serum_circles:
-               case drawing_stage::procrustes_arrows: case drawing_stage::legend: case drawing_stage::title: case drawing_stage::border: case drawing_stage::__last:
-                   break;
-           }
-       }
+      private:
+        template <typename S> void draw_forward(drawing_stage stage, S&& surface) const
+        {
+            switch (stage) {
+                case drawing_stage::points:
+                    draw_points(std::forward<S>(surface));
+                    break;
+                case drawing_stage::labels:
+                    draw_labels(std::forward<S>(surface));
+                    break;
+                case drawing_stage::__first:
+                case drawing_stage::background:
+                case drawing_stage::grid:
+                case drawing_stage::serum_circles:
+                case drawing_stage::procrustes_arrows:
+                case drawing_stage::legend:
+                case drawing_stage::title:
+                case drawing_stage::border:
+                case drawing_stage::__last:
+                    break;
+            }
+        }
 
-     public:
+      public:
         using DrawingOrder = std::vector<size_t>;
         using UnpackedStyles = std::vector<PointStyle>;
 
         Points();
         Points(std::shared_ptr<acmacs::Layout> layout, const acmacs::Transformation& transformation);
 
-        Points& drawing_order(const DrawingOrder& drawing_order) { drawing_order_ = drawing_order; return *this; }
-        Points& styles(std::shared_ptr<PointStyles> styles) { styles_ = styles; return *this; }
-        Points& labels(const PointLabels& labels) { labels_ = &labels; return *this; }
+        Points& drawing_order(const DrawingOrder& drawing_order)
+        {
+            drawing_order_ = drawing_order;
+            return *this;
+        }
+        Points& styles(std::shared_ptr<PointStyles> styles)
+        {
+            styles_ = styles;
+            return *this;
+        }
+        Points& labels(const PointLabels& labels)
+        {
+            labels_ = &labels;
+            return *this;
+        }
 
         void draw(drawing_stage stage, surface::Surface& surface) const override { draw_forward(stage, surface); }
         // void draw(drawing_stage stage, surface::JsDynamic& surface) const override { draw_forward(stage, surface); }
@@ -108,9 +138,14 @@ namespace acmacs::draw
 
         const auto& transformation() const { return transformation_; }
 
+        // ----------------------------------------------------------------------
         // drawi
+
         std::pair<size_t, PointStyle*> add(const PointCoordinates& coord);
         PointLabel& add_label(size_t point_no) { return labels_here_->add(point_no); }
+        PointStyle& style_ref(size_t point_no) const { return styles_->style_ref(point_no); }
+
+        PointRefs all_points() { return PointRefs(*this); }
 
       private:
         std::shared_ptr<acmacs::Layout> layout_;
@@ -129,12 +164,14 @@ namespace acmacs::draw
         // void draw_labels(surface::JsStatic& surface) const;
 
         PointStyle style(size_t point_no) const
-            {
-                if (styles_)
-                    return styles_->style(point_no);
-                else
-                    return default_style_;
-            }
+        {
+            if (styles_)
+                return styles_->style(point_no);
+            else
+                return default_style_;
+        }
+
+        friend class PointRefs;
 
     }; // class Points
 

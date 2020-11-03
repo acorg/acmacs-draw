@@ -11,6 +11,7 @@ namespace acmacs::draw
         bool empty() const override { return data_.empty(); }
         PointStyle style(size_t aPointNo) const override { return data_[aPointNo]; }
         PointStylesCompacted compacted() const override;
+        PointStyle& style_ref(size_t aPointNo) override { return data_[aPointNo]; }
 
         PointStyle& add(const PointStyle& style) { data_.push_back(style); return data_.back(); }
 
