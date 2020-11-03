@@ -249,9 +249,6 @@ bool acmacs::drawi::v1::Settings::apply_point()
     update_style(*style);
     update_label(points.add_label(point_no));
 
-    // if (const auto& label = getenv("label"sv); !label.is_null())
-    //     update_label(points.add_label(point_no), label);
-
     return true;
 
 } // acmacs::drawi::v1::Settings::apply_point
@@ -266,10 +263,16 @@ bool acmacs::drawi::v1::Settings::apply_point_modify()
     auto points = draw_.points().all_points();
 
     try {
-        getenv("select"sv).visit([]<typename Value>(const Value& value) {
+        getenv("select"sv).visit([&points]<typename Value>(const Value& value) {
             if constexpr (std::is_same_v<Value, rjson::v3::detail::string>) {
                 if (value.template to<std::string_view>() == "all"sv) {
                 }
+                else
+                    throw unrecognized_select{};
+            }
+            else if constexpr (std::is_same_v<Value, rjson::v3::detail::object>) {
+                if (const auto& name_v = value["name"sv]; !name_v.is_null())
+                    points.filter_by_name(name_v.template to<std::string_view>());
                 else
                     throw unrecognized_select{};
             }

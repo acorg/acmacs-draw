@@ -36,7 +36,7 @@ namespace acmacs::draw
 
         constexpr size_t index() const { return index_; }
         constexpr bool show() const { return show_; }
-        const std::string& display_name() const { return display_name_; }
+        std::string_view display_name() const { return display_name_; }
         PointCoordinates offset() const { return offset_; }
         Color text_color() const { return text_color_; }
         Pixels text_size() const { return text_size_; }
@@ -75,6 +75,7 @@ namespace acmacs::draw
     {
       public:
         Points& points() { return points_; }
+        void filter_by_name(std::string_view pattern);
 
       private:
         PointRefs(Points& a_points);

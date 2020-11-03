@@ -1,9 +1,8 @@
 #include "acmacs-base/layout.hh"
 #include "acmacs-base/range.hh"
 #include "acmacs-base/range-v3.hh"
+#include "acmacs-base/regex.hh"
 #include "acmacs-draw/surface.hh"
-// #include "acmacs-draw/surface-js-static.hh"
-// #include "acmacs-draw/surface-js-dynamic.hh"
 #include "acmacs-draw/draw-points.hh"
 #include "acmacs-draw/point-style-data.hh"
 
@@ -27,6 +26,34 @@ double acmacs::draw::PointLabel::text_offset(double offset_hint, double point_si
 
 // ----------------------------------------------------------------------
 
+acmacs::draw::PointRefs::PointRefs(Points& a_points)
+    : std::vector<size_t>(a_points.layout_->number_of_points()),
+      points_{a_points}
+{
+    ranges::copy(ranges::views::ints(0ul, size()), begin());
+}
+
+// ----------------------------------------------------------------------
+
+void acmacs::draw::PointRefs::filter_by_name(std::string_view pattern)
+{
+    if (pattern.size() > 1 && pattern[0] == '~') {
+        const std::regex re{std::next(std::begin(pattern), 1), std::end(pattern), acmacs::regex::icase};
+        erase(std::remove_if(begin(), end(),
+                             [&re, this](size_t point_no) {
+                                 const auto name = points().add_label(point_no).display_name();
+                                 return !std::regex_search(std::begin(name), std::end(name), re);
+                             }),
+              end());
+    }
+    else {
+        erase(std::remove_if(begin(), end(), [pattern, this](size_t point_no) { return points().add_label(point_no).display_name() != pattern; }), end());
+    }
+
+} // acmacs::draw::PointRefs::filter_by_name
+
+// ----------------------------------------------------------------------
+
 acmacs::draw::Points::Points()
     : layout_{std::make_shared<acmacs::Layout>()},
       styles_{std::make_shared<PointStylesData>()},
@@ -43,15 +70,6 @@ acmacs::draw::Points::Points(std::shared_ptr<acmacs::Layout> layout, const acmac
       drawing_order_{acmacs::filled_with_indexes(layout->number_of_points())}
 {
 } // acmacs::draw::Points::Points
-
-// ----------------------------------------------------------------------
-
-acmacs::draw::PointRefs::PointRefs(Points& a_points)
-    : std::vector<size_t>(a_points.layout_->number_of_points()),
-      points_{a_points}
-{
-    ranges::copy(ranges::views::ints(0ul, size()), begin());
-}
 
 // ----------------------------------------------------------------------
 
