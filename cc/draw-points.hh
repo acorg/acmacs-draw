@@ -145,6 +145,7 @@ namespace acmacs::draw
         std::pair<size_t, PointStyle*> add(const PointCoordinates& coord);
         PointLabel& add_label(size_t point_no) { return labels_here_->add(point_no); }
         PointStyle& style_ref(size_t point_no) const { return styles_->style_ref(point_no); }
+        const acmacs::Layout& layout() const { return *layout_; }
 
         PointRefs all_points() { return PointRefs(*this); }
 

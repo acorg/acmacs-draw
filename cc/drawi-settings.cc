@@ -1,5 +1,6 @@
 #include "acmacs-base/color-modifier.hh"
 #include "acmacs-base/rjson-v3-helper.hh"
+#include "acmacs-base/layout.hh"
 #include "acmacs-draw/drawi-settings.hh"
 #include "acmacs-draw/draw-points.hh"
 
@@ -140,6 +141,8 @@ void acmacs::drawi::v1::Settings::update_style(acmacs::PointStyle& style, std::s
         style.shape(acmacs::PointShape{val.to<std::string_view>()});
     else if (key == "size"sv)
         style.size(Pixels{val.to<double>()});
+    else if (key == "radius"sv)
+        style.radius(Scaled{val.to<double>()});
     else if (key == "outline-width"sv)
         style.outline_width(Pixels{val.to<double>()});
     else if (key == "aspect"sv)
@@ -175,7 +178,7 @@ void acmacs::drawi::v1::Settings::update_style(acmacs::draw::PointRefs& refs, st
 template <typename StyleRef> void acmacs::drawi::v1::Settings::update_style(StyleRef&& ref)
 {
     using namespace std::string_view_literals;
-    for (const auto key : {"fill"sv, "outline"sv, "outline-width"sv, "show"sv, "hide"sv, "size"sv, "shape"sv, "aspect"sv, "rotation"sv}) {
+    for (const auto key : {"fill"sv, "outline"sv, "outline-width"sv, "show"sv, "hide"sv, "size"sv, "radius"sv, "shape"sv, "aspect"sv, "rotation"sv}) {
         if (const auto& val = getenv(key); !val.is_null())
             update_style(std::forward<StyleRef>(ref), key, val);
     }
