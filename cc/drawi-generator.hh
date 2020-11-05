@@ -35,6 +35,7 @@ namespace acmacs::drawi::inline v1
             static inline const std::string_view Triangle{"triangle"};
 
             to_json::object generate() const override;
+            void generate_content(to_json::object& target) const;
 
             Point& coord(const PointCoordinates& new_coord) { coord_ = new_coord; return *this; }
             Point& fill(Color a_fill) { fill_ = a_fill; return *this; }
@@ -56,7 +57,7 @@ namespace acmacs::drawi::inline v1
             Color label_color_{BLACK};
         };
 
-        struct PointModify : public Element
+        struct PointModify : public Point
         {
             to_json::object generate() const override;
 

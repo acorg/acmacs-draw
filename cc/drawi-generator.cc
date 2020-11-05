@@ -56,24 +56,36 @@ void acmacs::drawi::v1::Generator::generate(std::string_view filename) const
 to_json::object acmacs::drawi::v1::Generator::Point::generate() const
 {
     using namespace to_json;
-
-    const Point default_point;
-    object label{kv{"text", label_}};
-    drawi_detail::update(label, *this, default_point, &Point::label_size_, "size", drawi_detail::deref);
-    drawi_detail::update(label, *this, default_point, &Point::label_color_, "color", drawi_detail::to_string);
-    drawi_detail::update(label, *this, default_point, &Point::label_offset_, "offset", drawi_detail::make_offset);
-
-    object pnt{kv{"N", "point"}, kv{"c", array{drawi_detail::fmtd(coord_.x()), drawi_detail::fmtd(coord_.y())}}, kv{"label", std::move(label)}};
-    drawi_detail::update(pnt, *this, default_point, &Point::size_, "size", drawi_detail::deref);
-    drawi_detail::update(pnt, *this, default_point, &Point::fill_, "fill", drawi_detail::to_string);
-    drawi_detail::update(pnt, *this, default_point, &Point::outline_, "outline", drawi_detail::to_string);
-    drawi_detail::update(pnt, *this, default_point, &Point::outline_width_, "outline_width", drawi_detail::deref);
-    drawi_detail::update(pnt, *this, default_point, &Point::shape_, "shape", drawi_detail::identity);
-    pnt << json::compact_output::yes;
-
+    object pnt{kv{"N", "point"}, kv{"c", array{drawi_detail::fmtd(coord_.x()), drawi_detail::fmtd(coord_.y())}}};
+    generate_content(pnt);
     return pnt;
 
 } // acmacs::drawi::v1::Generator::Point::generate
+
+// ----------------------------------------------------------------------
+
+void acmacs::drawi::v1::Generator::Point::generate_content(to_json::object& target) const
+{
+    using namespace std::string_view_literals;
+    using namespace to_json;
+
+    const Point default_point;
+
+    object label;
+    drawi_detail::update(label, *this, default_point, &Point::label_, "text", drawi_detail::identity);
+    drawi_detail::update(label, *this, default_point, &Point::label_size_, "size", drawi_detail::deref);
+    drawi_detail::update(label, *this, default_point, &Point::label_color_, "color", drawi_detail::to_string);
+    drawi_detail::update(label, *this, default_point, &Point::label_offset_, "offset", drawi_detail::make_offset);
+    if (!label.empty())
+        target << kv{"label"sv, std::move(label)};
+
+    drawi_detail::update(target, *this, default_point, &Point::size_, "size", drawi_detail::deref);
+    drawi_detail::update(target, *this, default_point, &Point::fill_, "fill", drawi_detail::to_string);
+    drawi_detail::update(target, *this, default_point, &Point::outline_, "outline", drawi_detail::to_string);
+    drawi_detail::update(target, *this, default_point, &Point::outline_width_, "outline_width", drawi_detail::deref);
+    drawi_detail::update(target, *this, default_point, &Point::shape_, "shape", drawi_detail::identity);
+
+} // acmacs::drawi::v1::Generator::Point::generate_content
 
 // ----------------------------------------------------------------------
 
@@ -88,6 +100,7 @@ to_json::object acmacs::drawi::v1::Generator::PointModify::generate() const
     else
         pnt << kv{"select"sv, "all"sv};
 
+    generate_content(pnt);
     return pnt;
 
 } // acmacs::drawi::v1::Generator::PointModify::generate
