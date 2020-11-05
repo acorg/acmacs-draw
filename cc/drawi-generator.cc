@@ -58,6 +58,7 @@ to_json::object acmacs::drawi::v1::Generator::Point::generate() const
     using namespace to_json;
     object pnt{kv{"N", "point"}, kv{"c", array{drawi_detail::fmtd(coord_.x()), drawi_detail::fmtd(coord_.y())}}};
     generate_content(pnt);
+    pnt << json::compact_output::yes;
     return pnt;
 
 } // acmacs::drawi::v1::Generator::Point::generate
@@ -101,6 +102,7 @@ to_json::object acmacs::drawi::v1::Generator::PointModify::generate() const
         pnt << kv{"select"sv, "all"sv};
 
     generate_content(pnt);
+    pnt << json::compact_output::yes;
     return pnt;
 
 } // acmacs::drawi::v1::Generator::PointModify::generate
