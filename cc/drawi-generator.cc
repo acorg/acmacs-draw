@@ -4,44 +4,34 @@
 
 // ----------------------------------------------------------------------
 
+namespace drawi_detail
+{
+    const auto fmtd = [](double val) { return to_json::raw{fmt::format("{:7.4f}", val)}; };
+    static const auto update = [](to_json::object& target, const auto& element, const auto& default_element, auto field_ref, std::string_view field_name, auto& convert) {
+        if (std::invoke(field_ref, element) != std::invoke(field_ref, default_element))
+            target << to_json::kv{field_name, convert(std::invoke(field_ref, element))};
+    };
+    static const auto identity = [](const auto& val) { return val; };
+    static const auto to_string = [](const auto& val) { return fmt::format("{}", val); };
+    static const auto deref = [](const auto& val) { return *val; };
+    static const auto make_offset = [](const auto& val) { return to_json::array{val.x(), val.y()}; };
+
+} // namespace drawi_detail
+
+// ----------------------------------------------------------------------
+
 void acmacs::drawi::v1::Generator::generate(std::string_view filename) const
 {
     using namespace to_json;
-
-    const auto fmtd = [](double val) { return raw{fmt::format("{:7.4f}", val)}; };
-
-    const Point default_point;
-    const auto update = [&default_point](object& target, const Point& point, auto field_ref, std::string_view field_name, auto& convert) {
-        if (std::invoke(field_ref, point) != std::invoke(field_ref, default_point))
-            target << kv{field_name, convert(std::invoke(field_ref, point))};
-    };
-    const auto identity = [](const auto& val) { return val; };
-    const auto to_string = [](const auto& val) { return fmt::format("{}", val); };
-    const auto deref = [](const auto& val) { return *val; };
-    const auto make_offset = [](const auto& val) { return array{val.x(), val.y()}; };
+    const auto fmtd = drawi_detail::fmtd;
 
     array drawi;
     drawi << "border"
           << "grid"
           << object{kv{"N", "viewport"}, kv{"abs", array{fmtd(viewport().left()), fmtd(viewport().top()), fmtd(viewport().size.width), fmtd(viewport().size.height)}}, json::compact_output::yes};
 
-    for (const auto& point : points_) {
-        object label{kv{"text", point.label_}};
-        update(label, point, &Point::label_size_, "size", deref);
-        update(label, point, &Point::label_color_, "color", to_string);
-        update(label, point, &Point::label_offset_, "offset", make_offset);
-
-        object pnt{kv{"N", "point"},
-                kv{"c", array{fmtd(point.coord_.x()), fmtd(point.coord_.y())}},
-                kv{"label", std::move(label)}};
-        update(pnt, point, &Point::size_, "size", deref);
-        update(pnt, point, &Point::fill_, "fill", to_string);
-        update(pnt, point, &Point::outline_, "outline", to_string);
-        update(pnt, point, &Point::outline_width_, "outline_width", deref);
-        update(pnt, point, &Point::shape_, "shape", identity);
-        pnt << json::compact_output::yes;
-        drawi << std::move(pnt);
-    }
+    for (const auto& element : elements_)
+        drawi << element->generate();
 
     drawi << object{kv{"?N", "point-modify"},
                 kv{"select", "all"},
@@ -60,6 +50,47 @@ void acmacs::drawi::v1::Generator::generate(std::string_view filename) const
     acmacs::file::write(filename, fmt::format("{:4}", drawi_setup));
 
 } // acmacs::drawi::v1::Generator::generate
+
+// ----------------------------------------------------------------------
+
+to_json::object acmacs::drawi::v1::Generator::Point::generate() const
+{
+    using namespace to_json;
+
+    const Point default_point;
+    object label{kv{"text", label_}};
+    drawi_detail::update(label, *this, default_point, &Point::label_size_, "size", drawi_detail::deref);
+    drawi_detail::update(label, *this, default_point, &Point::label_color_, "color", drawi_detail::to_string);
+    drawi_detail::update(label, *this, default_point, &Point::label_offset_, "offset", drawi_detail::make_offset);
+
+    object pnt{kv{"N", "point"}, kv{"c", array{drawi_detail::fmtd(coord_.x()), drawi_detail::fmtd(coord_.y())}}, kv{"label", std::move(label)}};
+    drawi_detail::update(pnt, *this, default_point, &Point::size_, "size", drawi_detail::deref);
+    drawi_detail::update(pnt, *this, default_point, &Point::fill_, "fill", drawi_detail::to_string);
+    drawi_detail::update(pnt, *this, default_point, &Point::outline_, "outline", drawi_detail::to_string);
+    drawi_detail::update(pnt, *this, default_point, &Point::outline_width_, "outline_width", drawi_detail::deref);
+    drawi_detail::update(pnt, *this, default_point, &Point::shape_, "shape", drawi_detail::identity);
+    pnt << json::compact_output::yes;
+
+    return pnt;
+
+} // acmacs::drawi::v1::Generator::Point::generate
+
+// ----------------------------------------------------------------------
+
+to_json::object acmacs::drawi::v1::Generator::PointModify::generate() const
+{
+    using namespace std::string_view_literals;
+    using namespace to_json;
+
+    object pnt{kv{"N"sv, "point-modify"sv}};
+    if (select_.has_value())
+        pnt << kv{"select"sv, object{kv{select_->first, select_->second}}};
+    else
+        pnt << kv{"select"sv, "all"sv};
+
+    return pnt;
+
+} // acmacs::drawi::v1::Generator::PointModify::generate
 
 // ----------------------------------------------------------------------
 

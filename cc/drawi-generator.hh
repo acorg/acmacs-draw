@@ -5,6 +5,11 @@
 
 // ----------------------------------------------------------------------
 
+namespace to_json::inline v2
+{
+    class object;
+}
+
 namespace acmacs::drawi::inline v1
 {
     class Generator
@@ -15,13 +20,21 @@ namespace acmacs::drawi::inline v1
         constexpr Viewport& viewport() { return viewport_; }
         constexpr const Viewport& viewport() const { return viewport_; }
 
-        struct Point
+        struct Element
+        {
+            virtual ~Element() = default;
+            virtual to_json::object generate() const = 0;
+        };
+
+        struct Point : public Element
         {
             static inline const std::string_view Circle{"circle"};
             static inline const std::string_view Egg{"egg"};
             static inline const std::string_view UglyEgg{"uglyegg"};
             static inline const std::string_view Box{"box"};
             static inline const std::string_view Triangle{"triangle"};
+
+            to_json::object generate() const override;
 
             Point& coord(const PointCoordinates& new_coord) { coord_ = new_coord; return *this; }
             Point& fill(Color a_fill) { fill_ = a_fill; return *this; }
@@ -43,11 +56,24 @@ namespace acmacs::drawi::inline v1
             Color label_color_{BLACK};
         };
 
-        Point& add_point() { return points_.emplace_back(); }
+        struct PointModify : public Element
+        {
+            to_json::object generate() const override;
+
+            std::optional<std::pair<std::string, std::string>> select_;
+        };
+
+        template <typename Elt> Elt& add()
+        {
+            auto ptr = std::make_unique<Elt>();
+            auto& elt = *ptr;
+            *elements_.emplace_back(std::move(ptr));
+            return elt;
+        }
 
       private:
         Viewport viewport_{-5, -5, 10};
-        std::vector<Point> points_;
+        std::vector<std::unique_ptr<Element>> elements_;
     };
 
 } // namespace acmacs::drawi::inline v1
