@@ -64,15 +64,17 @@ namespace acmacs::drawi::inline v1
         {
             to_json::object generate() const override;
 
+            PointModify& select(std::string_view k, std::string_view v) { select_ = std::make_pair(std::string{k}, std::string{v}); return *this; }
+
             std::optional<std::pair<std::string, std::string>> select_;
         };
 
-        template <typename Elt> Elt& add()
-        {
-            auto ptr = std::make_unique<Elt>();
-            auto& elt = *ptr;
-            *elements_.emplace_back(std::move(ptr));
-            return elt;
+            template <typename Elt> Elt& add()
+            {
+                auto ptr = std::make_unique<Elt>();
+                auto& elt = *ptr;
+                *elements_.emplace_back(std::move(ptr));
+                return elt;
         }
 
       private:
