@@ -33,19 +33,6 @@ void acmacs::drawi::v1::Generator::generate(std::string_view filename) const
     for (const auto& element : elements_)
         drawi << element->generate();
 
-    drawi << object{kv{"?N", "point-modify"},
-                kv{"select", "all"},
-                kv{"size", 10},
-                kv{"fill", "green:p+0.7"},
-                kv{"outline", "black"},
-                kv{"outline-width", 1},
-                kv{"shape", "triangle"},
-                kv{"label", object{
-                    kv{"offset", array{0, 1}},
-                    kv{"size", 7},
-                    kv{"color", "black"}}},
-            json::compact_output::yes};
-
     object drawi_setup{kv{"drawi", drawi}};
     acmacs::file::write(filename, fmt::format("{:4}", drawi_setup));
 

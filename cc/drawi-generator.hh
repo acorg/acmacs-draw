@@ -44,6 +44,9 @@ namespace acmacs::drawi::inline v1
             Point& size(Pixels a_size) { size_ = a_size; return *this; }
             Point& shape(std::string_view a_shape) { shape_ = a_shape; return *this; }
             Point& label(std::string_view a_label) { label_ = a_label; return *this; }
+            Point& label_size(Pixels size) { label_size_ = size; return *this; }
+            Point& label_offset(const PointCoordinates& offset) { label_offset_ = offset; return *this; }
+            Point& label_color(Color a_color) { label_color_ = a_color; return *this; }
 
             PointCoordinates coord_{PointCoordinates::zero2D};
             Color fill_{TRANSPARENT};
