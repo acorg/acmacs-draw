@@ -34,6 +34,8 @@ bool acmacs::drawi::v1::Settings::apply_built_in(std::string_view name) // retur
             return apply_point_modify();
         else if (name == "viewport"sv)
             return apply_viewport();
+        else if (name == "title"sv)
+            return apply_title();
         else if (name == "grid"sv)
             return apply_grid();
         else if (name == "background"sv)
@@ -123,6 +125,18 @@ bool acmacs::drawi::v1::Settings::apply_border()
     return true;
 
 } // acmacs::drawi::v1::Settings::apply_border
+
+// ----------------------------------------------------------------------
+
+bool acmacs::drawi::v1::Settings::apply_title()
+{
+    using namespace std::string_view_literals;
+    std::vector<std::string> lines;
+    lines.emplace_back(rjson::v3::read_string(getenv("text"sv), {}));
+    draw_.title(lines);
+    return true;
+
+} // acmacs::drawi::v1::Settings::apply_title
 
 // ----------------------------------------------------------------------
 

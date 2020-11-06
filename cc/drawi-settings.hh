@@ -40,6 +40,7 @@ namespace acmacs::drawi::inline v1
 
       protected:
         bool apply_viewport();
+        bool apply_title();
         bool apply_point();
         bool apply_point_modify();
 

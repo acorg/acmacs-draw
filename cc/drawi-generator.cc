@@ -33,6 +33,9 @@ void acmacs::drawi::v1::Generator::generate(std::string_view filename) const
     for (const auto& element : elements_)
         drawi << element->generate();
 
+    if (!title_.empty())
+        drawi << object{kv{"N", "title"}, kv{"text", title_}, json::compact_output::yes};
+
     object drawi_setup{kv{"drawi", drawi}};
     acmacs::file::write(filename, fmt::format("{:4}", drawi_setup));
 
