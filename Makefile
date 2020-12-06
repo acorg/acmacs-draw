@@ -3,11 +3,12 @@
 
 TARGETS = \
   $(ACMACS_DRAW_LIB) \
-  $(ACMACS_DRAW_PY_LIB) \
   $(DIST)/drawi \
   $(DIST)/test-cairo \
   $(DIST)/test-cairo-fonts \
   $(DIST)/test-distinct-colors
+
+# $(ACMACS_DRAW_PY_LIB)
 
 SRC_DIR = $(abspath $(ACMACSD_ROOT)/sources)
 
@@ -45,7 +46,7 @@ ACMACS_DRAW_PY_LIB = $(DIST)/$(ACMACS_DRAW_PY_LIB_NAME)$(PYTHON_MODULE_SUFFIX)
 
 all: install
 
-CONFIGURE_PYTHON = 1
+# CONFIGURE_PYTHON = 1
 CONFIGURE_CAIRO = 1
 include $(ACMACSD_ROOT)/share/Makefile.config
 
