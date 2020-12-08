@@ -66,11 +66,13 @@ install-disabled:
 	#ln -sf $(shell pwd)/bin/* $(AD_BIN)
 
 test: install $(DIST)/test-cairo $(DIST)/test-cairo-fonts $(DIST)/test-distinct-colors
-ifneq ($(DEBUG),1)
-	bin/test-acmacs-draw
-else
-	echo ">> WARNING: acmacs-draw tests do not work with address sanitizer (via python)"
-endif
+	echo ">>> acmacs-draw tests used py interface and now disabled"
+
+# ifneq ($(DEBUG),1)
+# 	bin/test-acmacs-draw
+# else
+# 	echo ">> WARNING: acmacs-draw tests do not work with address sanitizer (via python)"
+# endif
 .PHONY: test
 
 # ----------------------------------------------------------------------
