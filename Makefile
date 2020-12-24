@@ -56,9 +56,7 @@ LDLIBS = $(AD_LIB)/$(call shared_lib_name,libacmacsbase,1,0) $(CAIRO_LIBS) $(CXX
 
 install: install-headers make-installation-dirs $(TARGETS)
 	$(call install_lib,$(ACMACS_DRAW_LIB))
-	$(call install_py_lib,$(ACMACS_DRAW_PY_LIB))
-	$(call symbolic_link_wildcard,$(DIST)/draw*,$(AD_BIN))
-	$(call symbolic_link_wildcard,$(abspath doc)/*.org,$(AD_DOC))
+	$(call install_all,$(AD_PACKAGE_NAME))
 
 install-disabled:
 	$(call make_dir,$(AD_SHARE)/js/draw)
@@ -77,15 +75,15 @@ test: install $(DIST)/test-cairo $(DIST)/test-cairo-fonts $(DIST)/test-distinct-
 
 # ----------------------------------------------------------------------
 
-$(ACMACS_DRAW_LIB): $(patsubst %.cc,$(BUILD)/%.o,$(ACMACS_DRAW_SOURCES)) | $(DIST)
+$(ACMACS_DRAW_LIB): $(patsubst %.cc,$(BUILD)/%.o,$(ACMACS_DRAW_SOURCES)) | $(DIST) install-headers
 	$(call echo_shared_lib,$@)
 	$(call make_shared_lib,$(ACMACS_DRAW_LIB_NAME),$(ACMACS_DRAW_LIB_MAJOR),$(ACMACS_DRAW_LIB_MINOR)) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-$(ACMACS_DRAW_PY_LIB): $(patsubst %.cc,$(BUILD)/%.o,$(ACMACS_DRAW_PY_SOURCES)) | $(DIST)
-	$(call echo_shared_lib,$@)
-	$(call make_shared_lib,$(ACMACS_DRAW_PY_LIB_NAME),$(ACMACS_DRAW_PY_LIB_MAJOR),$(ACMACS_DRAW_PY_LIB_MINOR)) $(LDFLAGS) -o $@ $^ $(LDLIBS) $(PYTHON_LIBS)
+# $(ACMACS_DRAW_PY_LIB): $(patsubst %.cc,$(BUILD)/%.o,$(ACMACS_DRAW_PY_SOURCES)) | $(DIST)
+# 	$(call echo_shared_lib,$@)
+# 	$(call make_shared_lib,$(ACMACS_DRAW_PY_LIB_NAME),$(ACMACS_DRAW_PY_LIB_MAJOR),$(ACMACS_DRAW_PY_LIB_MINOR)) $(LDFLAGS) -o $@ $^ $(LDLIBS) $(PYTHON_LIBS)
 
-$(DIST)/%: $(BUILD)/%.o | $(ACMACS_DRAW_LIB)
+$(DIST)/%: $(BUILD)/%.o | $(ACMACS_DRAW_LIB) install-headers
 	$(call echo_link_exe,$@)
 	$(CXX) $(LDFLAGS) -o $@ $^ $(ACMACS_DRAW_LIB) $(LDLIBS) $(AD_RPATH)
 
