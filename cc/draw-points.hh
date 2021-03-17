@@ -20,8 +20,10 @@ namespace acmacs::draw
     class PointLabel
     {
      public:
-        PointLabel(size_t index) : index_(index) {}
+        PointLabel(size_t index = static_cast<size_t>(-1)) : index_(index) {}
+        PointLabel(const PointLabel&) = default;
 
+        constexpr PointLabel& index(size_t ind) { index_ = ind; return *this; }
         constexpr PointLabel& show(bool show) { show_ = show; return *this; }
         PointLabel& offset(const PointCoordinates& offs) { offset_ = offs; return *this; }
         PointLabel& display_name(std::string_view display_name) { display_name_ = display_name; return *this; }
