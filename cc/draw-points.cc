@@ -8,6 +8,23 @@
 
 // ----------------------------------------------------------------------
 
+acmacs::draw::PointLabel& acmacs::draw::PointLabel::operator=(const PointLabel& rhs)
+{
+    show_ = rhs.show_;
+    if (!std::isnan(rhs.offset_.x()))
+        offset_ = rhs.offset_;
+    if (rhs.display_name_.has_value())
+        display_name_ = rhs.display_name_;
+    text_color_.add(rhs.text_color_);
+    if (*rhs.text_size_ > 0)
+        text_size_ = rhs.text_size_;
+    text_style_ = rhs.text_style_;
+    return *this;
+
+} // acmacs::draw::PointLabel::operator=
+
+// ----------------------------------------------------------------------
+
 double acmacs::draw::PointLabel::text_offset(double offset_hint, double point_size, double text_size, bool text_origin_at_opposite)
 {
     double offset = 0;

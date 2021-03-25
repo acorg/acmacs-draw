@@ -22,6 +22,7 @@ namespace acmacs::draw
      public:
         PointLabel(size_t index = static_cast<size_t>(-1)) : index_(index) {}
         PointLabel(const PointLabel&) = default;
+        PointLabel& operator=(const PointLabel&);
 
         constexpr PointLabel& index(size_t ind) { index_ = ind; return *this; }
         constexpr PointLabel& show(bool show) { show_ = show; return *this; }
@@ -38,9 +39,9 @@ namespace acmacs::draw
 
         constexpr size_t index() const { return index_; }
         constexpr bool show() const { return show_; }
-        std::string_view display_name() const { return display_name_; }
+        std::string_view display_name() const { return display_name_.has_value() ? std::string_view{*display_name_} : std::string_view{"{abbreviated_name_with_passage_type}"}; }
         PointCoordinates offset() const { return offset_; }
-        Color text_color() const { return text_color_; }
+        Color text_color() const { return text_color_.has_color() ? Color{text_color_} : BLACK; }
         Pixels text_size() const { return text_size_; }
         const TextStyle text_style() const { return text_style_; }
 
@@ -50,8 +51,8 @@ namespace acmacs::draw
         bool show_{true};
         size_t index_;
         PointCoordinates offset_{0, 1};
-        std::string display_name_;
-        acmacs::color::Modifier text_color_{BLACK};
+        std::optional<std::string> display_name_;
+        acmacs::color::Modifier text_color_{};
         Pixels text_size_{12};
         TextStyle text_style_;
 
