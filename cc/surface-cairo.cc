@@ -858,7 +858,6 @@ acmacs::surface::PdfCairo::PdfCairo(std::string_view aFilename, double aWidth, d
     cairo_surface_destroy(surface);
     change_width_in_parent(aWidth);
     viewport({acmacs::PointCoordinates(0.0, 0.0), Size{aViewportWidth, aHeight * aViewportWidth / aWidth}});
-      // std::cerr << *this << std::endl;
 
 } // PdfCairo::PdfCairo
 
