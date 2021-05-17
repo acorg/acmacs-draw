@@ -104,48 +104,102 @@ namespace acmacs::surface
 
         }; // class CairoChild
 
+        // ----------------------------------------------------------------------
+
+        class CairoCommon : public Cairo
+        {
+          public:
+            CairoCommon() {}
+            ~CairoCommon() override { flush(); }
+
+            cairo_t* cairo_context() override { return mCairoContext; }
+            void new_page() override { cairo_show_page(cairo_context()); }
+
+            void flush()        // not virtual, called from destructor
+                {
+                    if (surface_) {
+                        cairo_surface_destroy(surface_);
+                        surface_ = nullptr;
+                    }
+                    if (mCairoContext) {
+                        cairo_destroy(mCairoContext);
+                        mCairoContext = nullptr;
+                    }
+                }
+
+          protected:
+            void setup(cairo_surface_t* surface, double width, double height, double viewport_width)
+            {
+                surface_ = surface;
+                mCairoContext = cairo_create(surface);
+                change_width_in_parent(width);
+                viewport({acmacs::PointCoordinates(0.0, 0.0), Size{viewport_width, height * viewport_width / width}});
+            }
+
+            auto surface() { return surface_; }
+
+          private:
+            cairo_t* mCairoContext;
+            cairo_surface_t* surface_; // keep it for PngCairo
+        };
+
     } // namespace internal_1
 
     // ----------------------------------------------------------------------
 
-    class PdfCairo : public internal_1::Cairo
+    class PdfCairo : public internal_1::CairoCommon
     {
       public:
-        PdfCairo(std::string_view aFilename, double aWidth, double aHeight, double aViewportWidth = default_canvas_width);
-        ~PdfCairo() override;
-
-        cairo_t* cairo_context() override { return mCairoContext; }
-        // virtual Cairo* parent() { return nullptr; }
-        // virtual const Cairo* parent() const { return nullptr; }
-        void new_page() override { cairo_show_page(cairo_context()); }
-
-      private:
-        cairo_t* mCairoContext;
+        PdfCairo(std::string_view aFilename, double aWidth, double aHeight, double aViewportWidth = default_canvas_width)
+        {
+            setup(cairo_pdf_surface_create(aFilename.empty() ? nullptr : aFilename.data(), aWidth, aHeight), aWidth, aHeight, aViewportWidth);
+        }
 
     }; // class PdfCairo
 
     // ----------------------------------------------------------------------
 
-    class PdfBufferCairo : public internal_1::Cairo
+    class PdfBufferCairo : public internal_1::CairoCommon
     {
       public:
-        PdfBufferCairo(double aWidth, double aHeight, double aViewportWidth = default_canvas_width);
-        ~PdfBufferCairo() override;
+        PdfBufferCairo(double aWidth, double aHeight, double aViewportWidth = default_canvas_width)
+        {
+            setup(cairo_pdf_surface_create_for_stream(&writer, this, aWidth, aHeight), aWidth, aHeight, aViewportWidth);
+        }
 
-        cairo_t* cairo_context() override { return mCairoContext; }
-        // virtual Cairo* parent() { return nullptr; }
-        // virtual const Cairo* parent() const { return nullptr; }
-        void new_page() override { cairo_show_page(cairo_context()); }
-        void flush();
         const std::string& data() const { return data_; }
 
       private:
-        cairo_t* mCairoContext;
         std::string data_;
 
         static cairo_status_t writer(void *closure, const unsigned char *data, unsigned int length);
 
     }; // class PdfCairo
+
+    // ----------------------------------------------------------------------
+
+    class PngCairo : public internal_1::CairoCommon
+    {
+      public:
+        PngCairo(std::string_view aFilename, double aWidth, double aHeight, double aViewportWidth = default_canvas_width) : filename_{aFilename}
+        {
+            setup(cairo_image_surface_create(CAIRO_FORMAT_ARGB32, static_cast<int>(aWidth), static_cast<int>(aHeight)), aWidth, aHeight, aViewportWidth);
+        }
+        ~PngCairo() override { flush(); }
+
+        void flush() // not virtual, called from destructor
+        {
+            if (surface()) {
+                if (const auto err = cairo_surface_write_to_png(surface(), filename_.c_str()); err != CAIRO_STATUS_SUCCESS)
+                    throw std::runtime_error{AD_FORMAT("writing png to {} failed: {}", filename_, err)};
+                internal_1::CairoCommon::flush();
+            }
+        }
+
+      private:
+        std::string filename_;
+
+    }; // class PngCairo
 
 } // namespace acmacs::surface
 

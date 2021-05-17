@@ -851,48 +851,6 @@ acmacs::Size acmacs::surface::internal_1::Cairo::text_size(std::string_view aTex
 
 // ----------------------------------------------------------------------
 
-acmacs::surface::PdfCairo::PdfCairo(std::string_view aFilename, double aWidth, double aHeight, double aViewportWidth)
-{
-    auto surface = cairo_pdf_surface_create(aFilename.empty() ? nullptr : aFilename.data(), aWidth, aHeight);
-    mCairoContext = cairo_create(surface);
-    cairo_surface_destroy(surface);
-    change_width_in_parent(aWidth);
-    viewport({acmacs::PointCoordinates(0.0, 0.0), Size{aViewportWidth, aHeight * aViewportWidth / aWidth}});
-
-} // PdfCairo::PdfCairo
-
-// ----------------------------------------------------------------------
-
-acmacs::surface::PdfCairo::~PdfCairo()
-{
-    if (mCairoContext)
-        cairo_destroy(mCairoContext);
-
-} // PdfCairo::~PdfCairo
-
-// ----------------------------------------------------------------------
-
-acmacs::surface::PdfBufferCairo::PdfBufferCairo(double aWidth, double aHeight, double aViewportWidth)
-{
-    auto surface = cairo_pdf_surface_create_for_stream(&writer, this, aWidth, aHeight);
-    mCairoContext = cairo_create(surface);
-    cairo_surface_destroy(surface);
-    change_width_in_parent(aWidth);
-    viewport({acmacs::PointCoordinates(0.0, 0.0), Size{aViewportWidth, aHeight * aViewportWidth / aWidth}});
-
-} // acmacs::surface::PdfBufferCairo::PdfBufferCairo
-
-// ----------------------------------------------------------------------
-
-void acmacs::surface::PdfBufferCairo::flush()
-{
-    cairo_destroy(mCairoContext);
-    mCairoContext = nullptr;
-
-} // acmacs::surface::PdfBufferCairo::flush
-
-// ----------------------------------------------------------------------
-
 cairo_status_t acmacs::surface::PdfBufferCairo::writer(void *closure, const unsigned char* data, unsigned int length)
 {
     auto* self = reinterpret_cast<PdfBufferCairo*>(closure);
@@ -900,15 +858,6 @@ cairo_status_t acmacs::surface::PdfBufferCairo::writer(void *closure, const unsi
     return CAIRO_STATUS_SUCCESS;
 
 } // acmacs::surface::PdfBufferCairo::writer
-
-// ----------------------------------------------------------------------
-
-acmacs::surface::PdfBufferCairo::~PdfBufferCairo()
-{
-    if (mCairoContext)
-        cairo_destroy(mCairoContext);
-
-} // acmacs::surface::PdfBufferCairo::~PdfBufferCairo
 
 // ----------------------------------------------------------------------
 /// Local Variables:
