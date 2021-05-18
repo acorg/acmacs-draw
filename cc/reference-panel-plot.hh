@@ -20,9 +20,6 @@ namespace acmacs::draw
     class ReferencePanelPlot
     {
       public:
-        void plot(std::string_view output_filename, const acmacs::chart::ReferencePanelPlotData::ASTable& data) const;
-
-      private:
         struct Parameters
         {
             std::string title{"*title*"};
@@ -33,6 +30,11 @@ namespace acmacs::draw
             double cell_voffset_per_level;
         };
 
+        void plot(std::string_view output_filename, const acmacs::chart::ReferencePanelPlotData::ASTable& data) const;
+
+        Parameters& parameters() { return parameters_; }
+
+      private:
         Parameters parameters_;
 
         void text(surface::Surface& aSurface, const PointCoordinates& aOffset, std::string_view aText, Color aColor, Rotation aRotation, double aFontSize, double aMaxWidth) const;
