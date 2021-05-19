@@ -32,13 +32,13 @@ void acmacs::draw::ReferencePanelPlot::plot_cell(surface::Surface& cell_surface,
     cell_surface.rectangle(cell_surface.viewport().origin, cell_surface.viewport().size, BLACK, Pixels{0.4});
 
     // serum name
-    text(cell_surface, {parameters_.cell_label_scale * 1.2, parameters_.cell_label_scale}, serum_name, BLACK, NoRotation, parameters_.cell_label_scale,
-         (parameters_.hstep - parameters_.cell_label_scale * 1.5));
+    text(cell_surface, {parameters_.cell_label_scale + parameters_.cell_padding_scale, parameters_.cell_label_scale}, serum_name, BLACK, NoRotation, parameters_.cell_label_scale,
+         (parameters_.hstep - parameters_.cell_label_scale - parameters_.cell_padding_scale * 2.0));
     // antigen name
-    text(cell_surface, {parameters_.cell_label_scale, parameters_.vstep - parameters_.cell_voffset_base}, antigen_name, BLACK, Rotation{-M_PI_2}, parameters_.cell_label_scale,
-         (parameters_.vstep - parameters_.cell_voffset_base * 1.5));
+    text(cell_surface, {parameters_.cell_label_scale, parameters_.vstep - parameters_.cell_padding_scale}, antigen_name, BLACK, Rotation{-M_PI_2}, parameters_.cell_label_scale,
+         (parameters_.vstep - parameters_.cell_padding_scale * 2.0));
 
-    const double logged_titer_step = (parameters_.vstep - parameters_.cell_voffset_base - parameters_.cell_label_scale) / static_cast<double>(parameters_.titer_levels.size());
+    const double logged_titer_step = (parameters_.vstep - parameters_.cell_padding_scale * 2 - parameters_.cell_label_scale) / static_cast<double>(parameters_.titer_levels.size());
     const double median_titer_logged = cell.median_titer.logged_with_thresholded();
 
     double table_no{2};
@@ -46,7 +46,7 @@ void acmacs::draw::ReferencePanelPlot::plot_cell(surface::Surface& cell_surface,
         if (!titer.is_dont_care()) {
             const double symbol_left{table_no - 0.5 + parameters_.cell_padding_scale};
             const double titer_logged = titer.logged_with_thresholded();
-            const double symbol_top = parameters_.vstep - parameters_.cell_voffset_base - (titer_logged + 2.0) * logged_titer_step;
+            const double symbol_top = parameters_.vstep - parameters_.cell_padding_scale - (titer_logged + 2.0) * logged_titer_step;
             // AD_DEBUG("{} {} top:{}", titer, titer_logged, symbol_top);
             const double symbol_bottom = symbol_top + logged_titer_step;
             const Color symbol_color = titer_color(titer_logged, median_titer_logged);
@@ -68,8 +68,7 @@ void acmacs::draw::ReferencePanelPlot::plot_cell(surface::Surface& cell_surface,
     for (const auto [titer_label_vpos, titer_label] : enumerate(parameters_.titer_levels)) {
         cell_surface.text_right_aligned(
             {parameters_.hstep - parameters_.cell_label_scale * 0.2,
-             // parameters_.cell_label_scale + parameters_.voffset_base + titer_label_vpos * logged_titer_step + logged_titer_step * 0.5},
-             parameters_.vstep - parameters_.cell_voffset_base - static_cast<double>(titer_label_vpos) * logged_titer_step - logged_titer_step * 0.5 + titer_label_font_size * 0.3},
+             parameters_.vstep - parameters_.cell_padding_scale - static_cast<double>(titer_label_vpos) * logged_titer_step - logged_titer_step * 0.5 + titer_label_font_size * 0.3},
             titer_label, BLACK, Scaled{titer_label_font_size});
     }
 
