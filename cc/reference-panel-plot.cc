@@ -39,6 +39,7 @@ void acmacs::draw::ReferencePanelPlot::plot_cell(surface::Surface& cell_surface,
          (parameters_.vstep - parameters_.cell_voffset_base * 1.5));
 
     const double logged_titer_step = (parameters_.vstep - parameters_.cell_voffset_base - parameters_.cell_top_title_height) / static_cast<double>(parameters_.titer_levels.size());
+    const double median_titer_logged = cell.median_titer.logged_with_thresholded();
 
     double table_no{2};
     for (const auto& titer : cell.titers) {
@@ -47,7 +48,7 @@ void acmacs::draw::ReferencePanelPlot::plot_cell(surface::Surface& cell_surface,
             const double symbol_top = parameters_.vstep - parameters_.cell_voffset_base - (titer_logged + 2.0) * logged_titer_step;
             // AD_DEBUG("{} {} top:{}", titer, titer_logged, symbol_top);
             const double symbol_bottom = symbol_top + logged_titer_step;
-            const Color symbol_color{PINK}; // = color_for_titer(element.first, median_index);
+            const Color symbol_color = titer_color(titer_logged, median_titer_logged);
             if (titer.is_less_than()) {
                 cell_surface.triangle_filled({table_no - 0.5, symbol_top},
                                       {table_no + 0.5, symbol_top},
@@ -90,6 +91,20 @@ void acmacs::draw::ReferencePanelPlot::text(surface::Surface& aSurface, const Po
     aSurface.text(aOffset, aText, aColor, Scaled{aFontSize}, acmacs::TextStyle(), aRotation);
 
 } // acmacs::draw::ReferencePanelPlot::text
+
+// ----------------------------------------------------------------------
+
+Color acmacs::draw::ReferencePanelPlot::titer_color(double titer_logged, double median_titer_logged) const
+{
+    const auto dist = std::abs(titer_logged - median_titer_logged);
+    if (dist < 0.5)
+        return parameters_.color_median;
+    else if (dist < 1.5)
+        return parameters_.color_next_to_median;
+    else
+        return parameters_.color_other;
+
+} // acmacs::draw::ReferencePanelPlot::titer_color
 
 // ----------------------------------------------------------------------
 
