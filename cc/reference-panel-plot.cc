@@ -6,21 +6,31 @@
 
 void acmacs::draw::ReferencePanelPlot::plot(std::string_view output_filename, const acmacs::chart::ReferencePanelPlotData::ASTable& as_table) const
 {
-    const size_t number_of_sera{as_table.sera.size()};
+    const auto surface_width{1000.0};
+    const auto number_of_antigens{static_cast<double>(as_table.antigens.size())};
+    const auto number_of_sera{static_cast<double>(as_table.sera.size())};
+    const auto aspect = number_of_antigens / number_of_sera + parameters_.title_scale; // h / w
+
+    acmacs::surface::PdfCairo surface_main{output_filename, surface_width, surface_width * aspect, 1.0};
+
+    text(surface_main, {parameters_.title_scale, parameters_.title_scale * 0.85}, parameters_.title, BLACK, NoRotation, parameters_.title_scale, -1 /* centered */);
+
     parameters_.hstep = static_cast<double>(as_table.data[0][0].titers.size()) + 2.0 * parameters_.cell_padding_scale;
     parameters_.vstep = parameters_.hstep;
-    const double title_height = parameters_.vstep * 0.5;
-    acmacs::surface::PdfCairo surface(output_filename, static_cast<double>(number_of_sera) * parameters_.hstep, static_cast<double>(as_table.antigens.size()) * parameters_.vstep + title_height,
-                                      static_cast<double>(number_of_sera) * parameters_.hstep);
-    const acmacs::Viewport cell_viewport{acmacs::Size{parameters_.hstep, parameters_.vstep}};
-    text(surface, {title_height, title_height * 0.7}, parameters_.title, BLACK, NoRotation, title_height * 0.8, static_cast<double>(number_of_sera) * parameters_.hstep - title_height * 2);
 
+    surface::Surface& surface =
+        surface_main.subsurface({0.0, parameters_.title_scale}, Scaled{1.0}, Viewport{Size{parameters_.hstep * number_of_sera, parameters_.vstep * number_of_antigens}}, true);
+
+    const Viewport cell_viewport{Size{parameters_.hstep, parameters_.vstep}};
     for (const auto [ag_no, row] : enumerate(as_table.data)) {
         for (const auto [sr_no, cell] : enumerate(row)) {
-            surface::Surface& cell_surface = surface.subsurface({static_cast<double>(sr_no) * parameters_.hstep, static_cast<double>(ag_no) * parameters_.vstep + title_height}, Scaled{parameters_.hstep}, cell_viewport, true);
+            surface::Surface& cell_surface =
+                surface.subsurface({static_cast<double>(sr_no) * parameters_.hstep, static_cast<double>(ag_no) * parameters_.vstep}, Scaled{parameters_.hstep}, cell_viewport, true);
             plot_cell(cell_surface, cell, as_table.antigens[ag_no], as_table.sera[sr_no]);
         }
     }
+
+    surface_main.flush();
 
 } // acmacs::draw::ReferencePanelPlot::plot
 
@@ -75,13 +85,23 @@ void acmacs::draw::ReferencePanelPlot::plot_cell(surface::Surface& cell_surface,
 
 // ----------------------------------------------------------------------
 
-void acmacs::draw::ReferencePanelPlot::text(surface::Surface& aSurface, const PointCoordinates& aOffset, std::string_view aText, Color aColor, Rotation aRotation, double aFontSize,
+void acmacs::draw::ReferencePanelPlot::text(surface::Surface& surface, const PointCoordinates& aOffset, std::string_view aText, Color aColor, Rotation aRotation, double aFontSize,
                                             double aMaxWidth) const
 {
-    const auto size = aSurface.text_size(aText, Scaled{aFontSize});
-    if (size.width > aMaxWidth)
-        aFontSize *= aMaxWidth / size.width;
-    aSurface.text(aOffset, aText, aColor, Scaled{aFontSize}, acmacs::TextStyle(), aRotation);
+    const auto size = surface.text_size(aText, Scaled{aFontSize});
+    if (aMaxWidth < 0) { // centered
+        double offset_x{(surface.viewport().size.width - size.width) / 2.0};
+        if (size.width > surface.viewport().size.width) {
+            aFontSize *= surface.viewport().size.width / size.width;
+            offset_x = 0;
+        }
+        surface.text({offset_x, aOffset.y()}, aText, aColor, Scaled{aFontSize}, acmacs::TextStyle(), aRotation);
+    }
+    else {
+        if (size.width > aMaxWidth)
+            aFontSize *= aMaxWidth / size.width;
+        surface.text(aOffset, aText, aColor, Scaled{aFontSize}, acmacs::TextStyle(), aRotation);
+    }
 
 } // acmacs::draw::ReferencePanelPlot::text
 

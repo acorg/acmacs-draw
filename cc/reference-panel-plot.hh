@@ -27,6 +27,7 @@ namespace acmacs::draw
             mutable double hstep{1};
             mutable double vstep{1};
 
+            double title_scale{0.1}; // relative to image width
             double cell_label_scale{2.0};
             double cell_titer_scale{1.5};
             double cell_padding_scale{2.0};
