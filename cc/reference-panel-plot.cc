@@ -64,12 +64,11 @@ void acmacs::draw::ReferencePanelPlot::plot_cell(surface::Surface& cell_surface,
     }
 
     // titer value marks
-    const double titer_label_font_size = parameters_.cell_label_scale * 0.7;
     for (const auto [titer_label_vpos, titer_label] : enumerate(parameters_.titer_levels)) {
         cell_surface.text_right_aligned(
             {parameters_.hstep - parameters_.cell_label_scale * 0.2,
-             parameters_.vstep - parameters_.cell_padding_scale - static_cast<double>(titer_label_vpos) * logged_titer_step - logged_titer_step * 0.5 + titer_label_font_size * 0.3},
-            titer_label, BLACK, Scaled{titer_label_font_size});
+             parameters_.vstep - parameters_.cell_padding_scale - static_cast<double>(titer_label_vpos) * logged_titer_step - logged_titer_step * 0.5 + parameters_.cell_titer_scale * 0.3},
+            titer_label, BLACK, Scaled{parameters_.cell_titer_scale});
     }
 
 } // acmacs::draw::ReferencePanelPlot::plot_cell

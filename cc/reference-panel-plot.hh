@@ -28,6 +28,7 @@ namespace acmacs::draw
             mutable double vstep{1};
 
             double cell_label_scale{2.0};
+            double cell_titer_scale{1.5};
             double cell_padding_scale{2.0};
 
             std::vector<std::string> titer_levels{"5", "10", "20", "40", "80", "160", "320", "640", "1280", "2560", "5120", "10240", "20480", "40960"};
