@@ -40,6 +40,33 @@ void acmacs::draw::ReferencePanelPlot::plot_cell(surface::Surface& cell_surface,
 
     const double logged_titer_step = (parameters_.vstep - parameters_.cell_voffset_base - parameters_.cell_top_title_height) / static_cast<double>(parameters_.titer_levels.size());
 
+    double table_no{2};
+    for (const auto& titer : cell.titers) {
+        if (!titer.is_dont_care()) {
+            const double titer_logged = titer.logged_with_thresholded();
+            const double symbol_top = parameters_.vstep - parameters_.cell_voffset_base - (titer_logged + 2.0) * logged_titer_step;
+            // AD_DEBUG("{} {} top:{}", titer, titer_logged, symbol_top);
+            const double symbol_bottom = symbol_top + logged_titer_step;
+            const Color symbol_color{PINK}; // = color_for_titer(element.first, median_index);
+            if (titer.is_less_than()) {
+                cell_surface.triangle_filled({table_no - 0.5, symbol_top},
+                                      {table_no + 0.5, symbol_top},
+                                      {table_no,       symbol_bottom},
+                                      TRANSPARENT, Pixels{0}, symbol_color);
+            }
+            else if (titer.is_more_than()) {
+                cell_surface.triangle_filled({table_no - 0.5, symbol_bottom},
+                                      {table_no + 0.5, symbol_bottom},
+                                      {table_no,       symbol_top},
+                                      TRANSPARENT, Pixels{0}, symbol_color);
+            }
+            else {
+                cell_surface.rectangle_filled({table_no - 0.5, symbol_top}, {1, logged_titer_step}, TRANSPARENT, Pixels{0}, symbol_color);
+            }
+        }
+        ++table_no;
+    }
+
     // titer value marks
     const double titer_label_font_size = parameters_.cell_top_title_height * 0.7;
     for (const auto [titer_label_vpos, titer_label] : enumerate(parameters_.titer_levels)) {

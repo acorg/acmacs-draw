@@ -31,17 +31,17 @@ ACMACS_DRAW_SOURCES = \
 
 # surface-html.cc surface-js-dynamic.cc surface-js-static.cc
 
-ACMACS_DRAW_PY_SOURCES = py.cc $(ACMACS_DRAW_SOURCES)
+# ACMACS_DRAW_PY_SOURCES = py.cc $(ACMACS_DRAW_SOURCES)
 
 ACMACS_DRAW_LIB_MAJOR = 1
 ACMACS_DRAW_LIB_MINOR = 0
 ACMACS_DRAW_LIB_NAME = libacmacsdraw
 ACMACS_DRAW_LIB = $(DIST)/$(call shared_lib_name,$(ACMACS_DRAW_LIB_NAME),$(ACMACS_DRAW_LIB_MAJOR),$(ACMACS_DRAW_LIB_MINOR))
 
-ACMACS_DRAW_PY_LIB_MAJOR = 1
-ACMACS_DRAW_PY_LIB_MINOR = 0
-ACMACS_DRAW_PY_LIB_NAME = acmacs_draw_backend
-ACMACS_DRAW_PY_LIB = $(DIST)/$(ACMACS_DRAW_PY_LIB_NAME)$(PYTHON_MODULE_SUFFIX)
+# ACMACS_DRAW_PY_LIB_MAJOR = 1
+# ACMACS_DRAW_PY_LIB_MINOR = 0
+# ACMACS_DRAW_PY_LIB_NAME = acmacs_draw_backend
+# ACMACS_DRAW_PY_LIB = $(DIST)/$(ACMACS_DRAW_PY_LIB_NAME)$(PYTHON_MODULE_SUFFIX)
 
 # ----------------------------------------------------------------------
 
@@ -51,7 +51,11 @@ all: install
 CONFIGURE_CAIRO = 1
 include $(ACMACSD_ROOT)/share/Makefile.config
 
-LDLIBS = $(AD_LIB)/$(call shared_lib_name,libacmacsbase,1,0) $(CAIRO_LIBS) $(CXX_LIBS)
+LDLIBS = \
+  $(AD_LIB)/$(call shared_lib_name,libacmacsbase,1,0) \
+  $(AD_LIB)/$(call shared_lib_name,libacmacschart,2,0) \
+  $(CAIRO_LIBS) \
+  $(CXX_LIBS)
 
 # ----------------------------------------------------------------------
 
