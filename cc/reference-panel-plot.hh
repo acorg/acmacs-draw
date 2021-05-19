@@ -23,11 +23,15 @@ namespace acmacs::draw
         struct Parameters
         {
             std::string title{"*title*"};
+
+            mutable double hstep{1};
+            mutable double vstep{1};
+
             double cell_top_title_height{1.3};
-            // double cell_hstep{1};
-            // double cell_vstep{1};
             double cell_voffset_base{0.1};
             double cell_voffset_per_level{0};
+
+            std::vector<std::string> titer_levels{"5", "10", "20", "40", "80", "160", "320", "640", "1280", "2560", "5120", "10240", "20480", "40960"};
         };
 
         void plot(std::string_view output_filename, const acmacs::chart::ReferencePanelPlotData::ASTable& as_table) const;
@@ -37,11 +41,10 @@ namespace acmacs::draw
       private:
         Parameters parameters_;
 
-        void plot_cell(surface::Surface& cell_surface, const chart::ReferencePanelPlotData::AntigenSerumData& cell, std::string_view antigen_name, std::string_view serum_name, double hstep, double vstep) const;
+        void plot_cell(surface::Surface& cell_surface, const chart::ReferencePanelPlotData::AntigenSerumData& cell, std::string_view antigen_name, std::string_view serum_name) const;
         void text(surface::Surface& aSurface, const PointCoordinates& aOffset, std::string_view aText, Color aColor, Rotation aRotation, double aFontSize, double aMaxWidth) const;
-
     };
-}
+} // namespace acmacs::draw
 
 // ----------------------------------------------------------------------
 /// Local Variables:
