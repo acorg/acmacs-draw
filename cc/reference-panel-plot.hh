@@ -27,7 +27,8 @@ namespace acmacs::draw
             mutable double hstep{1};
             mutable double vstep{1};
 
-            double cell_top_title_height{1.3};
+            double cell_label_scale{2.0};
+            double cell_padding_scale{2.0};
             double cell_voffset_base{0.1};
             double cell_voffset_per_level{0};
 
