@@ -39,7 +39,7 @@ void acmacs::draw::ReferencePanelPlot::plot_cell(surface::Surface& cell_surface,
          (parameters_.vstep - parameters_.cell_padding_scale * 2.0));
 
     const double logged_titer_step = (parameters_.vstep - parameters_.cell_padding_scale * 2 - parameters_.cell_label_scale) / static_cast<double>(parameters_.titer_levels.size());
-    const double median_titer_logged = cell.median_titer.logged_with_thresholded();
+    const double median_titer_logged = cell.median_titer.is_dont_care() ? 0.0 : cell.median_titer.logged_with_thresholded();
 
     double table_no{2};
     for (const auto& titer : cell.titers) {
