@@ -31,23 +31,15 @@ ACMACS_DRAW_SOURCES = \
 
 # surface-html.cc surface-js-dynamic.cc surface-js-static.cc
 
-# ACMACS_DRAW_PY_SOURCES = py.cc $(ACMACS_DRAW_SOURCES)
-
 ACMACS_DRAW_LIB_MAJOR = 1
 ACMACS_DRAW_LIB_MINOR = 0
 ACMACS_DRAW_LIB_NAME = libacmacsdraw
 ACMACS_DRAW_LIB = $(DIST)/$(call shared_lib_name,$(ACMACS_DRAW_LIB_NAME),$(ACMACS_DRAW_LIB_MAJOR),$(ACMACS_DRAW_LIB_MINOR))
 
-# ACMACS_DRAW_PY_LIB_MAJOR = 1
-# ACMACS_DRAW_PY_LIB_MINOR = 0
-# ACMACS_DRAW_PY_LIB_NAME = acmacs_draw_backend
-# ACMACS_DRAW_PY_LIB = $(DIST)/$(ACMACS_DRAW_PY_LIB_NAME)$(PYTHON_MODULE_SUFFIX)
-
 # ----------------------------------------------------------------------
 
 all: install
 
-# CONFIGURE_PYTHON = 1
 CONFIGURE_CAIRO = 1
 include $(ACMACSD_ROOT)/share/Makefile.config
 
@@ -83,10 +75,6 @@ test: install $(DIST)/test-cairo $(DIST)/test-cairo-fonts $(DIST)/test-distinct-
 $(ACMACS_DRAW_LIB): $(patsubst %.cc,$(BUILD)/%.o,$(ACMACS_DRAW_SOURCES)) | $(DIST) install-headers
 	$(call echo_shared_lib,$@)
 	$(call make_shared_lib,$(ACMACS_DRAW_LIB_NAME),$(ACMACS_DRAW_LIB_MAJOR),$(ACMACS_DRAW_LIB_MINOR)) $(LDFLAGS) -o $@ $^ $(LDLIBS)
-
-# $(ACMACS_DRAW_PY_LIB): $(patsubst %.cc,$(BUILD)/%.o,$(ACMACS_DRAW_PY_SOURCES)) | $(DIST)
-# 	$(call echo_shared_lib,$@)
-# 	$(call make_shared_lib,$(ACMACS_DRAW_PY_LIB_NAME),$(ACMACS_DRAW_PY_LIB_MAJOR),$(ACMACS_DRAW_PY_LIB_MINOR)) $(LDFLAGS) -o $@ $^ $(LDLIBS) $(PYTHON_LIBS)
 
 $(DIST)/%: $(BUILD)/%.o | $(ACMACS_DRAW_LIB) install-headers
 	$(call echo_link_exe,$@)
