@@ -91,7 +91,23 @@ void acmacs::draw::internal::LegendPointLabel::draw(surface::Surface& surface, c
     const auto scaled_point_size = surface.convert(point_size_).value();
     const auto point_x = origin.x() + scaled_point_size / 2;
     const auto text_x = origin.x() * 2 + scaled_point_size;
-    surface.circle_filled({point_x, origin.y() + height / 2}, point_size_, AspectNormal, NoRotation, point_outline_, point_outline_width_, surface::Dash::NoDash, point_fill_);
+    switch (shape_) {
+        case PointShape::Circle:
+            surface.circle_filled({point_x, origin.y() + height / 2}, point_size_, AspectNormal, NoRotation, point_outline_, point_outline_width_, surface::Dash::NoDash, point_fill_);
+            break;
+        case PointShape::Egg:
+            surface.egg_filled({point_x, origin.y() + height / 2}, point_size_, AspectNormal, NoRotation, point_outline_, point_outline_width_, surface::Dash::NoDash, point_fill_);
+            break;
+        case PointShape::UglyEgg:
+            surface.ugly_egg_filled({point_x, origin.y() + height / 2}, point_size_, AspectNormal, NoRotation, point_outline_, point_outline_width_, surface::Dash::NoDash, point_fill_);
+            break;
+        case PointShape::Box:
+            surface.square_filled({point_x, origin.y() + height / 2}, point_size_, AspectNormal, NoRotation, point_outline_, point_outline_width_, point_fill_);
+            break;
+        case PointShape::Triangle:
+            surface.triangle_filled({point_x, origin.y() + height / 2}, point_size_, AspectNormal, NoRotation, point_outline_, point_outline_width_, point_fill_);
+            break;
+    }
     TitleLine::draw(surface, {text_x, origin.y() + height});
 
 } // acmacs::draw::internal::LegendPointLabel::draw

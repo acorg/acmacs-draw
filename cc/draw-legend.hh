@@ -1,4 +1,4 @@
-#include "acmacs-base/text-style.hh"
+#include "acmacs-base/point-style.hh"
 #include "acmacs-draw/surface.hh"
 #include "acmacs-draw/draw-elements.hh"
 
@@ -190,10 +190,12 @@ namespace acmacs::draw
 
             void draw(surface::Surface& surface, const acmacs::PointCoordinates& origin, double height) const;
             acmacs::Size size(surface::Surface& surface) const;
+            void shape(acmacs::PointShape::Shape shape) { shape_ = shape; }
 
           private:
             Pixels point_size_{12}, point_outline_width_{1};
             Color point_outline_{BLACK}, point_fill_{TRANSPARENT};
+            acmacs::PointShape::Shape shape_{acmacs::PointShape::Circle};
 
         }; // class LegendPointLabel
 
