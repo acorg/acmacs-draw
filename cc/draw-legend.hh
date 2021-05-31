@@ -181,8 +181,9 @@ namespace acmacs::draw
             {
             }
             LegendPointLabel(std::string_view text, Color text_color, Pixels text_size, const acmacs::TextStyle& text_style, Pixels point_size, Color point_outline, Pixels point_outline_width,
-                             Color point_fill)
-                : TitleLine(text, text_color, text_size, text_style), point_size_(point_size), point_outline_width_{point_outline_width}, point_outline_(point_outline), point_fill_(point_fill)
+                             Color point_fill, acmacs::PointShape::Shape point_shape)
+                : TitleLine(text, text_color, text_size, text_style), point_size_(point_size), point_outline_width_{point_outline_width}, point_outline_(point_outline),
+                  point_fill_(point_fill), shape_{point_shape}
             {
             }
 
@@ -240,9 +241,9 @@ namespace acmacs::draw
         {
             lines().emplace_back(text, point_size, point_outline, point_outline_width, point_fill);
         }
-        void add(std::string_view text, Color text_color, Pixels text_size, const acmacs::TextStyle& text_style, Pixels point_size, Color point_outline, Pixels point_outline_width, Color point_fill)
+        void add(std::string_view text, Color text_color, Pixels text_size, const acmacs::TextStyle& text_style, Pixels point_size, Color point_outline, Pixels point_outline_width, Color point_fill, acmacs::PointShape::Shape point_shape)
         {
-            lines().emplace_back(text, text_color, text_size, text_style, point_size, point_outline, point_outline_width, point_fill);
+            lines().emplace_back(text, text_color, text_size, text_style, point_size, point_outline, point_outline_width, point_fill, point_shape);
         }
 
     }; // class Legend
