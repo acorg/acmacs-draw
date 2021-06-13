@@ -192,6 +192,9 @@ namespace acmacs::draw
         class ArrowData
         {
           public:
+            ArrowData() = default;
+            ArrowData(size_t at, Pixels width = Pixels{5}, Pixels outline_width = Pixels{1}) : at_{at}, width_{width}, outline_width_{outline_width} {}
+
             constexpr auto at() const { return at_; }
             constexpr auto from() const { return from_; }
             Color fill(Color dflt) const { return acmacs::color::modify(dflt, fill_); }
