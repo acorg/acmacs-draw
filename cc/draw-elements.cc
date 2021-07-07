@@ -56,6 +56,11 @@ void acmacs::draw::DrawElementsToFile::generate() const
         acmacs::surface::Surface& rescaled_surface = main_surface.subsurface(PointCoordinates::zero2D, Scaled{main_surface.viewport().size.width}, viewport(), true);
         draw(rescaled_surface);
     }
+    else if (std::string_view(filename_.data() + filename_.size() - 4, 4) == ".png") {
+        acmacs::surface::PngCairo main_surface(filename_, size_, size_);
+        acmacs::surface::Surface& rescaled_surface = main_surface.subsurface(PointCoordinates::zero2D, Scaled{main_surface.viewport().size.width}, viewport(), true);
+        draw(rescaled_surface);
+    }
     // else if (std::string_view(filename_.data() + filename_.size() - 5, 5) == ".html") {
     //     acmacs::surface::JsStatic surface(filename_, {size_, size_}, viewport_);
     //     draw(surface);
