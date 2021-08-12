@@ -115,9 +115,9 @@ namespace acmacs
 
 template <> struct fmt::formatter<acmacs::Viewport> : public fmt::formatter<acmacs::fmt_helper::float_formatter>
 {
-    template <typename FormatContext> auto format(const acmacs::Viewport& viewport, FormatContext& ctx)
+    template <typename FormatContext> auto format(const acmacs::Viewport& viewport, FormatContext& ctx) const
     {
-        format_to(ctx.out(), "Viewport[{}, {}, {}", format_val(viewport.left()), format_val(viewport.top()), format_val(viewport.size.width));
+        format_to(ctx.out(), fmt::runtime("Viewport[{}, {}, {}"), format_val(viewport.left()), format_val(viewport.top()), format_val(viewport.size.width));
         if (!float_equal(viewport.size.width, viewport.size.height))
             format_to(ctx.out(), ", {}", format_val(viewport.size.height));
         return format_to(ctx.out(), "]");
