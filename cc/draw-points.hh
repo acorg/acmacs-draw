@@ -100,7 +100,7 @@ namespace acmacs::draw
                 case drawing_stage::labels:
                     draw_labels(std::forward<S>(surface));
                     break;
-                case drawing_stage::__first:
+                case drawing_stage::_first:
                 case drawing_stage::background:
                 case drawing_stage::grid:
                 case drawing_stage::serum_circles:
@@ -108,7 +108,7 @@ namespace acmacs::draw
                 case drawing_stage::legend:
                 case drawing_stage::title:
                 case drawing_stage::border:
-                case drawing_stage::__last:
+                case drawing_stage::_last:
                     break;
             }
         }

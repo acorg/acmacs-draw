@@ -28,7 +28,7 @@ namespace acmacs::surface
 
 namespace acmacs::draw
 {
-    enum class drawing_stage : size_t { __first, background, grid, points, labels, serum_circles, procrustes_arrows, legend, title, border, __last };
+    enum class drawing_stage : size_t { _first, background, grid, points, labels, serum_circles, procrustes_arrows, legend, title, border, _last };
 
     inline void increment(drawing_stage& value)
     {
@@ -44,8 +44,8 @@ namespace acmacs::draw
         virtual ~Element() = default;
         virtual void transform(const Transformation&) const {}
         virtual void draw(drawing_stage stage, surface::Surface& surface) const = 0;
-        // virtual void draw(drawing_stage stage, surface::JsStatic& /*surface*/) const { if (stage == drawing_stage::__first) std::cerr << "WARNING: draw(JsStatic) not implemented for " << typeid(*this).name() << '\n'; }
-        // virtual void draw(drawing_stage stage, surface::JsDynamic& /*surface*/) const { if (stage == drawing_stage::__first) std::cerr << "WARNING: draw(JsDynamic) not implemented for " << typeid(*this).name() << '\n'; }
+        // virtual void draw(drawing_stage stage, surface::JsStatic& /*surface*/) const { if (stage == drawing_stage::_first) std::cerr << "WARNING: draw(JsStatic) not implemented for " << typeid(*this).name() << '\n'; }
+        // virtual void draw(drawing_stage stage, surface::JsDynamic& /*surface*/) const { if (stage == drawing_stage::_first) std::cerr << "WARNING: draw(JsDynamic) not implemented for " << typeid(*this).name() << '\n'; }
 
 
     }; // class Element
@@ -101,7 +101,7 @@ namespace acmacs::draw
 
         template <typename Surface> void draw(Surface&& surface) const
             {
-                for (auto stage = drawing_stage::__first; stage != drawing_stage::__last; increment(stage)) {
+                for (auto stage = drawing_stage::_first; stage != drawing_stage::_last; increment(stage)) {
                     for (const auto& element : elements_) {
                         // AD_DEBUG("draw {} stage:{}", typeid(*element).name(), stage);
                         element->draw(stage, surface);
