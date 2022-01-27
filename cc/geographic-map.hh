@@ -17,6 +17,3 @@ acmacs::Viewport geographic_map_viewport();
 double geographic_map_aspect();
 
 // ----------------------------------------------------------------------
-/// Local Variables:
-/// eval: (if (fboundp 'eu-rename-buffer) (eu-rename-buffer))
-/// End:

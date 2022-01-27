@@ -37,6 +37,3 @@ acmacs::Viewport geographic_map_viewport()
 } // geographic_map_viewport
 
 // ----------------------------------------------------------------------
-/// Local Variables:
-/// eval: (if (fboundp 'eu-rename-buffer) (eu-rename-buffer))
-/// End:
