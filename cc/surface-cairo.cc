@@ -860,6 +860,3 @@ cairo_status_t acmacs::surface::PdfBufferCairo::writer(void *closure, const unsi
 } // acmacs::surface::PdfBufferCairo::writer
 
 // ----------------------------------------------------------------------
-/// Local Variables:
-/// eval: (if (fboundp 'eu-rename-buffer) (eu-rename-buffer))
-/// End:
