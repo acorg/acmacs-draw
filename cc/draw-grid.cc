@@ -95,9 +95,3 @@ void acmacs::draw::Border::draw(drawing_stage stage, surface::Surface& surface) 
 // } // acmacs::draw::Border::draw
 
 // ----------------------------------------------------------------------
-
-
-// ----------------------------------------------------------------------
-/// Local Variables:
-/// eval: (if (fboundp 'eu-rename-buffer) (eu-rename-buffer))
-/// End:
