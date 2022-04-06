@@ -278,6 +278,3 @@ void acmacs::draw::Points::draw_labels(surface::Surface& surface) const
 // } // acmacs::draw::Points::draw_labels
 
 // ----------------------------------------------------------------------
-/// Local Variables:
-/// eval: (if (fboundp 'eu-rename-buffer) (eu-rename-buffer))
-/// End:
