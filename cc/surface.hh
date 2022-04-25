@@ -203,6 +203,3 @@ template <> struct fmt::formatter<acmacs::surface::Surface> : public fmt::format
 
 
 // ----------------------------------------------------------------------
-/// Local Variables:
-/// eval: (if (fboundp 'eu-rename-buffer) (eu-rename-buffer))
-/// End:
