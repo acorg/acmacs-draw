@@ -197,7 +197,7 @@ template <> struct fmt::formatter<acmacs::surface::Surface> : public fmt::format
 {
     template <typename FormatContext> auto format(const acmacs::surface::Surface& surface, FormatContext& ctx)
     {
-        return format_to(ctx.out(), "Surface[{}, Origin{}, width={}]", surface.viewport(), surface.origin_in_parent(), surface.width_in_parent());
+        return fmt::format_to(ctx.out(), "Surface[{}, Origin{}, width={}]", surface.viewport(), surface.origin_in_parent(), surface.width_in_parent());
     }
 };
 
